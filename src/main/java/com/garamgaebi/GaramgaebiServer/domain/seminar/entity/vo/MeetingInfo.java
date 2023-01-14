@@ -1,10 +1,12 @@
-package com.garamgaebi.GaramgaebiServer;
+package com.garamgaebi.GaramgaebiServer.domain.seminar.entity.vo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Getter;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Embeddable
 @Getter
@@ -12,8 +14,9 @@ public class MeetingInfo {
     @Column(name = "title")
     private String title;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime date;
 
     @Column(name = "location")
     private String location;
@@ -21,6 +24,7 @@ public class MeetingInfo {
     @Column(name = "fee")
     private Integer fee;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date")
-    private Date endDate;
+    private LocalDateTime endDate;
 }

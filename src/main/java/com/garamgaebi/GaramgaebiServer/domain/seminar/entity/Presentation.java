@@ -1,5 +1,6 @@
-package com.garamgaebi.GaramgaebiServer;
+package com.garamgaebi.GaramgaebiServer.domain.seminar.entity;
 
+import com.garamgaebi.GaramgaebiServer.domain.seminar.entity.vo.PresentationDetail;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,7 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Presentation {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     @Column(name = "presentation_idx")
     private Long idx;
 

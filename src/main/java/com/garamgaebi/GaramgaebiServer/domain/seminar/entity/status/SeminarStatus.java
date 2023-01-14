@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer;
+package com.garamgaebi.GaramgaebiServer.domain.seminar.entity.status;
 
 // 세미나 상태
 // OPEN : 오픈

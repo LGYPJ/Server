@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer;
+package com.garamgaebi.GaramgaebiServer.domain.seminar.entity.status;
 
 // 유저 세미나 상태
 // APPLY : 신청

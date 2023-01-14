@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer;
+package com.garamgaebi.GaramgaebiServer.domain.seminar.entity.vo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

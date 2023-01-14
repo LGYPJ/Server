@@ -1,5 +1,8 @@
-package com.garamgaebi.GaramgaebiServer;
+package com.garamgaebi.GaramgaebiServer.domain.seminar.entity;
 
+import com.garamgaebi.GaramgaebiServer.domain.seminar.entity.status.SeminarStatus;
+import com.garamgaebi.GaramgaebiServer.domain.seminar.entity.status.UserSeminarStatus;
+import com.garamgaebi.GaramgaebiServer.domain.seminar.entity.vo.MeetingInfo;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
