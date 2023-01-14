@@ -4,11 +4,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 public class MeetingInfo {
     @Column(name = "title")

@@ -10,11 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class PresentationDetail {
+public class BankAccount {
+    @Column(name = "bank")
+    private String bank;
 
-    @Column(name = "content")
-    private String content;
-
-    @Column(name = "presentation_url")
-    private String presentationUrl;
+    @Column(name = "account")
+    private String account;
 }
