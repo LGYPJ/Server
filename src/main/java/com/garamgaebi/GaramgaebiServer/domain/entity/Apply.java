@@ -38,19 +38,11 @@ public class Apply {
     private String account;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private NetworkingStatus status;
+    private ProgramStatus status;
 
-
-    // == 연관관계 편의 메서드 == //
-   // public void setMember(Member member) {
-    // this.member = member;
-    // member.getApply().add(this);
-    // }
-    //
-    // public void setProgram(Program program){
-    // this.program = program;
-    // program.getApply().add(this);
-    // }
-
+    public static Apply of(String account) {
+        Apply apply = new Apply();
+        apply.account = account;
+        return apply;
+    } //Program 신청 가능 상황일 때 연동 메서드 생성되면 수정하기. 일단은 계좌만 연동(isAbleToAcceptWaitingApply?)
 }
