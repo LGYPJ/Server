@@ -16,9 +16,8 @@ public class MemberQuit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long member_quit_id;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx")
+    @JoinColumn(name = "member_idx", nullable = false)
     private Member member;
 
     @Column(nullable = false)

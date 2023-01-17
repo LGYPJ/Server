@@ -16,9 +16,8 @@ public class QnA {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long qna_idx;
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx")
+    @JoinColumn(name = "member_idx", nullable = false)
     private Member member;
 
     @Column(nullable = false)

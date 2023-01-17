@@ -1,4 +1,3 @@
 package com.garamgaebi.GaramgaebiServer.global;
 
-public class SpringConfig {
-}
+public class SpringConfig { }
