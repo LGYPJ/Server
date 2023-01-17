@@ -38,19 +38,7 @@ public class Apply {
     private String account;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private NetworkingStatus status;
+    private ProgramStatus status;
 
-
-    // == 연관관계 편의 메서드 == //
-   // public void setMember(Member member) {
-    // this.member = member;
-    // member.getApply().add(this);
-    // }
-    //
-    // public void setProgram(Program program){
-    // this.program = program;
-    // program.getApply().add(this);
-    // }
 
 }
