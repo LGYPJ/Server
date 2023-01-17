@@ -40,5 +40,9 @@ public class Apply {
     @Enumerated(EnumType.STRING)
     private ProgramStatus status;
 
-
+    public static Apply of(String account) {
+        Apply apply = new Apply();
+        apply.account = account;
+        return apply;
+    } //Program 신청 가능 상황일 때 연동 메서드 생성되면 수정하기. 일단은 계좌만 연동(isAbleToAcceptWaitingApply?)
 }
