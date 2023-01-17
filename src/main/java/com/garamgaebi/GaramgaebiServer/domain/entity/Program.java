@@ -44,7 +44,7 @@ public class Program {
     @OneToMany(mappedBy = "program")
     private List<Apply> applies = new ArrayList<Apply>();
 
-    @OneToMany(mappedBy = "program")
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Presentation> presentations = new ArrayList<Presentation>();
 
 
