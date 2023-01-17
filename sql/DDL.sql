@@ -118,3 +118,15 @@ ALTER TABLE
     `Career` ADD CONSTRAINT `career_member_idx_foreign` FOREIGN KEY(`member_idx`) REFERENCES `Member`(`member_idx`);
 ALTER TABLE
     `Education` ADD CONSTRAINT `education_member_idx_foreign` FOREIGN KEY(`member_idx`) REFERENCES `Member`(`member_idx`);
+
+/*
+2023/01/16 로니
+Presentation 테이블 organization 컬럼 type bigint -> varchar(255) 수정
+*/
+alter table Presentation change organization organization varchar(255) not null;
+
+/*
+2023/01/16 로니
+MemberSeminar 테이블에 phone 컬럼 추가
+*/
+alter table MemberSeminar add column phone varchar(255) not null;
