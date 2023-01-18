@@ -1,15 +1,15 @@
 package com.garamgaebi.GaramgaebiServer.programtest;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
+import com.garamgaebi.GaramgaebiServer.domain.program.service.NetworkingService;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.SeminarService;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,10 +25,11 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
-public class SeminarTest {
+public class NetworkingTest {
 
     @Autowired
-    SeminarService seminarService;
+    NetworkingService networkingService;
+
     @Autowired
     ProgramRepository programRepository;
 
@@ -37,6 +38,7 @@ public class SeminarTest {
     Program thisMonthSeminar = new Program();
     Program nextMonthSeminar = new Program();
     Program twoMonthNextSeminar = new Program();
+
     Program overdueNetworking1 = new Program();
     Program overdueNetworking2 = new Program();
     Program thisMonthNetworking = new Program();
@@ -45,7 +47,7 @@ public class SeminarTest {
 
 
     @Test
-    public void 마감_세미나_리스트_조회() {
+    public void 마감_네트워킹_리스트_조회() {
         // given
         makeDummy(overdueSeminar1, overdueSeminar2, thisMonthSeminar, nextMonthSeminar, twoMonthNextSeminar,
                 overdueNetworking1, overdueNetworking2, thisMonthNetworking, nextMonthNetworking, twoMonthNextNetworking);
@@ -63,15 +65,15 @@ public class SeminarTest {
         programRepository.save(twoMonthNextNetworking);
 
         // when
-        List<ProgramDto> programDtos = seminarService.findClosedSeminarList();
+        List<ProgramDto> programDtos = networkingService.findClosedNetworking();
 
         // then
         Assertions.assertThat(programDtos.size()).isEqualTo(2);
-        Assertions.assertThat(programDtos.contains(overdueSeminar1));
-        Assertions.assertThat(programDtos.contains(overdueSeminar2));
-        Assertions.assertThat(!programDtos.contains(thisMonthSeminar));
-        Assertions.assertThat(!programDtos.contains(nextMonthSeminar));
-        Assertions.assertThat(!programDtos.contains(twoMonthNextSeminar));
+        Assertions.assertThat(programDtos.contains(overdueNetworking1));
+        Assertions.assertThat(programDtos.contains(overdueNetworking2));
+        Assertions.assertThat(!programDtos.contains(thisMonthNetworking));
+        Assertions.assertThat(!programDtos.contains(nextMonthNetworking));
+        Assertions.assertThat(!programDtos.contains(twoMonthNextNetworking));
 
         for(ProgramDto programDto : programDtos) {
             System.out.println(programDto.getTitle());
@@ -81,7 +83,7 @@ public class SeminarTest {
     }
 
     @Test
-    public void 이번달_세미나_조회() {
+    public void 이번달_네트워킹_조회() {
         // given
         makeDummy(overdueSeminar1, overdueSeminar2, thisMonthSeminar, nextMonthSeminar, twoMonthNextSeminar,
                 overdueNetworking1, overdueNetworking2, thisMonthNetworking, nextMonthNetworking, twoMonthNextNetworking);
@@ -100,17 +102,17 @@ public class SeminarTest {
 
 
         // when
-        ProgramDto programDto = seminarService.findThisMonthSeminar();
+        ProgramDto programDto = networkingService.findThisMonthNetworking();
 
         // then
-        Assertions.assertThat(programDto.getProgramIdx()).isEqualTo(thisMonthSeminar.getIdx());
+        Assertions.assertThat(programDto.getProgramIdx()).isEqualTo(thisMonthNetworking.getIdx());
 
         System.out.println(programDto.getTitle());
     }
 
     @Test
-    public void 예정_세미나_조회() {
-    // given
+    public void 예정_네트워킹_조회() {
+        // given
         makeDummy(overdueSeminar1, overdueSeminar2, thisMonthSeminar, nextMonthSeminar, twoMonthNextSeminar,
                 overdueNetworking1, overdueNetworking2, thisMonthNetworking, nextMonthNetworking, twoMonthNextNetworking);
 
@@ -128,10 +130,10 @@ public class SeminarTest {
 
 
         // when
-        ProgramDto programDto = seminarService.findReadySeminar();
+        ProgramDto programDto = networkingService.findReadyNetworking();
 
         // then
-        Assertions.assertThat(programDto.getProgramIdx()).isEqualTo(nextMonthSeminar.getIdx());
+        Assertions.assertThat(programDto.getProgramIdx()).isEqualTo(nextMonthNetworking.getIdx());
 
         System.out.println(programDto.getTitle());
     }

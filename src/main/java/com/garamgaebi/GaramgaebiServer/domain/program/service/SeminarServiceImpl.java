@@ -50,18 +50,19 @@ public class SeminarServiceImpl implements SeminarService {
         return programDtoBuilder(program.get());
     }
 
-    // 오픈 예정 세미나 리스트 조회
+    // 오픈 예정 세미나 조회
     @Override
     public ProgramDto findReadySeminar() {
         // 제약 조건 추가
 
-        List<Program> programs = programRepository.findByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.SEMINAR);
+        // 더 보기 좋은 로직으로 바꾸기
+        Optional<Program> program = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.SEMINAR);
 
-        if(programs.size() == 0) {
+        if(program.isEmpty()) {
             return null;
         }
 
-        return programDtoBuilder(programs.get(0));
+        return programDtoBuilder(program.get());
 
     }
 
