@@ -27,5 +27,15 @@ public class QnA {
     private String category;
 
     @Column(nullable = false)
-    private String cotent;
+    private String content;
+
+    //== 연관관계 메서드 == //
+    public void setQnA(QnA qna){
+        if(this.member != null) {
+            this.member.getQnAs().remove(this);
+        }
+        this.member = member;
+        member.getQnAs().add(this);
+    }
 }
+

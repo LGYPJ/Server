@@ -1,9 +1,16 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "Education")
 public class Education{
@@ -29,14 +36,16 @@ public class Education{
     @Column(name = "end_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date endDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_idx")
     private Member member;
 
-    // == 연관관계 메서드 == //
-//    public void setUser(Member member){
-//        this.member = member;
-//        member.getEducations().add(this);
-//    }
+    //== 연관관계 메서드 == //
+    public void setMember(Member member){
+        if(this.member != null) {
+            this.member.getEducations().remove(this);
+        }
+        this.member = member;
+        member.getEducations().add(this);
+    }
 }

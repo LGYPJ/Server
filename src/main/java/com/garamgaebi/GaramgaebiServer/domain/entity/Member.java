@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,35 +17,80 @@ import java.sql.Date;
 @Table(name = "Member")
 public class Member {
     @Id
+    @Column(name = "member_idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long member_idx;
+    private Long memberIdx;
 
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    private String profile_email;
+    @Column(name = "profile_email",nullable = false)
+    private String profileEmail;
 
-    @Column(nullable = false)
-    private String social_email;
+    @Column(name = "social_email",nullable = false)
+    private String socialEmail;
 
-    @Column(nullable = false)
-    private String uni_email;
+    @Column(name = "uni_email",nullable = false)
+    private String uniEmail;
 
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String profile_url;
+    @Column(name = "profile_url",nullable = false)
+    private String profileUrl;
 
-    @Column(nullable = false)
+    @Column(name="created_at",nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date created_at;
+    private Date createdAt;
 
-    @Column(nullable = false)
+    @Column(name="updated_at",nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date updated_at;
+    private Date updatedAt;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
+    @OneToMany(mappedBy = "member")
+    private List<Education> educations = new ArrayList<Education>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Career> careers = new ArrayList<Career>();
+
+    @OneToMany(mappedBy = "member")
+    private List<SNS> SNSs = new ArrayList<SNS>();
+
+    @OneToMany(mappedBy = "member")
+    private List<QnA> QnAs = new ArrayList<QnA>();
+
+    // == 연관관계 메서드 -- //
+    public void addEducation(Education education) {
+        this.educations.add(education);
+        // 중복 루프 방지
+        if (education.getMember() != this) {
+            education.setMember(this);
+        }
+    }
+
+    public void addCareer(Career career) {
+        this.careers.add(career);
+        // 중복 루프 방지
+        if (career.getMember() != this) {
+            career.setMember(this);
+        }
+    }
+
+    public void addSNS(SNS sns) {
+        this.SNSs.add(sns);
+        // 중복 루프 방지
+        if (sns.getMember() != this) {
+            sns.setMember(this);
+        }
+    }
+
+    public void addQnA(QnA qna) {
+        this.QnAs.add(qna);
+        // 중복 루프 방지
+        if (qna.getMember() != this) {
+            qna.setMember(this);
+        }
+    }
 }
