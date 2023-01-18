@@ -3,6 +3,7 @@ package com.garamgaebi.GaramgaebiServer.domain.program.repository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +17,5 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
 
     public Optional<Program> findOneByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime start, LocalDateTime end, ProgramType programType);
 
-    public List<Program> findByDateAfterAndProgramTypeOrderByDateAsc(LocalDateTime start, ProgramType programType);
+    public Optional<Program> findFirstByDateAfterAndProgramTypeOrderByDateAsc(LocalDateTime start, ProgramType programType);
 }
