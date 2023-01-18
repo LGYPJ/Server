@@ -16,4 +16,6 @@ public class ProgramDto {
     private String title;
     private LocalDateTime date;
     private String location;
+    private String payment;
+    private String status;
 }

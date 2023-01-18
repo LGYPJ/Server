@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/networkings")
@@ -16,27 +18,21 @@ public class NetworkingController {
     private final NetworkingService networkingService;
 
     // 네트워킹 모아보기
-    @GetMapping("")
-    public GetProgramListRes getNetworkingList() {
+    @GetMapping("/collection")
+    public GetProgramListRes getSeminarCollectionList() {
         // validation 처리
 
-        return new GetProgramListRes(
-                networkingService.findThisMonthNetworking(),
-                networkingService.findReadyNetworking(),
-                networkingService.findClosedNetworking()
-        );
+        GetProgramListRes getProgramListRes = networkingService.findNetworkingCollectionList();
+
+        return getProgramListRes;
     }
 
-    // 이번달 세미나
-    @GetMapping("/this-month")
-    public ProgramDto getThisMonthNetworking() {
+    //홈 화면 네트워킹 리스트
+    @GetMapping("/main")
+    public List<ProgramDto> getMainSeminarList() {
         // validation 처리
 
-        ProgramDto thisMonthNetworking = networkingService.findThisMonthNetworking();
-        if(thisMonthNetworking == null) {
-            // 예외처리
-        }
-
-        return thisMonthNetworking;
+        return networkingService.findMainNetworkingList();
     }
+
 }
