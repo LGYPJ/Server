@@ -1,11 +1,18 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Career")
 public class Career{
     @Id
@@ -36,8 +43,11 @@ public class Career{
     private Member member;
 
     // == 연관관계 메서드 == //
-//    public void setMember(Member member){
-//        this.member = member;
-//        member.getCareers().add(this);
-//    }
+    public void setMember(Member member){
+        if(this.member != null) {
+            this.member.getCareers().remove(this);
+        }
+        this.member = member;
+        member.getCareers().add(this);
+    }
 }
