@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,5 +109,14 @@ public class Program {
     public LocalDateTime getEndDate() {
         return getDate().minusWeeks(closePolicyWeek);
     }
+
+    // 이번달, 예정, 지난 프로그램 구분
+    public String getThisMonthStatus() {
+        if(this.date.isBefore(LocalDateTime.now())) { return "CLOSED"; }
+        else if(this.date.isBefore((LocalDateTime) LocalDate.now().plusMonths(1).atStartOfDay())) { return "THIS_MONTH"; }
+        else { return "READY"; }
+    }
+
+    // == 비즈니스 로직 == //
 
 }

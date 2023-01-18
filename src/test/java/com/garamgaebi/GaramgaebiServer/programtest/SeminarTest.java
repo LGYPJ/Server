@@ -3,6 +3,7 @@ package com.garamgaebi.GaramgaebiServer.programtest;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.GetProgramListRes;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.SeminarService;
@@ -45,95 +46,41 @@ public class SeminarTest {
 
 
     @Test
-    public void 마감_세미나_리스트_조회() {
+    public void 세미나_모아보기() {
         // given
         makeDummy(overdueSeminar1, overdueSeminar2, thisMonthSeminar, nextMonthSeminar, twoMonthNextSeminar,
                 overdueNetworking1, overdueNetworking2, thisMonthNetworking, nextMonthNetworking, twoMonthNextNetworking);
 
-        programRepository.save(overdueSeminar1);
-        programRepository.save(overdueSeminar2);
-        programRepository.save(thisMonthSeminar);
-        programRepository.save(nextMonthSeminar);
-        programRepository.save(twoMonthNextSeminar);
-
-        programRepository.save(overdueNetworking1);
-        programRepository.save(overdueNetworking2);
-        programRepository.save(thisMonthNetworking);
-        programRepository.save(nextMonthNetworking);
-        programRepository.save(twoMonthNextNetworking);
-
         // when
-        List<ProgramDto> programDtos = seminarService.findClosedSeminarList();
+        GetProgramListRes getProgramListRes = seminarService.findSeminarCollectionList();
 
         // then
-        Assertions.assertThat(programDtos.size()).isEqualTo(2);
-        Assertions.assertThat(programDtos.contains(overdueSeminar1));
-        Assertions.assertThat(programDtos.contains(overdueSeminar2));
-        Assertions.assertThat(!programDtos.contains(thisMonthSeminar));
-        Assertions.assertThat(!programDtos.contains(nextMonthSeminar));
-        Assertions.assertThat(!programDtos.contains(twoMonthNextSeminar));
+        Assertions.assertThat(getProgramListRes.getThisMonthProgram().getProgramIdx()).isEqualTo(thisMonthSeminar.getIdx());
+        Assertions.assertThat(getProgramListRes.getNextProgram().getProgramIdx()).isEqualTo(nextMonthSeminar.getIdx());
+        Assertions.assertThat(getProgramListRes.getClosedProgram().get(0).getProgramIdx()).isEqualTo(overdueSeminar2.getIdx());
+        Assertions.assertThat(getProgramListRes.getClosedProgram().get(1).getProgramIdx()).isEqualTo(overdueSeminar1.getIdx());
 
-        for(ProgramDto programDto : programDtos) {
-            System.out.println(programDto.getTitle());
-        }
-
-
+        System.out.println(getProgramListRes.getThisMonthProgram());
+        System.out.println(getProgramListRes.getNextProgram());
+        System.out.println(getProgramListRes.getClosedProgram());
     }
 
     @Test
-    public void 이번달_세미나_조회() {
+    public void 홈화면_세미나_리스트() {
         // given
         makeDummy(overdueSeminar1, overdueSeminar2, thisMonthSeminar, nextMonthSeminar, twoMonthNextSeminar,
                 overdueNetworking1, overdueNetworking2, thisMonthNetworking, nextMonthNetworking, twoMonthNextNetworking);
 
-        programRepository.save(overdueSeminar1);
-        programRepository.save(overdueSeminar2);
-        programRepository.save(thisMonthSeminar);
-        programRepository.save(nextMonthSeminar);
-        programRepository.save(twoMonthNextSeminar);
-
-        programRepository.save(overdueNetworking1);
-        programRepository.save(overdueNetworking2);
-        programRepository.save(thisMonthNetworking);
-        programRepository.save(nextMonthNetworking);
-        programRepository.save(twoMonthNextNetworking);
-
-
         // when
-        ProgramDto programDto = seminarService.findThisMonthSeminar();
+        List<ProgramDto> programDtos = seminarService.findMainSeminarList();
 
         // then
-        Assertions.assertThat(programDto.getProgramIdx()).isEqualTo(thisMonthSeminar.getIdx());
+        Assertions.assertThat(programDtos.get(0).getProgramIdx()).isEqualTo(thisMonthSeminar.getIdx());
+        Assertions.assertThat(programDtos.get(1).getProgramIdx()).isEqualTo(nextMonthSeminar.getIdx());
+        Assertions.assertThat(programDtos.get(2).getProgramIdx()).isEqualTo(twoMonthNextSeminar.getIdx());
+        Assertions.assertThat(programDtos.get(3).getProgramIdx()).isEqualTo(overdueSeminar2.getIdx());
+        Assertions.assertThat(programDtos.get(4).getProgramIdx()).isEqualTo(overdueSeminar1.getIdx());
 
-        System.out.println(programDto.getTitle());
-    }
-
-    @Test
-    public void 예정_세미나_조회() {
-    // given
-        makeDummy(overdueSeminar1, overdueSeminar2, thisMonthSeminar, nextMonthSeminar, twoMonthNextSeminar,
-                overdueNetworking1, overdueNetworking2, thisMonthNetworking, nextMonthNetworking, twoMonthNextNetworking);
-
-        programRepository.save(overdueSeminar1);
-        programRepository.save(overdueSeminar2);
-        programRepository.save(thisMonthSeminar);
-        programRepository.save(nextMonthSeminar);
-        programRepository.save(twoMonthNextSeminar);
-
-        programRepository.save(overdueNetworking1);
-        programRepository.save(overdueNetworking2);
-        programRepository.save(thisMonthNetworking);
-        programRepository.save(nextMonthNetworking);
-        programRepository.save(twoMonthNextNetworking);
-
-
-        // when
-        ProgramDto programDto = seminarService.findReadySeminar();
-
-        // then
-        Assertions.assertThat(programDto.getProgramIdx()).isEqualTo(nextMonthSeminar.getIdx());
-
-        System.out.println(programDto.getTitle());
     }
 
 
@@ -149,8 +96,6 @@ public class SeminarTest {
         overdueSeminar1.setDate(LocalDateTime.now().minusDays(10));
         overdueSeminar1.setFee(0);
         overdueSeminar1.setProgramType(ProgramType.SEMINAR);
-        overdueSeminar1.setApplies(null);
-        overdueSeminar1.setPresentations(null);
         overdueSeminar1.setStatus(overdueSeminar1.getStatus());
 
         overdueSeminar2.setTitle("마감 세미나2");
@@ -158,8 +103,6 @@ public class SeminarTest {
         overdueSeminar2.setDate(LocalDateTime.now().minusDays(5));
         overdueSeminar2.setFee(0);
         overdueSeminar2.setProgramType(ProgramType.SEMINAR);
-        overdueSeminar2.setApplies(null);
-        overdueSeminar2.setPresentations(null);
         overdueSeminar2.setStatus(overdueSeminar1.getStatus());
 
         thisMonthSeminar.setTitle("이번달 세미나");
@@ -167,8 +110,6 @@ public class SeminarTest {
         thisMonthSeminar.setDate(LocalDateTime.now().plusDays(10));
         thisMonthSeminar.setFee(0);
         thisMonthSeminar.setProgramType(ProgramType.SEMINAR);
-        thisMonthSeminar.setApplies(null);
-        thisMonthSeminar.setPresentations(null);
         thisMonthSeminar.setStatus(overdueSeminar1.getStatus());
 
         nextMonthSeminar.setTitle("다음 세미나");
@@ -176,8 +117,6 @@ public class SeminarTest {
         nextMonthSeminar.setDate(((LocalDateTime) LocalDate.now().plusMonths(1).atStartOfDay()).plusMinutes(1));
         nextMonthSeminar.setFee(0);
         nextMonthSeminar.setProgramType(ProgramType.SEMINAR);
-        nextMonthSeminar.setApplies(null);
-        nextMonthSeminar.setPresentations(null);
         nextMonthSeminar.setStatus(overdueSeminar1.getStatus());
 
         twoMonthNextSeminar.setTitle("다다음 세미나");
@@ -185,8 +124,6 @@ public class SeminarTest {
         twoMonthNextSeminar.setDate(LocalDateTime.now().plusDays(110));
         twoMonthNextSeminar.setFee(0);
         twoMonthNextSeminar.setProgramType(ProgramType.SEMINAR);
-        twoMonthNextSeminar.setApplies(null);
-        twoMonthNextSeminar.setPresentations(null);
         twoMonthNextSeminar.setStatus(overdueSeminar1.getStatus());
 
         overdueNetworking1.setTitle("마감 네트워킹1");
@@ -194,8 +131,6 @@ public class SeminarTest {
         overdueNetworking1.setDate(LocalDateTime.now().minusDays(10));
         overdueNetworking1.setFee(0);
         overdueNetworking1.setProgramType(ProgramType.NETWORKING);
-        overdueNetworking1.setApplies(null);
-        overdueNetworking1.setPresentations(null);
         overdueNetworking1.setStatus(overdueNetworking1.getStatus());
 
         overdueNetworking2.setTitle("마감 네트워킹2");
@@ -203,8 +138,6 @@ public class SeminarTest {
         overdueNetworking2.setDate(LocalDateTime.now().minusDays(5));
         overdueNetworking2.setFee(0);
         overdueNetworking2.setProgramType(ProgramType.NETWORKING);
-        overdueNetworking2.setApplies(null);
-        overdueNetworking2.setPresentations(null);
         overdueNetworking2.setStatus(overdueNetworking1.getStatus());
 
         thisMonthNetworking.setTitle("이번달 네트워킹");
@@ -212,8 +145,6 @@ public class SeminarTest {
         thisMonthNetworking.setDate(LocalDateTime.now().plusDays(10));
         thisMonthNetworking.setFee(0);
         thisMonthNetworking.setProgramType(ProgramType.NETWORKING);
-        thisMonthNetworking.setApplies(null);
-        thisMonthNetworking.setPresentations(null);
         thisMonthNetworking.setStatus(overdueNetworking1.getStatus());
 
         nextMonthNetworking.setTitle("다음 네트워킹");
@@ -221,8 +152,6 @@ public class SeminarTest {
         nextMonthNetworking.setDate(((LocalDateTime) LocalDate.now().plusMonths(1).atStartOfDay()).plusMinutes(1));
         nextMonthNetworking.setFee(0);
         nextMonthNetworking.setProgramType(ProgramType.NETWORKING);
-        nextMonthNetworking.setApplies(null);
-        nextMonthNetworking.setPresentations(null);
         nextMonthNetworking.setStatus(overdueNetworking1.getStatus());
 
         twoMonthNextNetworking.setTitle("다다음 네트워킹");
@@ -230,9 +159,19 @@ public class SeminarTest {
         twoMonthNextNetworking.setDate(LocalDateTime.now().plusDays(110));
         twoMonthNextNetworking.setFee(0);
         twoMonthNextNetworking.setProgramType(ProgramType.NETWORKING);
-        twoMonthNextNetworking.setApplies(null);
-        twoMonthNextNetworking.setPresentations(null);
         twoMonthNextNetworking.setStatus(overdueNetworking1.getStatus());
+
+        programRepository.save(overdueSeminar1);
+        programRepository.save(overdueSeminar2);
+        programRepository.save(thisMonthSeminar);
+        programRepository.save(nextMonthSeminar);
+        programRepository.save(twoMonthNextSeminar);
+
+        programRepository.save(overdueNetworking1);
+        programRepository.save(overdueNetworking2);
+        programRepository.save(thisMonthNetworking);
+        programRepository.save(nextMonthNetworking);
+        programRepository.save(twoMonthNextNetworking);
 
     }
 

@@ -6,7 +6,10 @@ import com.garamgaebi.GaramgaebiServer.domain.program.service.SeminarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,27 +19,22 @@ public class SeminarController {
     private final SeminarService seminarService;
 
     // 세미나 모아보기
-    @GetMapping("")
-    public GetProgramListRes getSeminarList() {
+
+    @GetMapping("/collection")
+    public GetProgramListRes getSeminarCollectionList() {
         // validation 처리
 
-        return new GetProgramListRes(
-                seminarService.findThisMonthSeminar(),
-                seminarService.findReadySeminar(),
-                seminarService.findClosedSeminarList()
-        );
+        GetProgramListRes getProgramListRes = seminarService.findSeminarCollectionList();
+
+        return getProgramListRes;
     }
 
-    // 이번달 세미나
-    @GetMapping("/this-month")
-    public ProgramDto getThisMonthSeminar() {
+    //홈 화면 세미나 리스트
+    @GetMapping("/main")
+    public List<ProgramDto> getMainSeminarList() {
         // validation 처리
 
-        ProgramDto thisMonthSeminar = seminarService.findThisMonthSeminar();
-        if(thisMonthSeminar == null) {
-            // 예외처리
-        }
-
-        return thisMonthSeminar;
+        return seminarService.findMainSeminarList();
     }
+
 }
