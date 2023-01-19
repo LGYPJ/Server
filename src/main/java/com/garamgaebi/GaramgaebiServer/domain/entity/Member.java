@@ -49,16 +49,16 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<Education> educations = new ArrayList<Education>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<Career> careers = new ArrayList<Career>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<SNS> SNSs = new ArrayList<SNS>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<QnA> QnAs = new ArrayList<QnA>();
 
     // == 연관관계 메서드 -- //
@@ -88,7 +88,6 @@ public class Member {
 
     public void addQnA(QnA qna) {
         this.QnAs.add(qna);
-        // 중복 루프 방지
         if (qna.getMember() != this) {
             qna.setMember(this);
         }
