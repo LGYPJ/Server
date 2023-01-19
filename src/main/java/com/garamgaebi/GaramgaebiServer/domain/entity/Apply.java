@@ -38,7 +38,7 @@ public class Apply {
     private String account;
 
     @Enumerated(EnumType.STRING)
-    private ProgramStatus status;
+    private ApplyStatus status;
 
     public static Apply of(String account) {
         Apply apply = new Apply();

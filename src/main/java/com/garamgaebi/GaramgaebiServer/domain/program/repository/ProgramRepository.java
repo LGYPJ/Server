@@ -15,9 +15,9 @@ import java.util.Optional;
 public interface ProgramRepository extends JpaRepository<Program, Long> {
     public List<Program> findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime now, ProgramType programType);
 
-    public Optional<Program> findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime now, LocalDateTime end, ProgramType programType);
+    public Program findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime now, LocalDateTime end, ProgramType programType);
 
-    public Optional<Program> findFirstByDateAfterAndProgramTypeOrderByDateAsc(LocalDateTime start, ProgramType programType);
+    public Program findFirstByDateAfterAndProgramTypeOrderByDateAsc(LocalDateTime start, ProgramType programType);
 
     public List<Program> findAllByDateAfterAndProgramTypeOrderByDateAsc(LocalDateTime now, ProgramType programType);
 

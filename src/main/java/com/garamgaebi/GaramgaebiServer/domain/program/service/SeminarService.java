@@ -6,9 +6,15 @@ import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import java.util.List;
 
 public interface SeminarService {
-    // 세미나 모아보기
-    public GetProgramListRes findSeminarCollectionList();
+    // 이번달 세미나 조회
+    public ProgramDto findThisMonthSeminar();
+    // 예정된 세미나 조회
+    public ProgramDto findReadySeminar();
+    // 마감된 세미나 리스트 조회
+    public List<ProgramDto> findClosedSeminarsList();
     // 홈 화면 세미나 리스트
     public List<ProgramDto> findMainSeminarList();
+    // 세미나 상세 페이지
+    public void findSeminarDetails(Long seminarIdx);
 
 }

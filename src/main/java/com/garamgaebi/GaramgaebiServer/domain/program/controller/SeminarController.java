@@ -18,6 +18,8 @@ public class SeminarController {
 
     private final SeminarService seminarService;
 
+    /*
+    // 보류
     // 세미나 모아보기
 
     @GetMapping("/collection")
@@ -28,6 +30,8 @@ public class SeminarController {
 
         return getProgramListRes;
     }
+
+     */
 
     //홈 화면 세미나 리스트
     @GetMapping("/main")
