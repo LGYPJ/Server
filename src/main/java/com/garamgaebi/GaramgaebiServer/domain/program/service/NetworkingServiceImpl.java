@@ -31,9 +31,9 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         List<Program> closeNetworkings = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.NETWORKING);
 
-        Optional<Program> readyNetworking = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.NETWORKING);
+        Program readyNetworking = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.NETWORKING);
 
-        Optional<Program> thisMonthNetworking = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING);
+        Program thisMonthNetworking = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING);
 
         List<ProgramDto> closeProgramDtos = new ArrayList<ProgramDto>();
         for(Program program : closeNetworkings) {
@@ -41,10 +41,9 @@ public class NetworkingServiceImpl implements NetworkingService {
         }
 
         return new GetProgramListRes(
-                programDtoBuilder((thisMonthNetworking.isEmpty() ? null : thisMonthNetworking.get())),
-                programDtoBuilder(readyNetworking.isEmpty() ? null : readyNetworking.get()),
-                closeProgramDtos
-        );
+                programDtoBuilder(thisMonthNetworking),
+                programDtoBuilder(readyNetworking),
+                closeProgramDtos);
 
     }
 
@@ -53,14 +52,16 @@ public class NetworkingServiceImpl implements NetworkingService {
     @Override
     public List<ProgramDto> findMainNetworkingList() {
 
-        Optional<Program> thisMonthNetworking = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING);
+        Program thisMonthNetworking = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING);
+
         List<Program> readyNetworkings = programRepository.findAllByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.NETWORKING);
+
         List<Program> closeNetworkings = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.NETWORKING);
 
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        if(thisMonthNetworking.isPresent()) {
-            programDtos.add(programDtoBuilder(thisMonthNetworking.get()));
+        if(thisMonthNetworking != null) {
+            programDtos.add(programDtoBuilder(thisMonthNetworking));
         }
 
         for(Program program : readyNetworkings) {

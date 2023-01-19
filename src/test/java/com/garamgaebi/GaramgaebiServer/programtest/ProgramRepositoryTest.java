@@ -74,12 +74,12 @@ public class ProgramRepositoryTest {
 
 
         // when
-        Optional<Program> program = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), (LocalDateTime)(LocalDate.now().plusMonths(1)).atStartOfDay(), ProgramType.SEMINAR);
+        Program program = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), (LocalDateTime)(LocalDate.now().plusMonths(1)).atStartOfDay(), ProgramType.SEMINAR);
 
         // then
-        Assertions.assertThat(program.get().getIdx()).isEqualTo(thisMonthSeminar.getIdx());
+        Assertions.assertThat(program.getIdx()).isEqualTo(thisMonthSeminar.getIdx());
 
-        System.out.println(program.get().getTitle());
+        System.out.println(program.getTitle());
     }
 
     @Test
@@ -89,12 +89,12 @@ public class ProgramRepositoryTest {
                 overdueNetworking1, overdueNetworking2, thisMonthNetworking, nextMonthNetworking, twoMonthNextNetworking);
 
         // when
-        Optional<Program> program = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc((LocalDateTime)(LocalDate.now().plusMonths(1)).atStartOfDay(), ProgramType.SEMINAR);
+        Program program = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc((LocalDateTime)(LocalDate.now().plusMonths(1)).atStartOfDay(), ProgramType.SEMINAR);
 
         // then
-        Assertions.assertThat(program.get().getIdx()).isEqualTo(nextMonthSeminar.getIdx());
+        Assertions.assertThat(program.getIdx()).isEqualTo(nextMonthSeminar.getIdx());
 
-        System.out.println(program.get().getTitle());
+        System.out.println(program.getTitle());
     }
 
     @Test

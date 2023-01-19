@@ -31,9 +31,9 @@ public class SeminarServiceImpl implements SeminarService {
 
         List<Program> closePrograms = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.SEMINAR);
 
-        Optional<Program> readyProgram = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.SEMINAR);
+        Program readyProgram = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.SEMINAR);
 
-        Optional<Program> thisMonthProgram = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.SEMINAR);
+        Program thisMonthProgram = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.SEMINAR);
 
         List<ProgramDto> closeProgramDtos = new ArrayList<ProgramDto>();
         for(Program program : closePrograms) {
@@ -41,8 +41,8 @@ public class SeminarServiceImpl implements SeminarService {
         }
 
         return new GetProgramListRes(
-                programDtoBuilder((thisMonthProgram.isEmpty() ? null : thisMonthProgram.get())),
-                programDtoBuilder(readyProgram.isEmpty() ? null : readyProgram.get()),
+                programDtoBuilder(thisMonthProgram),
+                programDtoBuilder(readyProgram),
                 closeProgramDtos
         );
 
@@ -53,14 +53,14 @@ public class SeminarServiceImpl implements SeminarService {
     @Override
     public List<ProgramDto> findMainSeminarList() {
 
-        Optional<Program> thisMonthSeminar = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.SEMINAR);
+        Program thisMonthSeminar = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.SEMINAR);
         List<Program> readySeminar = programRepository.findAllByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.SEMINAR);
         List<Program> closePrograms = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.SEMINAR);
 
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        if(thisMonthSeminar.isPresent()) {
-            programDtos.add(programDtoBuilder(thisMonthSeminar.get()));
+        if(thisMonthSeminar != null) {
+            programDtos.add(programDtoBuilder(thisMonthSeminar));
         }
 
         for(Program program : readySeminar) {
