@@ -45,25 +45,9 @@ public class SeminarTest {
     Program twoMonthNextNetworking = new Program();
 
 
-    @Test
-    public void 세미나_모아보기() {
-        // given
-        makeDummy(overdueSeminar1, overdueSeminar2, thisMonthSeminar, nextMonthSeminar, twoMonthNextSeminar,
-                overdueNetworking1, overdueNetworking2, thisMonthNetworking, nextMonthNetworking, twoMonthNextNetworking);
-
-        // when
-        GetProgramListRes getProgramListRes = seminarService.findSeminarCollectionList();
-
-        // then
-        Assertions.assertThat(getProgramListRes.getThisMonthProgram().getProgramIdx()).isEqualTo(thisMonthSeminar.getIdx());
-        Assertions.assertThat(getProgramListRes.getNextProgram().getProgramIdx()).isEqualTo(nextMonthSeminar.getIdx());
-        Assertions.assertThat(getProgramListRes.getClosedProgram().get(0).getProgramIdx()).isEqualTo(overdueSeminar2.getIdx());
-        Assertions.assertThat(getProgramListRes.getClosedProgram().get(1).getProgramIdx()).isEqualTo(overdueSeminar1.getIdx());
-
-        System.out.println(getProgramListRes.getThisMonthProgram());
-        System.out.println(getProgramListRes.getNextProgram());
-        System.out.println(getProgramListRes.getClosedProgram());
-    }
+    // 이번달
+    // 예정
+    // 마감 세미나 테스트 짜기
 
     @Test
     public void 홈화면_세미나_리스트() {

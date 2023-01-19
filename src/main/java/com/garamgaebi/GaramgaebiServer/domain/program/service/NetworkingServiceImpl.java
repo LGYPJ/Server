@@ -23,7 +23,7 @@ public class NetworkingServiceImpl implements NetworkingService {
 
     private final ProgramRepository programRepository;
 
-
+    /*
     // 세미나 모아보기 조회
     @Transactional
     @Override
@@ -45,6 +45,45 @@ public class NetworkingServiceImpl implements NetworkingService {
                 programDtoBuilder(readyNetworking),
                 closeProgramDtos);
 
+    }
+     */
+
+    // 이번 달 네트워킹 조회
+    @Transactional(readOnly = true)
+    @Override
+    public ProgramDto findThisMonthNetworking() {
+
+        Program thisMonthProgram = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING);
+
+        return programDtoBuilder(thisMonthProgram);
+    }
+
+
+    // 예정된 세미나 조회
+    @Transactional(readOnly = true)
+    @Override
+    public ProgramDto findReadyNetworking() {
+
+        Program readyProgram = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.NETWORKING);
+
+        return programDtoBuilder(readyProgram);
+    }
+
+
+    // 마감된 세미나 리스트 조회
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProgramDto> findClosedNetworkingList() {
+        // validation 처리
+
+        List<Program> closePrograms = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.NETWORKING);
+        List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
+
+        for(Program program : closePrograms) {
+            programDtos.add(programDtoBuilder(program));
+        }
+
+        return programDtos;
     }
 
     // 홈 화면 세미나 조회
@@ -73,6 +112,12 @@ public class NetworkingServiceImpl implements NetworkingService {
         }
 
         return programDtos;
+    }
+
+    // 네트워킹 상세페이지
+    @Override
+    public void findNetworkingDetails(Long networkingIdx) {
+
     }
 
     // programDto 빌더
