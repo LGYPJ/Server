@@ -46,7 +46,7 @@ public class NetworkingController {
     public ProgramInfoDto getNetworkingDetailInfo(@RequestBody ProgramDetailReq programDetailReq) {
         // validation
 
-        return networkingService.findNetworkingDetails(programDetailReq.getMemberIdx(), programDetailReq.getProgramIdx());
+        return networkingService.findNetworkingDetails(programDetailReq);
     }
 
 }

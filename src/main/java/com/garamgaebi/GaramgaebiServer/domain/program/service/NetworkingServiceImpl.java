@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDetailReq;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
@@ -85,7 +86,7 @@ public class NetworkingServiceImpl implements NetworkingService {
     }
 
     // 홈 화면 세미나 조회
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<ProgramDto> findMainNetworkingList() {
 
@@ -113,9 +114,12 @@ public class NetworkingServiceImpl implements NetworkingService {
     }
 
     //
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public ProgramInfoDto findNetworkingDetails(Long memberIdx, Long networkingIdx) {
+    public ProgramInfoDto findNetworkingDetails(ProgramDetailReq programDetailReq) {
+        Long memberIdx = programDetailReq.getMemberIdx();
+        Long networkingIdx = programDetailReq.getProgramIdx();
+
         Optional<Program> networkingWrapper = programRepository.findById(networkingIdx);
         // 유저 유효성 검사
         // Member를 직접 찾아야하나? -> 이 도메인에서 접근하는게 맞나?

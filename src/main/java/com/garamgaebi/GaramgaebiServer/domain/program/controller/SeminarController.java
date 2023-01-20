@@ -1,9 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.controller;
 
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.GetProgramListRes;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDetailReq;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.SeminarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -47,8 +44,18 @@ public class SeminarController {
             // 예외 처리
         }
 
-        return seminarService.findSeminarDetails(programDetailReq.getMemberIdx(), programDetailReq.getProgramIdx());
+        return seminarService.findSeminarDetails(programDetailReq);
+    }
 
+    @GetMapping("/{seminar-idx}/presentations")
+    public List<PresentationDto> getSeminarPresentationList(@PathVariable(name = "seminar-idx") Long seminarIdx) {
+        // validation 처리
+
+        if(seminarIdx == null) {
+            // 예외처리
+        }
+
+        return seminarService.findSeminarPresentationList(seminarIdx);
     }
 
 }

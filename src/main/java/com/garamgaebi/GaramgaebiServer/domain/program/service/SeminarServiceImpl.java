@@ -1,13 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.apply.ApplyRepository;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Apply;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.GetProgramListRes;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
+import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -118,9 +113,12 @@ public class SeminarServiceImpl implements SeminarService {
     }
 
     // 세미나 상세정보 상단 부분 조회
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public ProgramInfoDto findSeminarDetails(Long memberIdx, Long seminarIdx) {
+    public ProgramInfoDto findSeminarDetails(ProgramDetailReq programDetailReq) {
+        Long memberIdx = programDetailReq.getMemberIdx();
+        Long seminarIdx = programDetailReq.getProgramIdx();
+
         Optional<Program> seminarWrapper = programRepository.findById(seminarIdx);
         // 유저 유효성 검사
         // Member를 직접 찾아야하나? -> 이 도메인에서 접근하는게 맞나?
@@ -147,6 +145,41 @@ public class SeminarServiceImpl implements SeminarService {
                 seminar.getEndDate(),
                 seminar.getStatus(),
                 seminar.checkMemberCanApply(memberIdx));
+    }
+
+    // 세미나 상세정보 발표자료 조회
+    @Transactional(readOnly = true)
+    @Override
+    public List<PresentationDto> findSeminarPresentationList(Long seminarIdx) {
+
+        Optional<Program> seminarWrapper = programRepository.findById(seminarIdx);
+        // validation
+        if(seminarWrapper.isEmpty()) {
+            // 없는 세미나 예외 처리
+        }
+        else {
+            if(seminarWrapper.get().getProgramType() != ProgramType.SEMINAR) {
+                // 예외 처리
+            }
+        }
+
+        Program seminar = seminarWrapper.get();
+        List<PresentationDto> presentationDtos = new ArrayList<PresentationDto>();
+
+        for(Presentation presentation : seminar.getPresentations()) {
+            presentationDtos.add(new PresentationDto(
+                    presentation.getIdx(),
+                    presentation.getTitle(),
+                    presentation.getNickname(),
+                    presentation.getProfileImg(),
+                    presentation.getOrganization(),
+                    presentation.getContent(),
+                    presentation.getPresentationUrl()
+                    ));
+        }
+
+        return presentationDtos;
+
     }
 
     // programDto 빌더
