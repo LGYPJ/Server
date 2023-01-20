@@ -81,7 +81,7 @@ public class Program {
     }
 
 
-    // 세미나 상태 조회
+    // 프로그램 상태 조회
     public ProgramStatus getStatus() {
         if(this.status != ProgramStatus.CLOSED_CONFIRM) {
             if(LocalDateTime.now().isBefore(getOpenDate())) {
@@ -120,5 +120,18 @@ public class Program {
 
     // == 비즈니스 로직 == //
 
+    // 유저 신청 가능 여부 조회
+    public String checkMemberCanApply(Long memberIdx) {
+        if(getStatus() != ProgramStatus.OPEN)
+            return "UnableToApply";
+
+        for(Apply apply : this.applies) {
+            // 해당 멤버가 이미 신청한 경우
+            if(apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY) {
+                return "UnableToApply";
+            }
+        }
+        return "AbleToApply";
+    }
 
 }

@@ -26,6 +26,8 @@ public class Presentation {
     private String content;
     @Column(name = "presentation_url")
     private String presentationUrl;
+    @Column(name = "profile_img")
+    private String profileImg;
 
 
     // == 연관관계 메서드 == //

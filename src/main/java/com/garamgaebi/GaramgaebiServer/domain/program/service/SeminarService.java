@@ -1,7 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.GetProgramListRes;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +15,8 @@ public interface SeminarService {
     // 홈 화면 세미나 리스트
     public List<ProgramDto> findMainSeminarList();
     // 세미나 상세 페이지
-    public void findSeminarDetails(Long seminarIdx);
+    public ProgramInfoDto findSeminarDetails(ProgramDetailReq programDetailReq);
 
+    // 세미나 상세정보 발표자료 조회
+    List<PresentationDto> findSeminarPresentationList(Long seminarIdx);
 }
