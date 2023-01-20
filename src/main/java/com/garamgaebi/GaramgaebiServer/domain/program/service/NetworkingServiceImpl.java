@@ -2,17 +2,15 @@ package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.GetProgramListRes;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjuster;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -114,11 +112,39 @@ public class NetworkingServiceImpl implements NetworkingService {
         return programDtos;
     }
 
-    // 네트워킹 상세페이지
+    //
+    @Transactional
     @Override
-    public void findNetworkingDetails(Long networkingIdx) {
+    public ProgramInfoDto findNetworkingDetails(Long memberIdx, Long networkingIdx) {
+        Optional<Program> networkingWrapper = programRepository.findById(networkingIdx);
+        // 유저 유효성 검사
+        // Member를 직접 찾아야하나? -> 이 도메인에서 접근하는게 맞나?
+        // MemberRepository에 의존해야 하나? -> 너무 멀리가는 것 같은데
+        // 차라리 유효성 로직을 Apply에 위임하는게 낫나? -> 그럼 apply 도메인에 멤버 검사용 메서드가 추가될텐데 그건 좀 아닌듯
 
+        if(networkingWrapper.isEmpty()) {
+            // 없는 네트워킹 예외 처리
+        }
+        else {
+            if(networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
+                // 잘못된 요청 예외 처리
+                System.out.println("네트워킹이 아닌 프로그램 요청");
+            }
+        }
+
+        Program seminar = networkingWrapper.get();
+
+        return new ProgramInfoDto(
+                seminar.getIdx(),
+                seminar.getTitle(),
+                seminar.getDate(),
+                seminar.getLocation(),
+                seminar.getFee(),
+                seminar.getEndDate(),
+                seminar.getStatus(),
+                seminar.checkMemberCanApply(memberIdx));
     }
+
 
     // programDto 빌더
     private ProgramDto programDtoBuilder(Program program) {

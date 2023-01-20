@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.GetProgramListRes;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public interface SeminarService {
     // 홈 화면 세미나 리스트
     public List<ProgramDto> findMainSeminarList();
     // 세미나 상세 페이지
-    public void findSeminarDetails(Long seminarIdx);
+    public ProgramInfoDto findSeminarDetails(Long memberIdx, Long seminarIdx);
 
 }

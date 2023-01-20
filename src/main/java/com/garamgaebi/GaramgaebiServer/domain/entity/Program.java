@@ -120,5 +120,17 @@ public class Program {
 
     // == 비즈니스 로직 == //
 
+    public String checkMemberCanApply(Long memberIdx) {
+        if(getStatus() != ProgramStatus.OPEN)
+            return "UnableToApply";
+
+        for(Apply apply : this.applies) {
+            // 해당 멤버가 이미 신청한 경우
+            if(apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY) {
+                return "UnableToApply";
+            }
+        }
+        return "AbleToApply";
+    }
 
 }
