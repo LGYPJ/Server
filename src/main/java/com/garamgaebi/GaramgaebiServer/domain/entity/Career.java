@@ -12,11 +12,11 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "Career")
 public class Career{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "career_idx")
     private Long careerIdx;
 
@@ -44,10 +44,9 @@ public class Career{
 
     // == 연관관계 메서드 == //
     public void setMember(Member member){
-        if(this.member != null) {
-            this.member.getCareers().remove(this);
-        }
         this.member = member;
-        member.getCareers().add(this);
+        if (!member.getCareers().contains(this)) {
+            member.getCareers().add(this);
+        }
     }
 }

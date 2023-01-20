@@ -8,16 +8,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "QnA")
 public class QnA {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "qna_idx")
     private Long qna_idx;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx", nullable = false)
+    @JoinColumn(name = "member_idx")
     private Member member;
 
     @Column(nullable = false)
@@ -30,12 +30,11 @@ public class QnA {
     private String content;
 
     //== 연관관계 메서드 == //
-    public void setQnA(QnA qna){
-        if(this.member != null) {
-            this.member.getQnAs().remove(this);
-        }
+    public void setMember(Member member){
         this.member = member;
-        member.getQnAs().add(this);
+        if (!member.getQnAs().contains(this)) {
+            member.getQnAs().add(this);
+        }
     }
 }
 

@@ -10,12 +10,12 @@ import java.util.Date;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "Education")
 public class Education{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "education_idx")
     private Long educationIdx;
 
@@ -33,7 +33,7 @@ public class Education{
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,10 +42,9 @@ public class Education{
 
     //== 연관관계 메서드 == //
     public void setMember(Member member){
-        if(this.member != null) {
-            this.member.getEducations().remove(this);
-        }
         this.member = member;
-        member.getEducations().add(this);
+        if (!member.getEducations().contains(this)) {
+            member.getEducations().add(this);
+        }
     }
 }

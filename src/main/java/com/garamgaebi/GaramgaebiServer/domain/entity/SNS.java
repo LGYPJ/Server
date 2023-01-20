@@ -10,12 +10,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "SNS")
 public class SNS {
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sns_idx")
     private Long snsIdx;
 
@@ -23,16 +22,15 @@ public class SNS {
     private String address;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx")
+    @JoinColumn(name = "member_idx",nullable = false)
     private Member member;
 
     //== 연관관계 메서드 == //
-    public void setSNS(Member member){
-        if(this.member != null) {
-            this.member.getSNSs().remove(this);
-        }
+    public void setMember(Member member){
         this.member = member;
-        member.getSNSs().add(this);
+        if (!member.getSNSs().contains(this)) {
+            member.getSNSs().add(this);
+        }
     }
 
 }
