@@ -134,4 +134,22 @@ public class Program {
         return "AbleToApply";
     }
 
+    // 참가자 리스트
+    public List<Member> getParticipants() {
+        List<Member> participants = new ArrayList<Member>();
+
+        for(Apply apply : this.applies) {
+            if(apply.getStatus() == ApplyStatus.APPLY || apply.getStatus() == ApplyStatus.APPLY_CONFIRM) {
+                // 탈퇴한 유저인 경우
+                if(apply.getMember().getStatus() == MemberStatus.DEACTIVE) {
+                    participants.add(null);
+                }
+                else {
+                    participants.add(apply.getMember());
+                }
+            }
+        }
+        return participants;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.dto;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class ProgramDto {
     private String title;
     private LocalDateTime date;
     private String location;
+    private ProgramType type;
     private String payment;
     private String status;
 }
