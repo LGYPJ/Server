@@ -37,6 +37,7 @@ public class SeminarController {
         return seminarService.findMainSeminarList();
     }
 
+    // 세미나 상세정보
     @GetMapping("/info")
     public ProgramInfoDto getSeminarDetailInfo(@RequestBody ProgramDetailReq programDetailReq) {
         // validation 처리
@@ -47,6 +48,16 @@ public class SeminarController {
         return seminarService.findSeminarDetails(programDetailReq);
     }
 
+    // 세미나 신청자 리스트
+    @GetMapping("/{seminar-idx}/participants")
+    public List<ParticipantDto> getSemianrParticipantList(@PathVariable(name = "seminar-idx") Long seminarIdx) {
+
+        // validation 처리
+
+        return seminarService.findSeminarParticipantsList(seminarIdx);
+    }
+
+    // 세미나 발표 리스트
     @GetMapping("/{seminar-idx}/presentations")
     public List<PresentationDto> getSeminarPresentationList(@PathVariable(name = "seminar-idx") Long seminarIdx) {
         // validation 처리

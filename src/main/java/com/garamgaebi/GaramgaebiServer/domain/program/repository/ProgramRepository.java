@@ -1,10 +1,12 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.repository;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -20,5 +22,10 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     public Program findFirstByDateAfterAndProgramTypeOrderByDateAsc(LocalDateTime start, ProgramType programType);
 
     public List<Program> findAllByDateAfterAndProgramTypeOrderByDateAsc(LocalDateTime now, ProgramType programType);
+
+    @Query("select p from Program p inner join Apply a where a.member = :member and (a.status = 'APPLY' or a.status = 'APPLY_CONFIRM') and p.date > current_timestamp order by p.date asc")
+    public List<Program> findMemberReadyPrograms(@Param("member") Member member);
+    @Query("select p from Program p inner join Apply a where a.member = :member and (a.status = 'APPLY' or a.status = 'APPLY_CONFIRM') and p.date < current_timestamp order by p.date desc")
+    public List<Program> findMemberClosedPrograms(@Param("member") Member member);
 
 }
