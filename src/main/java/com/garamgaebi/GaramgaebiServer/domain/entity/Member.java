@@ -1,21 +1,17 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "Member")
-public class Member {
+public class Member extends BaseTimeEntity {
     @Id
     @Column(name = "member_idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,14 +35,6 @@ public class Member {
     @Column(name = "profile_url",nullable = false)
     private String profileUrl;
 
-    @Column(name="created_at",nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date createdAt;
-
-    @Column(name="updated_at",nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date updatedAt;
-
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
@@ -60,6 +48,23 @@ public class Member {
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<QnA> QnAs = new ArrayList<QnA>();
+
+    @Builder
+    public Member(String nickname,
+                  String profileEmail,
+                  String socialEmail,
+                  String uniEmail,
+                  String content,
+                  String profileUrl,
+                  MemberStatus status) {
+        this.nickname = nickname;
+        this.profileEmail = profileEmail;
+        this.socialEmail = socialEmail;
+        this.uniEmail = uniEmail;
+        this.content = content;
+        this.profileUrl = profileUrl;
+        this.status = status;
+    }
 
     // == 연관관계 메서드 -- //
     public void addEducation(Education education) {

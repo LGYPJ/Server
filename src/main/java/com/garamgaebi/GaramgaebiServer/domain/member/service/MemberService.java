@@ -1,8 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.member.dto.PostMemberReq;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,13 +11,23 @@ import java.util.Optional;
 
 //@Transactional
 @Service
+@RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
 
-    @Autowired
-    public MemberService(MemberRepository memberRepository) { this.memberRepository = memberRepository; }
+    public boolean checkNicknameDuplication(String nickname) {
 
-    public Optional<Member> checkNicknameDuplication(String nickname) {
-        return memberRepository.findByNickname(nickname);
+        Optional<Member> result = memberRepository.findByNickname(nickname);
+
+        if (result == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Transactional
+    public Long postMember(PostMemberReq postMemberReq) {
+        return memberRepository.save(postMemberReq.toEntity()).getMemberIdx();
     }
 }

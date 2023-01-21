@@ -12,9 +12,8 @@ public class EmailController {
 
     private final EmailService emailService;
 
-    @PostMapping("emailconfirm")
-    @ResponseBody
-    public String emailConfirm(@RequestParam("email") String email) throws Exception {
+    @PostMapping("/{email}/emailconfirm")
+    public String emailConfirm(@PathVariable(name = "email") String email) throws Exception {
         String confirm = emailService.sendEmail(email);
 
         return confirm;
