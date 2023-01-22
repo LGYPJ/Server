@@ -30,4 +30,17 @@ public class MemberService {
     public Long postMember(PostMemberReq postMemberReq) {
         return memberRepository.save(postMemberReq.toEntity()).getMemberIdx();
     }
+
+    public boolean inactivedMember(Long memberIdx) {
+        Member member = memberRepository.findById(memberIdx)
+                .orElseThrow(() -> new IllegalArgumentException("No exist member."));
+
+        System.out.println(member.getStatus());
+
+        member.inactivedMember();
+
+        System.out.println(member.getStatus());
+
+        return true;
+    }
 }
