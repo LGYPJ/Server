@@ -30,7 +30,7 @@ public class ProgramServiceImpl implements ProgramService {
         }
         else {
             // 멤버 entity 안에 isActive() 메서드 넣는게 나을지 고민
-            if(member.getStatus() == MemberStatus.DEACTIVE) {
+            if(member.getStatus() == MemberStatus.INACTIVE) {
                 // 탈퇴회원 예외 처리
             }
         }
@@ -56,7 +56,7 @@ public class ProgramServiceImpl implements ProgramService {
         }
         else {
             // 멤버 entity 안에 isActive() 메서드 넣는게 나을지 고민
-            if(member.getStatus() == MemberStatus.DEACTIVE) {
+            if(member.getStatus() == MemberStatus.INACTIVE) {
                 // 탈퇴회원 예외 처리
             }
         }

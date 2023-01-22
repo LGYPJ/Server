@@ -25,4 +25,9 @@ public class MemberController {
     public Long postMember(@RequestBody PostMemberReq postMemberReq) {
         return memberService.postMember(postMemberReq);
     }
+
+    @PatchMapping("/{memberIdx}/member-inactived")
+    public boolean inactivedMember(@PathVariable(name = "memberIdx") Long memberIdx) {
+        return memberService.inactivedMember(memberIdx);
+    }
 }

@@ -6,5 +6,5 @@ package com.garamgaebi.GaramgaebiServer.domain.entity;
 - DEACTIVE: 비활성화 (탈퇴)
  */
 public enum MemberStatus {
-    ACTIVE, DEACTIVE
+    ACTIVE, INACTIVE
 }
