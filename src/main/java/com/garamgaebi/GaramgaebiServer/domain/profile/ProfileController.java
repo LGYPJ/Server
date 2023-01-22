@@ -1,13 +1,12 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile;
 
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.PostCareerReq;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.PostEducationReq;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.PostQnaReq;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.PostSNSReq;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.service.ProfileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -70,5 +69,36 @@ public class ProfileController {
     public String saveCareer(@RequestBody PostCareerReq req) {
         profileService.saveCareer(req);
         return "경력 등록 완료";
+    }
+
+    /**
+     * GET 프로필 상세조회 API
+     */
+    @ResponseBody
+    @GetMapping("/{memberIdx}")
+    public GetProfileRes getProfile(@PathVariable long memberIdx) {
+        GetProfileRes res = profileService.getProfile(memberIdx);
+        return res;
+    }
+
+    /**
+     * GET 프로필 10명 추천 API
+     * 10명 추천의 난수? 기준 정하기
+     */
+    @ResponseBody
+    @GetMapping("/profiles")
+    public List<GetProfilesRes> getProfiles() {
+        List<GetProfilesRes> resList = profileService.getProfiles();
+        return resList;
+    }
+
+    /**
+     * POST 프로필 수정 API
+     */
+    @ResponseBody
+    @PostMapping("/edit/{memberIdx}")
+    public String updateProfile(@RequestBody PostUpdateProfileReq req) {
+        profileService.updateProfile(req);
+        return "프로필 수정 완료";
     }
 }
