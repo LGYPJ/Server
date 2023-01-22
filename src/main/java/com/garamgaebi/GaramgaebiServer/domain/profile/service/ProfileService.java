@@ -1,14 +1,14 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.PostCareerReq;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.PostEducationReq;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.PostQnaReq;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.PostSNSReq;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -80,5 +80,80 @@ public class ProfileService {
         }
 
         profileRepository.saveCareer(career);
+    }
+
+    // GET 유저프로필조회 API
+    @Transactional
+    public GetProfileRes getProfile(long memberIdx) {
+
+        Member member = profileRepository.findMember(memberIdx);
+        GetProfileRes res = new GetProfileRes();
+
+        res.setMemberIdx(memberIdx);
+        res.setNickName(member.getNickname());
+        res.setProfileEmail(member.getProfileEmail());
+
+        List<Education> major = profileRepository.findIsLearning(memberIdx);
+        List<Career> career = profileRepository.findIsWorking(memberIdx);
+        if (career.isEmpty()) {
+            res.setBelong(major.get(0).getInstitution());
+            res.setBelong2(major.get(0).getMajor());
+        } else {
+            res.setBelong(career.get(0).getCompany());
+            res.setBelong2(career.get(0).getPosition());
+        }
+
+        res.setContent(member.getContent());
+        res.setSNSs(profileRepository.findAllSNS(memberIdx));
+        res.setCareers(profileRepository.findAllCareer(memberIdx));
+        res.setEducations(profileRepository.findAllEducation(memberIdx));
+
+        return res;
+    }
+
+    //GET 유저프로필 10명 API
+    @Transactional
+    public List<GetProfilesRes> getProfiles() {
+
+        List<GetProfilesRes> resList = new ArrayList<>();
+        List<Member> members = profileRepository.findMembers();
+        for (int i = 0; i < members.size(); i++) {
+
+            GetProfilesRes res = new GetProfilesRes();
+            Long memberIdx = members.get(i).getMemberIdx();
+            String nickname = members.get(i).getNickname();
+            res.setMemberIdx(memberIdx);
+            res.setNickName(nickname);
+            List<Education> major = profileRepository.findIsLearning(memberIdx);
+            List<Career> career = profileRepository.findIsWorking(memberIdx);
+            System.out.println(major.size());
+            System.out.println(career.size());
+
+            if (career.isEmpty() && major.isEmpty()) {
+                res.setBelong("소속이없습니다.");
+                res.setBelong2("소속이없습니다.");
+                resList.add(res);
+                continue;
+            }
+
+            if (career.size() > 0) {
+                res.setBelong(career.get(0).getCompany());
+                res.setBelong2(career.get(0).getPosition());
+            } else {
+                res.setBelong(major.get(0).getInstitution());
+                res.setBelong2(major.get(0).getMajor());
+            }
+            resList.add(res);
+        }
+        return resList;
+    }
+
+    // POST 유저 프로필 수정 API
+    @Transactional
+    public void updateProfile(PostUpdateProfileReq req) {
+        Member member = profileRepository.findMember(req.getMemberIdx());
+        member.setNickname(req.getNickName());
+        member.setProfileEmail(req.getProfileEmail());
+        member.setContent(req.getContent());
     }
 }
