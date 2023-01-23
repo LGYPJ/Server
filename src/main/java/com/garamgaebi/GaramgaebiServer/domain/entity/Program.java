@@ -140,7 +140,7 @@ public class Program {
         for(Apply apply : this.applies) {
             if(apply.getStatus() == ApplyStatus.APPLY || apply.getStatus() == ApplyStatus.APPLY_CONFIRM) {
                 // 탈퇴한 유저인 경우
-                if(apply.getMember().getStatus() == MemberStatus.DEACTIVE) {
+                if(apply.getMember().getStatus() == MemberStatus.INACTIVE) {
                     participants.add(null);
                 }
                 else {
