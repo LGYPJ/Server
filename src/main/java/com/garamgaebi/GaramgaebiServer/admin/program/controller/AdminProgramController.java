@@ -1,7 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.admin.program.controller;
 
 import com.garamgaebi.GaramgaebiServer.admin.program.dto.*;
+import com.garamgaebi.GaramgaebiServer.admin.program.repository.AdminProgramRepository;
 import com.garamgaebi.GaramgaebiServer.admin.program.service.AdminProgramService;
+import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminProgramController {
 
     private final AdminProgramService adminProgramService;
+    private final AdminProgramRepository adminProgramRepository;
+    private final ProgramRepository programRepository;
 
     // 세미나 등록
     @PostMapping("/seminar")
@@ -83,6 +87,15 @@ public class AdminProgramController {
         // validation
 
         adminProgramService.deletePresentation(presentationIdx);
+    }
+
+    // 프로그램 오픈
+    @PatchMapping("/program/{program-idx}/open")
+    @ResponseBody
+    public Long openProgram(@PathVariable(name = "program-idx") Long programIdx) {
+        // validation
+
+        return adminProgramService.openProgram(programIdx);
     }
 
 }

@@ -7,7 +7,6 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.Presentation;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
-import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +26,16 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     public Long addSeminar(SeminarDto seminarDto) {
         // validation
 
-        Program program = adminProgramRepository.save(seminarDto.toEntity());
+
+        Program program = new Program();
+        program.setTitle(seminarDto.getTitle());
+        program.setDate(seminarDto.getDate());
+        program.setFee(seminarDto.getFee());
+        program.setLocation(seminarDto.getLocation());
+        program.setStatus(ProgramStatus.READY_TO_OPEN);
+        program.setProgramType(ProgramType.SEMINAR);
+        program = adminProgramRepository.save(program);
+
         return program.getIdx();
     }
 
@@ -94,7 +102,15 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     public Long addNetworking(NetworkingDto networkingDto) {
         // validation
 
-        Program program = adminProgramRepository.save(networkingDto.toEntity());
+        Program program = new Program();
+        program.setTitle(networkingDto.getTitle());
+        program.setDate(networkingDto.getDate());
+        program.setFee(networkingDto.getFee());
+        program.setLocation(networkingDto.getLocation());
+        program.setStatus(ProgramStatus.READY_TO_OPEN);
+        program.setProgramType(ProgramType.NETWORKING);
+        program = adminProgramRepository.save(program);
+
         return program.getIdx();
     }
 
@@ -141,7 +157,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     }
 
     // 글 삭제
-    @Transactional()
+    @Transactional
     @Override
     public void deleteProgram(Long programIdx) {
         // validation
@@ -154,5 +170,23 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
         Program program = programWrapper.get();
         program.setStatus(ProgramStatus.DELETE);
+    }
+
+    // 프로그램 오픈
+    @Transactional
+    @Override
+    public Long openProgram(Long programIdx) {
+        // validation
+
+        Optional<Program> programWrapper = adminProgramRepository.findById(programIdx);
+
+        if(programWrapper.isEmpty()) {
+            // 없는 프로그램 예외처리
+        }
+
+        Program program = programWrapper.get();
+        program.setStatus(ProgramStatus.OPEN);
+
+        return program.getIdx();
     }
 }

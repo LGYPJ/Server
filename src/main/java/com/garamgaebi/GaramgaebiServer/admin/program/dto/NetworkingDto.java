@@ -20,16 +20,4 @@ public class NetworkingDto {
     private String location;
     private Integer fee;
 
-    public Program toEntity() {
-        Program program = new Program();
-
-        program.setTitle(this.title);
-        program.setDate(this.date);
-        program.setLocation(this.location);
-        program.setFee(this.fee);
-        program.setStatus(ProgramStatus.READY_TO_OPEN);
-        program.setProgramType(ProgramType.NETWORKING);
-
-        return program;
-    }
 }

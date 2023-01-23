@@ -27,4 +27,7 @@ public interface AdminProgramService {
 
     // 글 삭제
     void deleteProgram(Long programIdx);
+
+    // 프로그램 오픈
+    Long openProgram(Long programIdx);
 }
