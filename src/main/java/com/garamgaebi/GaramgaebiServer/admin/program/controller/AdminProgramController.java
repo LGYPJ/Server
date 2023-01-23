@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class AdminProgramController {
 
     private final AdminProgramService adminProgramService;
-    private final AdminProgramRepository adminProgramRepository;
-    private final ProgramRepository programRepository;
 
     // 세미나 등록
     @PostMapping("/seminar")
@@ -83,7 +81,7 @@ public class AdminProgramController {
     // 발표자료 삭제
     @DeleteMapping("/seminar/presentation/{presentation-idx}")
     @ResponseBody
-    public void deletePresenatation(@PathVariable Long presentationIdx) {
+    public void deletePresenatation(@PathVariable(name = "presentation-idx") Long presentationIdx) {
         // validation
 
         adminProgramService.deletePresentation(presentationIdx);

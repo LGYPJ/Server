@@ -6,6 +6,7 @@ import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileReposito
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,20 +55,28 @@ public class SeminarServiceImpl implements SeminarService {
     @Override
     public ProgramDto findThisMonthSeminar() {
 
-        Program thisMonthProgram = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.SEMINAR);
+        List<Program> thisMonthProgram = programRepository.findThisMonthProgram(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.SEMINAR, PageRequest.of(0,1));
 
-        return programDtoBuilder(thisMonthProgram);
+        if(thisMonthProgram.isEmpty()) {
+            return null;
+        }
+
+        return programDtoBuilder(thisMonthProgram.get(0));
     }
 
 
-    // 예정된 세미나 조회
+    // 가장 빠른 예정된 세미나 조회
     @Transactional(readOnly = true)
     @Override
     public ProgramDto findReadySeminar() {
 
-        Program readyProgram = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.SEMINAR);
+        List<Program> readyProgram = programRepository.findReadyProgram(getLastDayOfMonth(), ProgramType.SEMINAR, PageRequest.of(0,1));
 
-        return programDtoBuilder(readyProgram);
+        if(readyProgram.isEmpty()) {
+            return null;
+        }
+
+        return programDtoBuilder(readyProgram.get(0));
     }
 
 
@@ -77,7 +86,7 @@ public class SeminarServiceImpl implements SeminarService {
     public List<ProgramDto> findClosedSeminarsList() {
         // validation 처리
 
-        List<Program> closePrograms = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.SEMINAR);
+        List<Program> closePrograms = programRepository.findClosedProgramList(LocalDateTime.now(), ProgramType.SEMINAR);
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         for(Program program : closePrograms) {
@@ -92,14 +101,14 @@ public class SeminarServiceImpl implements SeminarService {
     @Override
     public List<ProgramDto> findMainSeminarList() {
 
-        Program thisMonthSeminar = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.SEMINAR);
-        List<Program> readySeminar = programRepository.findAllByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.SEMINAR);
+        ProgramDto thisMonthSeminar = findThisMonthSeminar();
+        List<Program> readySeminar = programRepository.findReadyProgramList(getLastDayOfMonth(), ProgramType.SEMINAR);
         List<ProgramDto> closeProgramDtos = findClosedSeminarsList();
 
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         if(thisMonthSeminar != null) {
-            programDtos.add(programDtoBuilder(thisMonthSeminar));
+            programDtos.add(thisMonthSeminar);
         }
 
         for(Program program : readySeminar) {

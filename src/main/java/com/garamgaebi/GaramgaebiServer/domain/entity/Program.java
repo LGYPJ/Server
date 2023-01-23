@@ -15,11 +15,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter @Setter
 public class Program {
-    // 오픈일 정책 : 모임 날짜 1달 전
-    @Transient
-    private static final int openPolicyMonth = 1;
 
-    // 모임 마감일 정책 : 모임 날짜 1주 전
+    // 모임 신청 마감일 정책 : 모임 날짜 1주 전
     @Transient
     private static final int  closePolicyWeek = 1;
 
@@ -82,29 +79,20 @@ public class Program {
 
     // 프로그램 상태 조회
     public ProgramStatus getStatus() {
-        if(this.status != ProgramStatus.CLOSED_CONFIRM) {
-            if(LocalDateTime.now().isBefore(getOpenDate())) {
-                setStatus(ProgramStatus.READY_TO_OPEN);
-            }
-            else if(LocalDateTime.now().isBefore(getEndDate())) {
-                setStatus(ProgramStatus.OPEN);
-            }
-            else if(!getIsPay().equals("FREE")) {
-                setStatus(ProgramStatus.CLOSED);
-            }
-            else {
-                setStatus(ProgramStatus.CLOSED_CONFIRM);
+        if(this.status != ProgramStatus.DELETE) {
+            if (LocalDateTime.now().isAfter(getEndDate())) {
+                if (this.status == ProgramStatus.CLOSED_CONFIRM || this.getIsPay().equals("FREE")){
+                    this.setStatus(ProgramStatus.CLOSED_CONFIRM);
+                }
+                else {
+                    this.setStatus(ProgramStatus.CLOSED);
+                }
             }
         }
         return status;
     }
 
-    // 오픈일 조회
-    public LocalDateTime getOpenDate() {
-        return getDate().minusMonths(openPolicyMonth);
-    }
-
-    // 마감일 조회
+    // 신청 마감일 조회
     public LocalDateTime getEndDate() {
         return getDate().minusWeeks(closePolicyWeek);
     }

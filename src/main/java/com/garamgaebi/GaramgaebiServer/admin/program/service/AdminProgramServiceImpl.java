@@ -71,8 +71,12 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
         Presentation presentation = presentationWrapper.get();
 
-        presentation.builder(presentationDto);
-        presentation = adminPresentationRepository.save(presentation);
+        presentation.setTitle(presentationDto.getTitle());
+        presentation.setNickname(presentationDto.getNickname());
+        presentation.setOrganization(presentationDto.getOrganization());
+        presentation.setProfileImg(presentationDto.getProfileImgUrl());
+        presentation.setContent(presentationDto.getContent());
+        presentation.setPresentationUrl(presentationDto.getPresentationUrl());
 
         return presentation.getIdx();
 
@@ -143,7 +147,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
         // validation
         if (programWrapper.isEmpty()) {
-            // 없는 네트워킹 예외처리
+            // 없는 프로그램 예외처리
         }
 
         Program program = programWrapper.get();
