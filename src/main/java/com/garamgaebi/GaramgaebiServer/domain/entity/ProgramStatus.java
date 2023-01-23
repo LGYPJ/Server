@@ -6,5 +6,5 @@ package com.garamgaebi.GaramgaebiServer.domain.entity;
 // CLOSED : 마감
 // CLOSED_CONFIRM : 마감 확인(환불 처리 완료)
 public enum ProgramStatus {
-    OPEN, READY_TO_OPEN, CLOSED, CLOSED_CONFIRM
+    OPEN, READY_TO_OPEN, CLOSED, CLOSED_CONFIRM, DELETE
 }

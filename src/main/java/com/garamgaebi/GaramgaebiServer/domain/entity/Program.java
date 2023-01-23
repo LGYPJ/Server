@@ -1,10 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Program")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter @Setter
 public class Program {
@@ -45,7 +44,7 @@ public class Program {
     @OneToMany(mappedBy = "program")
     private List<Apply> applies = new ArrayList<Apply>();
 
-    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "program", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Presentation> presentations = new ArrayList<Presentation>();
 
 

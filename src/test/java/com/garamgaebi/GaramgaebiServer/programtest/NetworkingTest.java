@@ -48,26 +48,6 @@ public class NetworkingTest {
 
 
     @Test
-    public void 네트워킹_모아보기() {
-        // given
-        makeDummy(overdueSeminar1, overdueSeminar2, thisMonthSeminar, nextMonthSeminar, twoMonthNextSeminar,
-                overdueNetworking1, overdueNetworking2, thisMonthNetworking, nextMonthNetworking, twoMonthNextNetworking);
-
-        // when
-        GetProgramListRes getProgramListRes = networkingService.findNetworkingCollectionList();
-
-        // then
-        Assertions.assertThat(getProgramListRes.getThisMonthProgram().getProgramIdx()).isEqualTo(thisMonthNetworking.getIdx());
-        Assertions.assertThat(getProgramListRes.getNextProgram().getProgramIdx()).isEqualTo(nextMonthNetworking.getIdx());
-        Assertions.assertThat(getProgramListRes.getClosedProgram().get(0).getProgramIdx()).isEqualTo(overdueNetworking2.getIdx());
-        Assertions.assertThat(getProgramListRes.getClosedProgram().get(1).getProgramIdx()).isEqualTo(overdueNetworking1.getIdx());
-
-        System.out.println(getProgramListRes.getThisMonthProgram());
-        System.out.println(getProgramListRes.getNextProgram());
-        System.out.println(getProgramListRes.getClosedProgram());
-    }
-
-    @Test
     public void 홈화면_네트워킹_리스트() {
         // given
         makeDummy(overdueSeminar1, overdueSeminar2, thisMonthSeminar, nextMonthSeminar, twoMonthNextSeminar,
