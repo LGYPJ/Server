@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
-@Configuration
+//@Configuration
 @PropertySource("classpath:application-garamgaebi.properties")
 public class MailConfig {
     @Value("${spring.mail.host}")
