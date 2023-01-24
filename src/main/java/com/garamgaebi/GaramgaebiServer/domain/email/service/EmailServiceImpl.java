@@ -12,7 +12,7 @@ import java.util.Random;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-    @Autowired
+    //@Autowired
     JavaMailSender emailSender;
 
     public static final String ePw = createKey();
