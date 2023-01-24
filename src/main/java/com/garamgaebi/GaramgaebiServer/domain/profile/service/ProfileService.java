@@ -16,7 +16,7 @@ import java.util.List;
 public class ProfileService {
     private final ProfileRepository profileRepository;
 
-    // POST 고객센터(QnA)신청 API
+    /** POST 고객센터(QnA)신청 API*/
     @Transactional
     public void saveQna(PostQnaReq req) {
 
@@ -30,7 +30,7 @@ public class ProfileService {
         profileRepository.saveQna(qna);
     }
 
-    // POST SNS추가 API
+    /** POST SNS추가 API*/
     @Transactional
     public void saveSns(PostSNSReq req) {
 
@@ -42,7 +42,7 @@ public class ProfileService {
         profileRepository.saveSns(sns);
     }
 
-    // POST 교육추가 API
+    /** POST 교육추가 API*/
     @Transactional
     public void saveEducation(PostEducationReq req) {
 
@@ -62,7 +62,7 @@ public class ProfileService {
         profileRepository.saveEducation(education);
     }
 
-    // POST 경력추가 API
+    /** POST 경력추가 API*/
     @Transactional
     public void saveCareer(PostCareerReq req) {
 
@@ -82,7 +82,7 @@ public class ProfileService {
         profileRepository.saveCareer(career);
     }
 
-    // GET 유저프로필조회 API
+    /** GET 유저프로필조회 API*/
     @Transactional
     public GetProfileRes getProfile(long memberIdx) {
 
@@ -92,17 +92,7 @@ public class ProfileService {
         res.setMemberIdx(memberIdx);
         res.setNickName(member.getNickname());
         res.setProfileEmail(member.getProfileEmail());
-
-        List<Education> major = profileRepository.findIsLearning(memberIdx);
-        List<Career> career = profileRepository.findIsWorking(memberIdx);
-        if (career.isEmpty()) {
-            res.setBelong(major.get(0).getInstitution());
-            res.setBelong2(major.get(0).getMajor());
-        } else {
-            res.setBelong(career.get(0).getCompany());
-            res.setBelong2(career.get(0).getPosition());
-        }
-
+        findCareerOrEducation(memberIdx, res);
         res.setContent(member.getContent());
         res.setSNSs(profileRepository.findAllSNS(memberIdx));
         res.setCareers(profileRepository.findAllCareer(memberIdx));
@@ -111,7 +101,23 @@ public class ProfileService {
         return res;
     }
 
-    //GET 유저프로필 10명 API
+    /** 소속중인 경력이나 교육 찾기 메서드(유저프로필조회 API)*/
+    private void findCareerOrEducation(long memberIdx, GetProfileRes res) {
+        List<Education> major = profileRepository.findIsLearning(memberIdx);
+        List<Career> career = profileRepository.findIsWorking(memberIdx);
+        if (career.isEmpty() != true) {
+            res.setBelong(career.get(0).getCompany());
+            res.setBelong2(career.get(0).getPosition());
+        } else if(major.isEmpty() != true) {
+            res.setBelong(major.get(0).getInstitution());
+            res.setBelong2(major.get(0).getMajor());
+        } else if (career.isEmpty() && major.isEmpty()) {
+            res.setBelong("소속이 없습니다.");
+            res.setBelong2("소속이 없습니다.");
+        }
+    }
+
+    /** GET 유저프로필 10명 API*/
     @Transactional
     public List<GetProfilesRes> getProfiles() {
 
@@ -126,8 +132,6 @@ public class ProfileService {
             res.setNickName(nickname);
             List<Education> major = profileRepository.findIsLearning(memberIdx);
             List<Career> career = profileRepository.findIsWorking(memberIdx);
-            System.out.println(major.size());
-            System.out.println(career.size());
 
             if (career.isEmpty() && major.isEmpty()) {
                 res.setBelong("소속이없습니다.");
@@ -135,7 +139,6 @@ public class ProfileService {
                 resList.add(res);
                 continue;
             }
-
             if (career.size() > 0) {
                 res.setBelong(career.get(0).getCompany());
                 res.setBelong2(career.get(0).getPosition());
@@ -148,7 +151,7 @@ public class ProfileService {
         return resList;
     }
 
-    // POST 유저 프로필 수정 API
+    /** POST 유저 프로필 수정 API*/
     @Transactional
     public void updateProfile(PostUpdateProfileReq req) {
         Member member = profileRepository.findMember(req.getMemberIdx());
