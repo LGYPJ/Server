@@ -1,15 +1,15 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDetailReq;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
+import com.garamgaebi.GaramgaebiServer.global.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.Optional;
 public class NetworkingServiceImpl implements NetworkingService {
 
     private final ProgramRepository programRepository;
-    private final ProfileRepository profileRepository;
+    private final MemberRepository memberRepository;
 
     /*
     // 세미나 모아보기 조회
@@ -134,31 +134,18 @@ public class NetworkingServiceImpl implements NetworkingService {
         Long memberIdx = programDetailReq.getMemberIdx();
         Long networkingIdx = programDetailReq.getProgramIdx();
 
-        Member member = profileRepository.findMember(memberIdx);
-        // 유저 유효성 검사
-        // Member를 직접 찾아야하나? -> 이 도메인에서 접근하는게 맞나?
-        // MemberRepository에 의존해야 하나? -> 너무 멀리가는 것 같은데
-        // 차라리 유효성 로직을 Apply에 위임하는게 낫나? -> 그럼 apply 도메인에 멤버 검사용 메서드가 추가될텐데 그건 좀 아닌듯
-        if(member == null) {
-            // 예외 처리
-        }
-        else {
-            // 멤버 entity 안에 isActive() 메서드 넣는게 나을지 고민
-            if(member.getStatus() == MemberStatus.INACTIVE) {
-                // 탈퇴회원 예외 처리
-            }
+        Optional<Member> member = memberRepository.findById(memberIdx);
+
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            // 없는 멤버 예외 처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
         Optional<Program> networkingWrapper = programRepository.findById(networkingIdx);
 
-        if(networkingWrapper.isEmpty()) {
+        if(networkingWrapper.isEmpty() || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
             // 없는 네트워킹 예외 처리
-        }
-        else {
-            if(networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
-                // 잘못된 요청 예외 처리
-                System.out.println("네트워킹이 아닌 프로그램 요청");
-            }
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
 
         Program seminar = networkingWrapper.get();
@@ -181,13 +168,9 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         Optional<Program> networkingWrapper = programRepository.findById(networkingIdx);
 
-        if(networkingWrapper.isEmpty()) {
+        if(networkingWrapper.isEmpty() || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
             // 없는 네트워킹 예외 처리
-        }
-        else {
-            if(networkingWrapper.get().getProgramType() != ProgramType.SEMINAR) {
-                // 예외 처리
-            }
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
 
         Program seminar = networkingWrapper.get();
