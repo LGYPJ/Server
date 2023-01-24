@@ -11,6 +11,7 @@ import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,30 +58,38 @@ public class NetworkingServiceImpl implements NetworkingService {
     @Override
     public ProgramDto findThisMonthNetworking() {
 
-        Program thisMonthProgram = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING);
+        List<Program> thisMonthProgram = programRepository.findThisMonthProgram(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING, PageRequest.of(0,1));
 
-        return programDtoBuilder(thisMonthProgram);
+        if(thisMonthProgram.isEmpty()) {
+            return null;
+        }
+
+        return programDtoBuilder(thisMonthProgram.get(0));
     }
 
 
-    // 예정된 세미나 조회
+    // 가장 빠른 예정된 네트워킹 조회
     @Transactional(readOnly = true)
     @Override
     public ProgramDto findReadyNetworking() {
 
-        Program readyProgram = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.NETWORKING);
+        List<Program> readyProgram = programRepository.findReadyProgram(getLastDayOfMonth(), ProgramType.NETWORKING, PageRequest.of(0,1));
 
-        return programDtoBuilder(readyProgram);
+        if(readyProgram.isEmpty()) {
+            return null;
+        }
+
+        return programDtoBuilder(readyProgram.get(0));
     }
 
 
-    // 마감된 세미나 리스트 조회
+    // 마감된 네트워킹 리스트 조회
     @Transactional(readOnly = true)
     @Override
     public List<ProgramDto> findClosedNetworkingList() {
         // validation 처리
 
-        List<Program> closePrograms = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.NETWORKING);
+        List<Program> closePrograms = programRepository.findClosedProgramList(LocalDateTime.now(), ProgramType.NETWORKING);
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         for(Program program : closePrograms) {
@@ -90,29 +99,29 @@ public class NetworkingServiceImpl implements NetworkingService {
         return programDtos;
     }
 
-    // 홈 화면 세미나 조회
+    // 홈 화면 네트워킹 리스트 조회
     @Transactional(readOnly = true)
     @Override
     public List<ProgramDto> findMainNetworkingList() {
 
-        Program thisMonthNetworking = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING);
+        ProgramDto thisMonthNetworking = findThisMonthNetworking();
 
-        List<Program> readyNetworkings = programRepository.findAllByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.NETWORKING);
+        List<Program> readyNetworkings = programRepository.findReadyProgramList(getLastDayOfMonth(), ProgramType.NETWORKING);
 
-        List<Program> closeNetworkings = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.NETWORKING);
+        List<ProgramDto> closeNetworkings = findClosedNetworkingList();
 
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         if(thisMonthNetworking != null) {
-            programDtos.add(programDtoBuilder(thisMonthNetworking));
+            programDtos.add(thisMonthNetworking);
         }
 
         for(Program program : readyNetworkings) {
             programDtos.add(programDtoBuilder(program));
         }
 
-        for(Program program : closeNetworkings) {
-            programDtos.add(programDtoBuilder(program));
+        for(ProgramDto programDto : closeNetworkings) {
+            programDtos.add(programDto);
         }
 
         return programDtos;
@@ -173,7 +182,7 @@ public class NetworkingServiceImpl implements NetworkingService {
         Optional<Program> networkingWrapper = programRepository.findById(networkingIdx);
 
         if(networkingWrapper.isEmpty()) {
-            // 없는 세미나 예외 처리
+            // 없는 네트워킹 예외 처리
         }
         else {
             if(networkingWrapper.get().getProgramType() != ProgramType.SEMINAR) {

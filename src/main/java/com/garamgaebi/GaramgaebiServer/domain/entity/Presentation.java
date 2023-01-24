@@ -1,15 +1,15 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
+import com.garamgaebi.GaramgaebiServer.admin.program.dto.PresentationDto;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "Presentation")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter @Setter
+@Builder(builderMethodName = "PresentationBuilder")
 public class Presentation {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +17,7 @@ public class Presentation {
     private Long idx;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "program_idx")
+    @JoinColumn(name = "programIdx")
     private Program program;
 
     private String title;
@@ -29,9 +29,20 @@ public class Presentation {
     @Column(name = "profile_img")
     private String profileImg;
 
+    public static PresentationBuilder builder(PresentationDto presentationDto) {
+        return PresentationBuilder()
+                .idx(presentationDto.getIdx())
+                .program(presentationDto.getProgram())
+                .title(presentationDto.getTitle())
+                .nickname(presentationDto.getNickname())
+                .organization(presentationDto.getOrganization())
+                .content(presentationDto.getContent())
+                .presentationUrl(presentationDto.getPresentationUrl())
+                .profileImg(presentationDto.getProfileImgUrl());
+    }
 
     // == 연관관계 메서드 == //
-    public void setSeminar(Program program) {
+    public void setProgram(Program program) {
         // 기존에 연관관계가 있었다면 끊고
         if(this.program != null) {
             this.program.getPresentations().remove(this);
@@ -43,5 +54,7 @@ public class Presentation {
             program.getPresentations().add(this);
         }
     }
+
+
 
 }
