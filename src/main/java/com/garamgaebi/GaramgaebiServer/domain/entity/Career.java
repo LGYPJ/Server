@@ -26,6 +26,10 @@ public class Career{
     @Column(name = "position", nullable = false)
     private String position;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "is_working")
+    private IsWorking isWorking;
+
     @Column(name = "start_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
@@ -33,11 +37,6 @@ public class Career{
     @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "is_working")
-    private IsWorking isWorking;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_idx")
     private Member member;

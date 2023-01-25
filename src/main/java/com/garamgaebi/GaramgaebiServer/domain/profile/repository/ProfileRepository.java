@@ -1,10 +1,14 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.repository;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetCareerList;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetEducationList;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetSNSList;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -31,18 +35,54 @@ public class ProfileRepository {
 
     public void saveCareer(Career career){ em.persist(career);}
 
-    public List<SNS> findAllSNS(Long id) {
+    public List<GetSNSList> findAllSNS(Long id) {
         Member member = em.find(Member.class, id);
-        List<SNS> snsList = member.getSNSs();
+        List<SNS> s = member.getSNSs();
+
+        List<GetSNSList> snsList = new ArrayList<>();
+        for (int i = 0; i < s.size(); i++) {
+            GetSNSList sns = new GetSNSList();
+            sns.setSnsIdx(s.get(i).getSnsIdx());
+            sns.setAddress(s.get(i).getAddress());
+            snsList.add(sns);
+        }
         return snsList;
     }
 
-    public List<Education> findAllEducation(Long id) {
+    public List<GetEducationList> findAllEducation(Long id) {
         Member member = em.find(Member.class, id);
-        List<Education> educationList = member.getEducations();
-        return educationList;
-    }
+        List<Education> m = member.getEducations();
 
+        List<GetEducationList> educations = new ArrayList<>();
+        for (int i = 0; i < m.size(); i++) {
+            GetEducationList education = new GetEducationList();
+            education.setEducationIdx(m.get(i).getEducationIdx());
+            education.setInstitution(m.get(i).getInstitution());
+            education.setMajor(m.get(i).getMajor());
+            education.setIsLearning(m.get(i).getIsLearning());
+            education.setStartDate(m.get(i).getStartDate());
+            education.setEndDate(m.get(i).getEndDate());
+            educations.add(education);
+        }
+        return educations;
+    }
+    public List<GetCareerList> findAllCareer(long id) {
+        Member member = em.find(Member.class, id);
+        List<Career> c = member.getCareers();
+
+        List<GetCareerList> careers = new ArrayList<>();
+        for (int i = 0; i < c.size(); i++) {
+            GetCareerList career = new GetCareerList();
+            career.setCareerIdx(c.get(i).getCareerIdx());
+            career.setCompany(c.get(i).getCompany());
+            career.setPosition(c.get(i).getPosition());
+            career.setIsWorking(c.get(i).getIsWorking());
+            career.setStartDate(c.get(i).getStartDate());
+            career.setEndDate(c.get(i).getEndDate());
+            careers.add(career);
+        }
+        return careers;
+    }
     public List<Education> findIsLearning(Long id) {
         String jpql = "select e from Education e where e.member.memberIdx = :member_idx AND e.isLearning = 'TRUE'";
         List<Education> major = em.createQuery(jpql,Education.class)
@@ -57,12 +97,6 @@ public class ProfileRepository {
                 .setParameter("member_idx",id)
                 .getResultList();
         return career;
-    }
-
-    public List<Career> findAllCareer(long id) {
-        Member member = em.find(Member.class, id);
-        List<Career> careerList = member.getCareers();
-        return careerList;
     }
 
     public List<Member> findMembers() {

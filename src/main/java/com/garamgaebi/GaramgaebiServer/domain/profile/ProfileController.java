@@ -26,16 +26,14 @@ public class ProfileController {
      */
     @ResponseBody
     @PostMapping("/qna")
-    public String saveQna(@RequestBody PostQnaReq req) {
+    public Boolean saveQna(@RequestBody PostQnaReq req) {
 
         //문의 내용이 비어있는지 validation
         if (req.getContent().isEmpty() == true) {
-            return "문의 내용이 비어있습니다.";
+            return false;
         }
-
         profileService.saveQna(req);
-        return "문의 내용이 접수되었습니다.";
-
+        return true;
     }
 
     /**
@@ -43,12 +41,12 @@ public class ProfileController {
      */
     @ResponseBody
     @PostMapping("/sns")
-    public String saveSns(@RequestBody PostSNSReq req) {
+    public Boolean saveSns(@RequestBody PostSNSReq req) {
         if (req.getAddress().isEmpty() == true) {
-            return "비어있습니다.";
+            return false;
         }
         profileService.saveSns(req);
-        return "SNS 등록 완료";
+        return true;
     }
 
     /**
@@ -56,9 +54,9 @@ public class ProfileController {
      */
     @ResponseBody
     @PostMapping("/education")
-    public String saveEducation(@RequestBody PostEducationReq req) {
+    public Boolean saveEducation(@RequestBody PostEducationReq req) {
         profileService.saveEducation(req);
-        return "교육 등록 완료";
+        return true;
     }
 
     /**
@@ -66,19 +64,49 @@ public class ProfileController {
      */
     @ResponseBody
     @PostMapping("/career")
-    public String saveCareer(@RequestBody PostCareerReq req) {
+    public Boolean saveCareer(@RequestBody PostCareerReq req) {
         profileService.saveCareer(req);
-        return "경력 등록 완료";
+        return true;
     }
 
     /**
-     * GET 프로필 상세조회 API
+     * GET 프로필 조회 API
      */
     @ResponseBody
     @GetMapping("/{memberIdx}")
     public GetProfileRes getProfile(@PathVariable long memberIdx) {
         GetProfileRes res = profileService.getProfile(memberIdx);
         return res;
+    }
+
+    /**
+     * GET 프로필 SNS 조회 API
+     */
+    @ResponseBody
+    @GetMapping("/sns/{memberIdx}")
+    public List<GetSNSList> getSNSList(@PathVariable long memberIdx) {
+        List<GetSNSList> snsList =profileService.getSNSList(memberIdx);
+        return snsList;
+    }
+
+    /**
+     * GET 프로필 경력 조회 API
+     */
+    @ResponseBody
+    @GetMapping("/career/{memberIdx}")
+    public List<GetCareerList> getCareerList(@PathVariable long memberIdx) {
+        List<GetCareerList> careerList =profileService.getCareerList(memberIdx);
+        return careerList;
+    }
+
+    /**
+     * GET 프로필 교육 조회 API
+     */
+    @ResponseBody
+    @GetMapping("/education/{memberIdx}")
+    public List<GetEducationList> getEducationList(@PathVariable long memberIdx) {
+        List<GetEducationList> educationList =profileService.getEducationList(memberIdx);
+        return educationList;
     }
 
     /**
@@ -97,8 +125,8 @@ public class ProfileController {
      */
     @ResponseBody
     @PostMapping("/edit/{memberIdx}")
-    public String updateProfile(@RequestBody PostUpdateProfileReq req) {
+    public Boolean updateProfile(@RequestBody PostUpdateProfileReq req) {
         profileService.updateProfile(req);
-        return "프로필 수정 완료";
+        return true;
     }
 }
