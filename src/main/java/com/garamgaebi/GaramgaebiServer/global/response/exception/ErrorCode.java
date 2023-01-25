@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
 
-    EMPTY_PARAMETER(2000, "파라미터가 전달되지 않았습니다."),
+    INVALID_ARGUMENT(2000, "입력 값을 확인해주세요."),
     NOT_EXIST_MEMBER(2001, "존재하지 않는 회원입니다."),
     NOT_EXIST_PROGRAM(2002, "존재하지 않는 프로그램입니다."),
+
+    NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
     INTERNAL_SERVER_ERROR(500, "서버 오류입니다.");
 

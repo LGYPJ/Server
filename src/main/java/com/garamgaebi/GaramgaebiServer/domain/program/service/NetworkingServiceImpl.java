@@ -27,31 +27,6 @@ public class NetworkingServiceImpl implements NetworkingService {
     private final ProgramRepository programRepository;
     private final MemberRepository memberRepository;
 
-    /*
-    // 세미나 모아보기 조회
-    @Transactional
-    @Override
-    public GetProgramListRes findNetworkingCollectionList() {
-
-        List<Program> closeNetworkings = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.NETWORKING);
-
-        Program readyNetworking = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.NETWORKING);
-
-        Program thisMonthNetworking = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING);
-
-        List<ProgramDto> closeProgramDtos = new ArrayList<ProgramDto>();
-        for(Program program : closeNetworkings) {
-            closeProgramDtos.add(programDtoBuilder(program));
-        }
-
-        return new GetProgramListRes(
-                programDtoBuilder(thisMonthNetworking),
-                programDtoBuilder(readyNetworking),
-                closeProgramDtos);
-
-    }
-     */
-
     // 이번 달 네트워킹 조회
     @Transactional(readOnly = true)
     @Override
@@ -144,7 +119,7 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         if(networkingWrapper.isEmpty() || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
             // 없는 네트워킹 예외 처리
-            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
+            throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
         Program seminar = networkingWrapper.get();
@@ -169,7 +144,7 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         if(networkingWrapper.isEmpty() || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
             // 없는 네트워킹 예외 처리
-            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
+            throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
         Program seminar = networkingWrapper.get();
