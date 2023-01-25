@@ -1,7 +1,5 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Career;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Education;
 import com.garamgaebi.GaramgaebiServer.domain.entity.SNS;
 import lombok.*;
 
@@ -18,7 +16,4 @@ public class GetProfileRes {
     private String belong;
     private String belong2;
     private String content;
-    private List<SNS> SNSs;
-    private List<Career> careers;
-    private List<Education> educations;
 }
