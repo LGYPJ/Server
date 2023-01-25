@@ -6,6 +6,8 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +27,8 @@ public class ProgramServiceImpl implements ProgramService {
 
         Member member = profileRepository.findMember(memberIdx);
 
-        if(member == null) {
-            // 예외 처리
-        }
-        else {
-            // 멤버 entity 안에 isActive() 메서드 넣는게 나을지 고민
-            if(member.getStatus() == MemberStatus.INACTIVE) {
-                // 탈퇴회원 예외 처리
-            }
+        if(member == null || member.getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
         List<Program> programs = programRepository.findMemberReadyPrograms(member);
@@ -51,14 +47,8 @@ public class ProgramServiceImpl implements ProgramService {
 
         Member member = profileRepository.findMember(memberIdx);
 
-        if(member == null) {
-            // 예외 처리
-        }
-        else {
-            // 멤버 entity 안에 isActive() 메서드 넣는게 나을지 고민
-            if(member.getStatus() == MemberStatus.INACTIVE) {
-                // 탈퇴회원 예외 처리
-            }
+        if(member == null || member.getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
         List<Program> programs = programRepository.findMemberClosedPrograms(member);
