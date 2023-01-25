@@ -195,8 +195,6 @@ public class SeminarServiceImpl implements SeminarService {
 
     // programDto 빌더
     private ProgramDto programDtoBuilder(Program program) {
-        if(program == null)
-            return null;
 
         return new ProgramDto(
                 program.getIdx(),
