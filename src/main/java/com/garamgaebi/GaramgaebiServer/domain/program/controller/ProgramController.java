@@ -18,18 +18,18 @@ import java.util.List;
 @RequestMapping("/programs")
 public class ProgramController {
 
-    private ProgramService programService;
+    private final ProgramService programService;
 
     // 예정된 내 모임
-    @GetMapping("/{member-idx}/reday")
-    public List<ProgramDto> getMemberReadyProgramList(@PathVariable(name = "member-idx") @NotNull @PositiveOrZero Long memberIdx) {
+    @GetMapping("/{member-idx}/ready")
+    public List<ProgramDto> getMemberReadyProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
 
         return programService.findMemberReadyProgramList(memberIdx);
     }
 
     // 지난 내 모임
     @GetMapping("/{member-idx}/close")
-    public List<ProgramDto> getMemberClsoedProgramList(@PathVariable(name = "member-idx") @NotNull @PositiveOrZero Long memberIdx) {
+    public List<ProgramDto> getMemberClsoedProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
 
         return programService.findMemberClosedProgramList(memberIdx);
     }

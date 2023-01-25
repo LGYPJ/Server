@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,9 +24,7 @@ public class NetworkingController {
 
     // 이번 달 네트워킹
     @GetMapping("/this-month")
-    public ProgramDto getThisMonthNetworking() {
-        return networkingService.findThisMonthNetworking();
-    }
+    public ProgramDto getThisMonthNetworking() { return networkingService.findThisMonthNetworking(); }
 
     // 예정된 네트워킹
     @GetMapping("/next-month")
@@ -51,7 +50,6 @@ public class NetworkingController {
 
         return networkingService.findNetworkingDetails(programDetailReq);
     }
-
 
     // 네트워킹 신청자 리스트
     @GetMapping("/{networking-idx}/participants")
