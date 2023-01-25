@@ -118,7 +118,7 @@ public class SeminarServiceImpl implements SeminarService {
         Optional<Program> seminarWrapper = programRepository.findById(seminarIdx);
 
         if(seminarWrapper.isEmpty() || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR) {
-            throw new RestApiException(ErrorCode.NOT_FOUND);
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
 
         Program seminar = seminarWrapper.get();

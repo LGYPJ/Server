@@ -6,6 +6,9 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Collections;
+import java.util.Optional;
+
 @Getter
 @AllArgsConstructor
 @JsonPropertyOrder({"isSuccess", "code", "message", "result"})
