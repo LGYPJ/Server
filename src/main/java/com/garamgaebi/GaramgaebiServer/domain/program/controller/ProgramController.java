@@ -2,6 +2,9 @@ package com.garamgaebi.GaramgaebiServer.domain.program.controller;
 
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.ProgramService;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,18 +18,18 @@ import java.util.List;
 @RequestMapping("/programs")
 public class ProgramController {
 
-    private ProgramService programService;
+    private final ProgramService programService;
 
-    @GetMapping("/{member-idx}/reday")
+    // 예정된 내 모임
+    @GetMapping("/{member-idx}/ready")
     public List<ProgramDto> getMemberReadyProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
-        // validation 처리
 
         return programService.findMemberReadyProgramList(memberIdx);
     }
 
+    // 지난 내 모임
     @GetMapping("/{member-idx}/close")
     public List<ProgramDto> getMemberClsoedProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
-        // validation 처리
 
         return programService.findMemberClosedProgramList(memberIdx);
     }

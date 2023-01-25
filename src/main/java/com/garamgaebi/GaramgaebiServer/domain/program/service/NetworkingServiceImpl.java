@@ -3,13 +3,12 @@ package com.garamgaebi.GaramgaebiServer.domain.program.service;
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
-import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDetailReq;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
-import com.garamgaebi.GaramgaebiServer.global.exception.ErrorCode;
-import com.garamgaebi.GaramgaebiServer.global.exception.RestApiException;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -27,31 +26,6 @@ public class NetworkingServiceImpl implements NetworkingService {
 
     private final ProgramRepository programRepository;
     private final MemberRepository memberRepository;
-
-    /*
-    // 세미나 모아보기 조회
-    @Transactional
-    @Override
-    public GetProgramListRes findNetworkingCollectionList() {
-
-        List<Program> closeNetworkings = programRepository.findAllByDateBeforeAndProgramTypeOrderByDateDesc(LocalDateTime.now(), ProgramType.NETWORKING);
-
-        Program readyNetworking = programRepository.findFirstByDateAfterAndProgramTypeOrderByDateAsc(getLastDayOfMonth(), ProgramType.NETWORKING);
-
-        Program thisMonthNetworking = programRepository.findFirstByDateBetweenAndProgramTypeOrderByDateAsc(LocalDateTime.now(), getLastDayOfMonth(), ProgramType.NETWORKING);
-
-        List<ProgramDto> closeProgramDtos = new ArrayList<ProgramDto>();
-        for(Program program : closeNetworkings) {
-            closeProgramDtos.add(programDtoBuilder(program));
-        }
-
-        return new GetProgramListRes(
-                programDtoBuilder(thisMonthNetworking),
-                programDtoBuilder(readyNetworking),
-                closeProgramDtos);
-
-    }
-     */
 
     // 이번 달 네트워킹 조회
     @Transactional(readOnly = true)
@@ -170,7 +144,7 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         if(networkingWrapper.isEmpty() || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
             // 없는 네트워킹 예외 처리
-            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
+            throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
         Program seminar = networkingWrapper.get();

@@ -3,39 +3,37 @@ package com.garamgaebi.GaramgaebiServer.domain.program.service;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProgramServiceImpl implements ProgramService {
 
-    private ProgramRepository programRepository;
-    private ProfileRepository profileRepository;
+    private final ProgramRepository programRepository;
+    private final MemberRepository memberRepository;
 
     // 예정된 내 모임 리스트 조회
     @Override
     public List<ProgramDto> findMemberReadyProgramList(Long memberIdx) {
 
-        Member member = profileRepository.findMember(memberIdx);
+        Optional<Member> member = memberRepository.findById(memberIdx);
 
-        if(member == null) {
-            // 예외 처리
-        }
-        else {
-            // 멤버 entity 안에 isActive() 메서드 넣는게 나을지 고민
-            if(member.getStatus() == MemberStatus.INACTIVE) {
-                // 탈퇴회원 예외 처리
-            }
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
-        List<Program> programs = programRepository.findMemberReadyPrograms(member);
+        List<Program> programs = programRepository.findMemberReadyPrograms(member.get());
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         for(Program program : programs) {
@@ -49,19 +47,13 @@ public class ProgramServiceImpl implements ProgramService {
     @Override
     public List<ProgramDto> findMemberClosedProgramList(Long memberIdx) {
 
-        Member member = profileRepository.findMember(memberIdx);
+        Optional<Member> member = memberRepository.findById(memberIdx);
 
-        if(member == null) {
-            // 예외 처리
-        }
-        else {
-            // 멤버 entity 안에 isActive() 메서드 넣는게 나을지 고민
-            if(member.getStatus() == MemberStatus.INACTIVE) {
-                // 탈퇴회원 예외 처리
-            }
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
-        List<Program> programs = programRepository.findMemberClosedPrograms(member);
+        List<Program> programs = programRepository.findMemberClosedPrograms(member.get());
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         for(Program program : programs) {

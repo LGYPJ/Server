@@ -23,7 +23,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 세미나 등록
     @Transactional
     @Override
-    public Long addSeminar(SeminarDto seminarDto) {
+    public ProgramRes addSeminar(SeminarDto seminarDto) {
         // validation
 
 
@@ -36,13 +36,13 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         program.setProgramType(ProgramType.SEMINAR);
         program = adminProgramRepository.save(program);
 
-        return program.getIdx();
+        return new ProgramRes(program.getIdx());
     }
 
     // 발표자료 추가
     @Transactional
     @Override
-    public Long addPresentation(Long seminarIdx, PresentationDto presentationDto) {
+    public PresentationRes addPresentation(Long seminarIdx, PresentationDto presentationDto) {
         Optional<Program> seminarWrapper = adminProgramRepository.findById(seminarIdx);
 
         if(seminarWrapper == null) {
@@ -56,13 +56,13 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         presentationDto.setProgram(seminar);
         Presentation presentation = adminPresentationRepository.save(presentationDto.toEntity());
 
-        return presentation.getIdx();
+        return new PresentationRes(presentation.getIdx());
     }
 
     // 발표자료 수정
     @Transactional
     @Override
-    public Long modifyPresentation(PresentationDto presentationDto) {
+    public PresentationRes modifyPresentation(PresentationDto presentationDto) {
         Optional<Presentation> presentationWrapper = adminPresentationRepository.findById(presentationDto.getIdx());
 
         if(presentationWrapper.isEmpty()) {
@@ -78,7 +78,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         presentation.setContent(presentationDto.getContent());
         presentation.setPresentationUrl(presentationDto.getPresentationUrl());
 
-        return presentation.getIdx();
+        return new PresentationRes(presentation.getIdx());
 
     }
 
@@ -103,7 +103,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 네트워킹 등록
     @Transactional
     @Override
-    public Long addNetworking(NetworkingDto networkingDto) {
+    public ProgramRes addNetworking(NetworkingDto networkingDto) {
         // validation
 
         Program program = new Program();
@@ -115,13 +115,13 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         program.setProgramType(ProgramType.NETWORKING);
         program = adminProgramRepository.save(program);
 
-        return program.getIdx();
+        return new ProgramRes(program.getIdx());
     }
 
     // 세미나 수정
     @Transactional
     @Override
-    public Long modifySeminar(PatchSeminarDto patchSeminarDto) {
+    public ProgramRes modifySeminar(PatchSeminarDto patchSeminarDto) {
         Optional<Program> programWrapper = adminProgramRepository.findById(patchSeminarDto.getIdx());
 
         if(programWrapper.isEmpty()) {
@@ -135,14 +135,14 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         program.setLocation(patchSeminarDto.getLocation());
         program.setFee(patchSeminarDto.getFee());
 
-        return program.getIdx();
+        return new ProgramRes(program.getIdx());
     }
 
 
     // 글 수정
     @Transactional
     @Override
-    public Long modifyNetworking(PatchNetworkingDto patchNetworkingDto) {
+    public ProgramRes modifyNetworking(PatchNetworkingDto patchNetworkingDto) {
         Optional<Program> programWrapper = adminProgramRepository.findById(patchNetworkingDto.getIdx());
 
         // validation
@@ -157,7 +157,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         program.setLocation(patchNetworkingDto.getLocation());
         program.setFee(patchNetworkingDto.getFee());
 
-        return program.getIdx();
+        return new ProgramRes(program.getIdx());
     }
 
     // 글 삭제
@@ -179,7 +179,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 프로그램 오픈
     @Transactional
     @Override
-    public Long openProgram(Long programIdx) {
+    public ProgramRes openProgram(Long programIdx) {
         // validation
 
         Optional<Program> programWrapper = adminProgramRepository.findById(programIdx);
@@ -191,6 +191,6 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         Program program = programWrapper.get();
         program.setStatus(ProgramStatus.OPEN);
 
-        return program.getIdx();
+        return new ProgramRes(program.getIdx());
     }
 }
