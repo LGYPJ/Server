@@ -10,5 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
-    boolean existsByProgramAndMember(Program program, String account );
+    boolean existsByProgramAndMember(Program program, Member member );
+
+    Apply findByProgramAndMember(Program program, Member member);
 }
