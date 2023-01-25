@@ -17,7 +17,7 @@ public class AdminProgramController {
     // 세미나 등록
     @PostMapping("/seminar")
     @ResponseBody
-    public Long writeSeminar(@RequestBody SeminarDto seminarDto) {
+    public ProgramRes writeSeminar(@RequestBody SeminarDto seminarDto) {
         // validation
 
         return adminProgramService.addSeminar(seminarDto);
@@ -26,7 +26,7 @@ public class AdminProgramController {
     // 네트워킹 등록
     @PostMapping("/networking")
     @ResponseBody
-    public Long writeNetworking(@RequestBody NetworkingDto networkingDto) {
+    public ProgramRes writeNetworking(@RequestBody NetworkingDto networkingDto) {
         // validation
 
         return adminProgramService.addNetworking(networkingDto);
@@ -35,7 +35,7 @@ public class AdminProgramController {
     // 세미나 수정
     @PatchMapping("/seminar")
     @ResponseBody
-    public Long modifySeminar(@RequestBody PatchSeminarDto patchSeminarDto) {
+    public ProgramRes modifySeminar(@RequestBody PatchSeminarDto patchSeminarDto) {
         // validation
 
         return adminProgramService.modifySeminar(patchSeminarDto);
@@ -44,7 +44,7 @@ public class AdminProgramController {
     // 네트워킹 수정
     @PatchMapping("/networking")
     @ResponseBody
-    public Long modifyNetworking(@RequestBody PatchNetworkingDto patchNetworkingDto) {
+    public ProgramRes modifyNetworking(@RequestBody PatchNetworkingDto patchNetworkingDto) {
         // validation
 
         return adminProgramService.modifyNetworking(patchNetworkingDto);
@@ -62,7 +62,7 @@ public class AdminProgramController {
     // 발표자료 추가
     @PostMapping("/seminar/{seminar-idx}/presentation")
     @ResponseBody
-    public Long writePresentation(@PathVariable(name = "seminar-idx") Long seminarIdx,
+    public PresentationRes writePresentation(@PathVariable(name = "seminar-idx") Long seminarIdx,
                                   @RequestBody PresentationDto presentationDto) {
         // validation
 
@@ -72,7 +72,7 @@ public class AdminProgramController {
     // 발표자료 수정
     @PatchMapping("/seminar/presentation")
     @ResponseBody
-    public Long modifyPresentation(@RequestBody PresentationDto presentationDto) {
+    public PresentationRes modifyPresentation(@RequestBody PresentationDto presentationDto) {
         // validation
 
         return adminProgramService.modifyPresentation(presentationDto);
@@ -81,7 +81,7 @@ public class AdminProgramController {
     // 발표자료 삭제
     @DeleteMapping("/seminar/presentation/{presentation-idx}")
     @ResponseBody
-    public void deletePresenatation(@PathVariable(name = "presentation-idx") Long presentationIdx) {
+    public void deletePresentation(@PathVariable(name = "presentation-idx") Long presentationIdx) {
         // validation
 
         adminProgramService.deletePresentation(presentationIdx);
@@ -90,7 +90,7 @@ public class AdminProgramController {
     // 프로그램 오픈
     @PatchMapping("/program/{program-idx}/open")
     @ResponseBody
-    public Long openProgram(@PathVariable(name = "program-idx") Long programIdx) {
+    public ProgramRes openProgram(@PathVariable(name = "program-idx") Long programIdx) {
         // validation
 
         return adminProgramService.openProgram(programIdx);

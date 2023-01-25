@@ -29,6 +29,24 @@ public class SeminarController {
 
      */
 
+    // 이번 달 세미나
+    @GetMapping("/this-month")
+    public ProgramDto getThisMonthSeminar() {
+        return seminarService.findThisMonthSeminar();
+    }
+
+    // 예정된 세미나
+    @GetMapping("/next-month")
+    public ProgramDto getNextSeminar() {
+        return seminarService.findReadySeminar();
+    }
+
+    // 마감된 세미나
+    @GetMapping("/closed")
+    public List<ProgramDto> getClosedSeminarList() {
+        return seminarService.findClosedSeminarsList();
+    }
+
     //홈 화면 세미나 리스트
     @GetMapping("/main")
     public List<ProgramDto> getMainSeminarList() {

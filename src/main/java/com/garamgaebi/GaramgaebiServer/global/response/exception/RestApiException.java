@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.global.exception;
+package com.garamgaebi.GaramgaebiServer.global.response.exception;
 
 
 import lombok.Getter;
