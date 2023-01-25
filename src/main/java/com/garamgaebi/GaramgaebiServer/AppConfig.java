@@ -6,6 +6,5 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableJpaRepositories
-@EnableWebMvc
 public class AppConfig {
 }

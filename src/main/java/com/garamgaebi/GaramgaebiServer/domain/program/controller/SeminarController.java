@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.program.controller;
 
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.SeminarService;
+import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -20,45 +21,45 @@ public class SeminarController {
 
     // 이번 달 세미나
     @GetMapping("/this-month")
-    public ProgramDto getThisMonthSeminar() {
-        return seminarService.findThisMonthSeminar();
+    public BaseResponse<ProgramDto> getThisMonthSeminar() {
+        return new BaseResponse<>(seminarService.findThisMonthSeminar());
     }
 
     // 예정된 세미나
     @GetMapping("/next-month")
-    public ProgramDto getNextSeminar() {
-        return seminarService.findReadySeminar();
+    public BaseResponse<ProgramDto> getNextSeminar() {
+        return new BaseResponse<>(seminarService.findReadySeminar());
     }
 
     // 마감된 세미나
     @GetMapping("/closed")
-    public List<ProgramDto> getClosedSeminarList() {
-        return seminarService.findClosedSeminarsList();
+    public BaseResponse<List<ProgramDto>> getClosedSeminarList() {
+        return new BaseResponse<>(seminarService.findClosedSeminarsList());
     }
 
     //홈 화면 세미나 리스트
     @GetMapping("/main")
-    public List<ProgramDto> getMainSeminarList() { return seminarService.findMainSeminarList(); }
+    public BaseResponse<List<ProgramDto>> getMainSeminarList() { return new BaseResponse<>(seminarService.findMainSeminarList()); }
 
     // 세미나 상세정보
     @GetMapping("/info")
-    public ProgramInfoDto getSeminarDetailInfo(@RequestBody @Valid ProgramDetailReq programDetailReq) {
+    public BaseResponse<ProgramInfoDto> getSeminarDetailInfo(@RequestBody @Valid ProgramDetailReq programDetailReq) {
 
-        return seminarService.findSeminarDetails(programDetailReq);
+        return new BaseResponse<>(seminarService.findSeminarDetails(programDetailReq));
     }
 
     // 세미나 신청자 리스트
     @GetMapping("/{seminar-idx}/participants")
-    public List<ParticipantDto> getSeminarParticipantList(@PathVariable(name = "seminar-idx") Long seminarIdx) {
+    public BaseResponse<List<ParticipantDto>> getSeminarParticipantList(@PathVariable(name = "seminar-idx") Long seminarIdx) {
 
-        return seminarService.findSeminarParticipantsList(seminarIdx);
+        return new BaseResponse<>(seminarService.findSeminarParticipantsList(seminarIdx));
     }
 
     // 세미나 발표 리스트
     @GetMapping("/{seminar-idx}/presentations")
-    public List<PresentationDto> getSeminarPresentationList(@PathVariable(name = "seminar-idx") Long seminarIdx) {
+    public BaseResponse<List<PresentationDto>> getSeminarPresentationList(@PathVariable(name = "seminar-idx") Long seminarIdx) {
 
-        return seminarService.findSeminarPresentationList(seminarIdx);
+        return new BaseResponse<>(seminarService.findSeminarPresentationList(seminarIdx));
     }
 
 }

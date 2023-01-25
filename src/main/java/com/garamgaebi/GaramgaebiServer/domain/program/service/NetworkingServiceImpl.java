@@ -168,8 +168,6 @@ public class NetworkingServiceImpl implements NetworkingService {
 
     // programDto 빌더
     private ProgramDto programDtoBuilder(Program program) {
-        if(program == null)
-            return null;
 
         return new ProgramDto(
                 program.getIdx(),

@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.program.controller;
 
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.ProgramService;
+import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -22,15 +23,15 @@ public class ProgramController {
 
     // 예정된 내 모임
     @GetMapping("/{member-idx}/ready")
-    public List<ProgramDto> getMemberReadyProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
+    public BaseResponse<List<ProgramDto>> getMemberReadyProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
 
-        return programService.findMemberReadyProgramList(memberIdx);
+        return new BaseResponse<>(programService.findMemberReadyProgramList(memberIdx));
     }
 
     // 지난 내 모임
     @GetMapping("/{member-idx}/close")
-    public List<ProgramDto> getMemberClsoedProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
+    public BaseResponse<List<ProgramDto>> getMemberClsoedProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
 
-        return programService.findMemberClosedProgramList(memberIdx);
+        return new BaseResponse<>(programService.findMemberClosedProgramList(memberIdx));
     }
 }
