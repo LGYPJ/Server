@@ -94,10 +94,6 @@ public class ProfileService {
         res.setProfileEmail(member.getProfileEmail());
         findCareerOrEducation(memberIdx, res);
         res.setContent(member.getContent());
-        res.setSNSs(profileRepository.findAllSNS(memberIdx));
-        res.setCareers(profileRepository.findAllCareer(memberIdx));
-        res.setEducations(profileRepository.findAllEducation(memberIdx));
-
         return res;
     }
 
@@ -115,6 +111,27 @@ public class ProfileService {
             res.setBelong("소속이 없습니다.");
             res.setBelong2("소속이 없습니다.");
         }
+    }
+
+    /** GET 프로필 SNS 조회 API*/
+    @Transactional
+    public List<GetSNSList> getSNSList(long memberIdx) {
+        List<GetSNSList> allSNS = profileRepository.findAllSNS(memberIdx);
+        return allSNS;
+    }
+
+    /** GET 프로필 경력 조회 API*/
+    @Transactional
+    public List<GetCareerList> getCareerList(long memberIdx) {
+        List<GetCareerList> allCareer = profileRepository.findAllCareer(memberIdx);
+        return allCareer;
+    }
+
+    /** GET 프로필 교육 조회 API*/
+    @Transactional
+    public List<GetEducationList> getEducationList(long memberIdx) {
+        List<GetEducationList> allEducation = profileRepository.findAllEducation(memberIdx);
+        return allEducation;
     }
 
     /** GET 유저프로필 10명 API*/

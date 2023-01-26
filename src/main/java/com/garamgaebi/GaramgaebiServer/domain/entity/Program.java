@@ -47,11 +47,13 @@ public class Program {
 
     // == 연관관계 메서드 -- //
     public void addApply(Apply apply) {
-        applies.add(apply);
-        // 중복 루프 방지
-        if(apply.getProgram() != this) {
-            apply.setProgram(this);
-        }
+        this.applies.add(apply);
+        apply.attach(this);
+    }
+
+    public void removeApply(Apply apply) {
+        this.applies.remove(apply);
+        apply.detachProgram();
     }
 
     public void addPresentation(Presentation presentation) {
