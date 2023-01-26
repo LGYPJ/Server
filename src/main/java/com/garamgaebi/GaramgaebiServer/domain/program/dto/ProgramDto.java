@@ -25,8 +25,8 @@ public class ProgramDto {
     private String location;
     @Schema(description = "프로그램 종류")
     private ProgramType type;
-    @Schema(description = "프로그램 유료(PREMIUM)/무료(FREE) 여부")
+    @Schema(description = "프로그램 유료/무료 여부(음수일 경우 ERROR)", allowableValues = {"PREMIUM", "FREE", "ERROR"})
     private String payment;
-    @Schema(description = "프로그램 상태(이번달(THIS_MONTH)/예정(READY)/마감(CLOSED))")
+    @Schema(description = "프로그램 상태(이번달/예정/마감)", allowableValues = {"THIS_MONTH", "READY", "CLOSED"})
     private String status;
 }

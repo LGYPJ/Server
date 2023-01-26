@@ -26,9 +26,9 @@ public class ProgramInfoDto {
     private Integer fee;
     @Schema(description = "프로그램 신청 마감 일시")
     private LocalDateTime endDate;
-    @Schema(description = "프로그램 상태 (오픈/마감)")
+    @Schema(description = "프로그램 상태 (오픈예정/오픈/마감)", allowableValues = {"READY_TO_OPEN", "OPEN", "CLOSED"})
     private ProgramStatus programStatus;
-    @Schema(description = "유저 상태(신청 가능/신청 불가능)")
-    private String userStatus;
+    @Schema(description = "유저 버튼 상태(마감/신청완료/신청확인 중/신청하기/신청취소/오픈예정/에러)", allowableValues = {"Closed", "ApplyComplete", "BeforeConfirmApply", "Apply", "ApplyCancel", "NotOpen", "Error"})
+    private String userButtonStatus;
 
 }
