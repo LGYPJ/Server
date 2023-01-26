@@ -42,7 +42,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 발표자료 추가
     @Transactional
     @Override
-    public PresentationRes addPresentation(Long seminarIdx, PresentationDto presentationDto) {
+    public PresentationRes addPresentation(Long seminarIdx, PostPresentationDto postPresentationDto) {
         Optional<Program> seminarWrapper = adminProgramRepository.findById(seminarIdx);
 
         if(seminarWrapper == null) {
@@ -53,8 +53,8 @@ public class AdminProgramServiceImpl implements AdminProgramService {
             //세미나가 아닌 프로그램 예외처리
         }
 
-        presentationDto.setProgram(seminar);
-        Presentation presentation = adminPresentationRepository.save(presentationDto.toEntity());
+        postPresentationDto.setProgram(seminar);
+        Presentation presentation = adminPresentationRepository.save(postPresentationDto.toEntity());
 
         return new PresentationRes(presentation.getIdx());
     }
@@ -62,8 +62,8 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 발표자료 수정
     @Transactional
     @Override
-    public PresentationRes modifyPresentation(PresentationDto presentationDto) {
-        Optional<Presentation> presentationWrapper = adminPresentationRepository.findById(presentationDto.getIdx());
+    public PresentationRes modifyPresentation(PostPresentationDto postPresentationDto) {
+        Optional<Presentation> presentationWrapper = adminPresentationRepository.findById(postPresentationDto.getIdx());
 
         if(presentationWrapper.isEmpty()) {
             // 없는 발표자료 예외처리
@@ -71,12 +71,12 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
         Presentation presentation = presentationWrapper.get();
 
-        presentation.setTitle(presentationDto.getTitle());
-        presentation.setNickname(presentationDto.getNickname());
-        presentation.setOrganization(presentationDto.getOrganization());
-        presentation.setProfileImg(presentationDto.getProfileImgUrl());
-        presentation.setContent(presentationDto.getContent());
-        presentation.setPresentationUrl(presentationDto.getPresentationUrl());
+        presentation.setTitle(postPresentationDto.getTitle());
+        presentation.setNickname(postPresentationDto.getNickname());
+        presentation.setOrganization(postPresentationDto.getOrganization());
+        presentation.setProfileImg(postPresentationDto.getProfileImgUrl());
+        presentation.setContent(postPresentationDto.getContent());
+        presentation.setPresentationUrl(postPresentationDto.getPresentationUrl());
 
         return new PresentationRes(presentation.getIdx());
 

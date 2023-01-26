@@ -35,6 +35,4 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     @Query("select p from Program p inner join Apply a where a.member = :member and (a.status = 'APPLY' or a.status = 'APPLY_CONFIRM') and p.date < current_timestamp and p not in (select tmp from Program tmp where tmp.status = 'DELETE') order by p.date desc")
     public List<Program> findMemberClosedPrograms(@Param("member") Member member);
 
-    //줄리아 관련 수정 부분
-    Optional<Program> findProgramOnlyByPath(String path);
 }

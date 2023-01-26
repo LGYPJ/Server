@@ -1,15 +1,18 @@
 package com.garamgaebi.GaramgaebiServer.domain.apply;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Apply;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Encryption;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -17,7 +20,98 @@ import java.util.List;
 public class ApplyService {
 
     private final ApplyRepository applyRepository;
+    private final MemberRepository memberRepository;
+    private final ProgramRepository programRepository;
 
+
+    @Transactional
+    public Long enroll(ApplyDto applyDto) {
+        Long memberIdx = applyDto.getMemberIdx();
+        Long programIdx = applyDto.getProgramIdx();
+
+        Optional<Member> member = memberRepository.findById(memberIdx);
+        Optional<Program> program = programRepository.findById(programIdx);
+
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
+        }
+        if(program.isEmpty() || program.get().getStatus() == ProgramStatus.DELETE) {
+            // 없는 프로그램 예외처리
+        }
+        // 하고 싶으면 member랑 program validation 추가
+
+        Apply apply = applyRepository.findByProgramAndMember(program.get(), member.get());
+        Apply newApply = null;
+
+        if(apply == null) {
+            newApply = new Apply();
+            newApply.setProgram(program.get());
+            newApply.setMember(member.get());
+            newApply.setName(applyDto.getName());
+            newApply.setNickname(applyDto.getNickname());
+            newApply.setPhone(applyDto.getPhone());
+        }
+
+        else if(apply.getStatus() != ApplyStatus.CANCEL) {
+            // 예외(이미 취소된 프로그램)
+        }
+
+        else {
+            newApply = apply;
+            newApply.setName(applyDto.getName());
+            newApply.setNickname(applyDto.getNickname());
+            newApply.setPhone(applyDto.getPhone());
+            newApply.setStatus(ApplyStatus.APPLY);
+        }
+
+
+        newApply = applyRepository.save(newApply);
+
+        return newApply.getApply_idx();
+    }
+
+    @Transactional
+    public Long leave(ApplyCancelDto applyCancelDto) {
+        Long memberIdx = applyCancelDto.getMemberIdx();
+        Long programIdx = applyCancelDto.getProgramIdx();
+
+        Optional<Member> member = memberRepository.findById(memberIdx);
+        Optional<Program> program = programRepository.findById(programIdx);
+
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            // 멤버 유효성 예외 처리
+        }
+        if(program.isEmpty() || program.get().getStatus() == ProgramStatus.DELETE) {
+            // 없는 프로그램 예외처리
+        }
+        // 하고 싶으면 member랑 program validation 추가
+
+        Apply apply = applyRepository.findByProgramAndMember(program.get(), member.get());
+
+
+        if(apply == null) {
+            // 신청하지 않은 프로그램 취소하는 경우 - 예외처리
+        }
+
+        else if(apply.getStatus() != ApplyStatus.APPLY) {
+            // 등록 상태가 아닌 경우 - 예외처리
+        }
+
+        else {
+            apply.setBank(applyCancelDto.getBank());
+            apply.setAccount(applyCancelDto.getAccount());
+            // newApply.setAccount(Encryption(applyCancelDto.getAccount())); 계좌 암호화 알고리즘으로 암호화하기
+            apply.setStatus(ApplyStatus.CANCEL);
+        }
+
+
+        apply = applyRepository.save(apply);
+
+        return apply.getApply_idx();
+    }
+
+
+    /*
     public void enroll(Program program, Member member) {
         if (!applyRepository.existsByProgramAndMember(program, member)) { //프로그램에 해당 멤버가 참가한 내역이 있는지 확인.
             Apply apply = Apply.of(member); //참가 정보 생성,  Apply Entity Apply.of 수정되면 같이 수정
@@ -45,6 +139,7 @@ public class ApplyService {
                 .orElseThrow(() -> new IllegalArgumentException(path + "에 해당하는 프로그램이 존재하지 않습니다."));
     }
 
+     */
 
 
 }
