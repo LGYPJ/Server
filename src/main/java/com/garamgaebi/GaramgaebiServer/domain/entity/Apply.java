@@ -40,9 +40,40 @@ public class Apply {
     @Enumerated(EnumType.STRING)
     private ApplyStatus status;
 
-    public static Apply of(String account) {
+    @Builder
+    public Apply(Member member,
+                 Program program,
+                 String name,
+                 String nickname,
+                 String phone,
+                 String bank,
+                 String account,
+                 ApplyStatus status) {
+        this.member = member;
+        this.program = program;
+        this.name = name;
+        this.nickname = nickname;
+        this.phone = phone;
+        this.bank = bank;
+        this.account = account;
+        this.status = status;
+    }
+
+    //계좌 암호화하기
+
+    public static Apply of(Member member) {
         Apply apply = new Apply();
-        apply.account = account;
+        apply.member = member;
         return apply;
-    } //Program 신청 가능 상황일 때 연동 메서드 생성되면 수정하기. 일단은 계좌만 연동(isAbleToAcceptWaitingApply?)
+    }
+
+
+    public void attach(Program program) {
+        this.program = program;
+    }
+
+    public void detachProgram() {
+        this.program = null;
+    }
+
 }
