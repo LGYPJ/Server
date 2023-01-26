@@ -4,8 +4,12 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.Apply;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.ProgramServiceImpl;
+import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/applies")
@@ -17,17 +21,17 @@ public class ApplyController {
     public ApplyController(ApplyService applyService) {this.applyService = applyService;}
 
     @PostMapping("/programs/{id}/enroll")
-    public Long enroll(Member member,@PathVariable String path, @PathVariable("id") Program program, @RequestBody ApplyDto applyDto) {
-        Program program1 = applyService.getProgramToEnroll(path);
-        applyService.enroll(program, member);
-        return applyService.enrollMember(applyDto);
+    public BaseResponse<Long> enroll(@RequestBody @Valid ApplyDto applyDto) {
+
+
+        return new BaseResponse<>(applyService.enroll(applyDto));
     }
 
     @PostMapping("/programs/{id}/leave")
-    public Long leave(Member member, @PathVariable String path, @PathVariable("id") Program program, @RequestBody ApplyDto applyDto) {
-        Program program1 = applyService.getProgramToEnroll(path);
-        applyService.leave(program, member);
-        return applyService.enrollMember(applyDto);
+    public BaseResponse<Long> leave(@RequestBody @Valid ApplyCancelDto applyCancelDto) {
+
+        return new BaseResponse<>(applyService.leave(applyCancelDto));
     }
 }
+
 

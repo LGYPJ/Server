@@ -5,7 +5,7 @@ import lombok.*;
 
 
 @Getter @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "Apply")
 public class Apply {

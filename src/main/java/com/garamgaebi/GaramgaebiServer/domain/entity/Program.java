@@ -81,9 +81,9 @@ public class Program {
 
     // 프로그램 상태 조회
     public ProgramStatus getStatus() {
-        if(this.status != ProgramStatus.DELETE) {
+        if(this.status != ProgramStatus.DELETE && this.status != ProgramStatus.CLOSED_CONFIRM) {
             if (LocalDateTime.now().isAfter(getEndDate())) {
-                if (this.status == ProgramStatus.CLOSED_CONFIRM || this.getIsPay().equals("FREE")){
+                if (this.getIsPay().equals("FREE")){
                     this.setStatus(ProgramStatus.CLOSED_CONFIRM);
                 }
                 else {
@@ -110,17 +110,51 @@ public class Program {
     // == 비즈니스 로직 == //
 
     // 유저 신청 가능 여부 조회
+    // CLOSED : 마감, 신청확인 중, 신청완료
+    // OPEN : 신청하기(이미 신청한 사람), 신청취소()
+    // READY_TO_OPEN : 상세페이지 비공개? 아니면 버튼 비활성화?
     public String checkMemberCanApply(Long memberIdx) {
-        if(getStatus() != ProgramStatus.OPEN)
-            return "UnableToApply";
-
-        for(Apply apply : this.applies) {
-            // 해당 멤버가 이미 신청한 경우
-            if(apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY) {
-                return "UnableToApply";
+        if(getStatus() == ProgramStatus.CLOSED_CONFIRM) {
+            for(Apply apply : this.applies) {
+                // 해당 멤버가 신청한 경우
+                if (apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY_CONFIRM) {
+                    // 신청 완료 버튼 활성화
+                    return "ApplyComplete";
+                }
             }
+            // 마감 버튼 활성화
+            return "Closed";
         }
-        return "AbleToApply";
+        else if(getStatus() == ProgramStatus.CLOSED) {
+            for(Apply apply : this.applies) {
+                // 해당 멤버가 신청한 경우
+                if (apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY) {
+                    // 신청확인 중 버튼 활성화
+                    return "BeforeConfirmApply";
+                }
+            }
+            // 마감 버튼 활성화
+            return "Closed";
+        }
+        else if (getStatus() == ProgramStatus.OPEN) {
+            for(Apply apply : this.applies) {
+                // 해당 멤버가 신청한 경우
+                if (apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY) {
+                    // 신청 취소 버튼 활성화
+                    return "ApplyCancel";
+                }
+            }
+            // 신청 버튼 활성화
+            return "Apply";
+        }
+        else if(getStatus() == ProgramStatus.READY_TO_OPEN) {
+            // 오픈 예정 버튼 활성화
+            return "NotOpen";
+        }
+        else {
+            // Delete인 경우
+            return "Error";
+        }
     }
 
     // 참가자 리스트

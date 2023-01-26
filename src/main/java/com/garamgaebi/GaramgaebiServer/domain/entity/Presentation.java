@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
-import com.garamgaebi.GaramgaebiServer.admin.program.dto.PresentationDto;
+import com.garamgaebi.GaramgaebiServer.admin.program.dto.PostPresentationDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,16 +29,16 @@ public class Presentation {
     @Column(name = "profile_img")
     private String profileImg;
 
-    public static PresentationBuilder builder(PresentationDto presentationDto) {
+    public static PresentationBuilder builder(PostPresentationDto postPresentationDto) {
         return PresentationBuilder()
-                .idx(presentationDto.getIdx())
-                .program(presentationDto.getProgram())
-                .title(presentationDto.getTitle())
-                .nickname(presentationDto.getNickname())
-                .organization(presentationDto.getOrganization())
-                .content(presentationDto.getContent())
-                .presentationUrl(presentationDto.getPresentationUrl())
-                .profileImg(presentationDto.getProfileImgUrl());
+                .idx(postPresentationDto.getIdx())
+                .program(postPresentationDto.getProgram())
+                .title(postPresentationDto.getTitle())
+                .nickname(postPresentationDto.getNickname())
+                .organization(postPresentationDto.getOrganization())
+                .content(postPresentationDto.getContent())
+                .presentationUrl(postPresentationDto.getPresentationUrl())
+                .profileImg(postPresentationDto.getProfileImgUrl());
     }
 
     // == 연관관계 메서드 == //

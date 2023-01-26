@@ -1,9 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.admin.program.controller;
 
 import com.garamgaebi.GaramgaebiServer.admin.program.dto.*;
-import com.garamgaebi.GaramgaebiServer.admin.program.repository.AdminProgramRepository;
 import com.garamgaebi.GaramgaebiServer.admin.program.service.AdminProgramService;
-import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,19 +61,19 @@ public class AdminProgramController {
     @PostMapping("/seminar/{seminar-idx}/presentation")
     @ResponseBody
     public PresentationRes writePresentation(@PathVariable(name = "seminar-idx") Long seminarIdx,
-                                  @RequestBody PresentationDto presentationDto) {
+                                  @RequestBody PostPresentationDto postPresentationDto) {
         // validation
 
-        return adminProgramService.addPresentation(seminarIdx, presentationDto);
+        return adminProgramService.addPresentation(seminarIdx, postPresentationDto);
     }
 
     // 발표자료 수정
     @PatchMapping("/seminar/presentation")
     @ResponseBody
-    public PresentationRes modifyPresentation(@RequestBody PresentationDto presentationDto) {
+    public PresentationRes modifyPresentation(@RequestBody PostPresentationDto postPresentationDto) {
         // validation
 
-        return adminProgramService.modifyPresentation(presentationDto);
+        return adminProgramService.modifyPresentation(postPresentationDto);
     }
 
     // 발표자료 삭제
