@@ -4,6 +4,7 @@ import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.ProgramService;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
@@ -27,7 +28,9 @@ public class ProgramController {
 
     // 예정된 내 모임
     @Operation(summary = "예정된 내 모임 조회", description = "예정된 신청 프로그램을 리스트로 조회합니다.", responses = {
-            @ApiResponse(responseCode = "200", description = "성공")
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     @GetMapping("/{member-idx}/ready")
     public BaseResponse<List<ProgramDto>> getMemberReadyProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
@@ -37,7 +40,9 @@ public class ProgramController {
 
     // 지난 내 모임
     @Operation(summary = "지난 내 모임 조회", description = "지난 신청 프로그램을 리스트로 조회합니다.", responses = {
-            @ApiResponse(responseCode = "200", description = "성공")
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     @GetMapping("/{member-idx}/close")
     public BaseResponse<List<ProgramDto>> getMemberClsoedProgramList(@PathVariable(name = "member-idx") Long memberIdx) {
