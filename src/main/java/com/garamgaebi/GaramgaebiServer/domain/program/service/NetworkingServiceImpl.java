@@ -119,7 +119,7 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         if(networkingWrapper.isEmpty() || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
             // 없는 네트워킹 예외 처리
-            throw new RestApiException(ErrorCode.NOT_FOUND);
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
 
         Program seminar = networkingWrapper.get();
@@ -168,8 +168,6 @@ public class NetworkingServiceImpl implements NetworkingService {
 
     // programDto 빌더
     private ProgramDto programDtoBuilder(Program program) {
-        if(program == null)
-            return null;
 
         return new ProgramDto(
                 program.getIdx(),

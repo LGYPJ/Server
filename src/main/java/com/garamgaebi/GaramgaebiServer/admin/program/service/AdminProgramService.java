@@ -7,10 +7,10 @@ public interface AdminProgramService {
     ProgramRes addSeminar(SeminarDto seminarDto);
 
     // 발표자료 추가
-    PresentationRes addPresentation(Long seminarIdx, PresentationDto presentationDto);
+    PresentationRes addPresentation(Long seminarIdx, PostPresentationDto postPresentationDto);
 
     // 발표자료 수정
-    PresentationRes modifyPresentation(PresentationDto presentationDto);
+    PresentationRes modifyPresentation(PostPresentationDto postPresentationDto);
 
     // 발표자료 삭제
     void deletePresentation(Long presentationIdx);

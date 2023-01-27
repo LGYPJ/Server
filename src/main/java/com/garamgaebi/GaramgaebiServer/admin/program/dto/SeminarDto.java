@@ -1,6 +1,5 @@
 package com.garamgaebi.GaramgaebiServer.admin.program.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Presentation;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
@@ -8,10 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -23,7 +20,7 @@ public class SeminarDto {
     private LocalDateTime date;
     private String location;
     private Integer fee;
-    private List<PresentationDto> presentations;
+    private List<PostPresentationDto> presentations;
 
     public Program toEntity() {
         Program program = new Program();

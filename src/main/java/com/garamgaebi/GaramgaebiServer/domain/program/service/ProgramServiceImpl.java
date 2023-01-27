@@ -3,6 +3,7 @@ package com.garamgaebi.GaramgaebiServer.domain.program.service;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
@@ -13,25 +14,26 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProgramServiceImpl implements ProgramService {
 
-    private ProgramRepository programRepository;
-    private ProfileRepository profileRepository;
+    private final ProgramRepository programRepository;
+    private final MemberRepository memberRepository;
 
     // 예정된 내 모임 리스트 조회
     @Override
     public List<ProgramDto> findMemberReadyProgramList(Long memberIdx) {
 
-        Member member = profileRepository.findMember(memberIdx);
+        Optional<Member> member = memberRepository.findById(memberIdx);
 
-        if(member == null || member.getStatus() == MemberStatus.INACTIVE) {
-            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
-        List<Program> programs = programRepository.findMemberReadyPrograms(member);
+        List<Program> programs = programRepository.findMemberReadyPrograms(member.get());
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         for(Program program : programs) {
@@ -45,13 +47,13 @@ public class ProgramServiceImpl implements ProgramService {
     @Override
     public List<ProgramDto> findMemberClosedProgramList(Long memberIdx) {
 
-        Member member = profileRepository.findMember(memberIdx);
+        Optional<Member> member = memberRepository.findById(memberIdx);
 
-        if(member == null || member.getStatus() == MemberStatus.INACTIVE) {
-            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
-        List<Program> programs = programRepository.findMemberClosedPrograms(member);
+        List<Program> programs = programRepository.findMemberClosedPrograms(member.get());
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         for(Program program : programs) {
@@ -64,8 +66,6 @@ public class ProgramServiceImpl implements ProgramService {
 
     // programDto 빌더
     private ProgramDto programDtoBuilder(Program program) {
-        if(program == null)
-            return null;
 
         return new ProgramDto(
                 program.getIdx(),
