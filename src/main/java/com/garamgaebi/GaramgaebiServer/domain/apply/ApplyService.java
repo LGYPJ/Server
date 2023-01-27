@@ -36,9 +36,8 @@ public class ApplyService {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
         if(program.isEmpty() || program.get().getStatus() == ProgramStatus.DELETE) {
-            // 없는 프로그램 예외처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
-        // 하고 싶으면 member랑 program validation 추가
 
         Apply apply = applyRepository.findByProgramAndMember(program.get(), member.get());
         Apply newApply = null;
@@ -53,7 +52,7 @@ public class ApplyService {
         }
 
         else if(apply.getStatus() != ApplyStatus.CANCEL) {
-            // 예외(이미 취소된 프로그램)
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
 
         else {
@@ -79,22 +78,21 @@ public class ApplyService {
         Optional<Program> program = programRepository.findById(programIdx);
 
         if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
-            // 멤버 유효성 예외 처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
         if(program.isEmpty() || program.get().getStatus() == ProgramStatus.DELETE) {
-            // 없는 프로그램 예외처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
-        // 하고 싶으면 member랑 program validation 추가
 
         Apply apply = applyRepository.findByProgramAndMember(program.get(), member.get());
 
 
         if(apply == null) {
-            // 신청하지 않은 프로그램 취소하는 경우 - 예외처리
+            throw new RestApiException(ErrorCode.NOT_ACCEPTABLE);
         }
 
         else if(apply.getStatus() != ApplyStatus.APPLY) {
-            // 등록 상태가 아닌 경우 - 예외처리
+            throw new RestApiException(ErrorCode.NOT_ACCEPTABLE);
         }
 
         else {
