@@ -1,5 +1,6 @@
-package com.garamgaebi.GaramgaebiServer.global;
+package com.garamgaebi.GaramgaebiServer.domain.email;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,9 +10,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
-//@Configuration
-@PropertySource("classpath:application-garamgaebi.properties")
+@Configuration
+@PropertySource("classpath:application.properties")
 public class MailConfig {
+
     @Value("${spring.mail.host}")
     private String host;
 
@@ -38,7 +40,6 @@ public class MailConfig {
 
     @Bean
     public JavaMailSender javaMailService() {
-
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
         javaMailSender.setHost(host);
