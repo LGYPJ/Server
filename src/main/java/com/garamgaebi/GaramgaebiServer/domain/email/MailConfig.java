@@ -1,6 +1,5 @@
 package com.garamgaebi.GaramgaebiServer.domain.email;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,7 +46,7 @@ public class MailConfig {
         javaMailSender.setUsername(id);
         javaMailSender.setPassword(password);
         javaMailSender.setJavaMailProperties(getMailProperties());
-        javaMailSender.setDefaultEncoding("UTF-8");
+//        javaMailSender.setDefaultEncoding("UTF-8");
 
         return javaMailSender;
     }
@@ -55,8 +54,11 @@ public class MailConfig {
     private Properties getMailProperties() {
         Properties pt = new Properties();
 
-        pt.put("spring.mail.properties.mail.smtp.auth", auth);
-        pt.put("spring.mail.properties.mail.smtp.starttls.enable", starttls);
+        pt.setProperty("spring.mail.properties.mail.smtp.starttls.enable", "true");
+        pt.setProperty("spring.mail.properties.mail.smtp.auth", "true");
+
+        // before put
+
 //        pt.put("spring.mail.properties.mail.smtp.starttls.required", starttls_required);
 //        pt.put("spring.mail.properties.mail.transport.protocol", protocol);
 
