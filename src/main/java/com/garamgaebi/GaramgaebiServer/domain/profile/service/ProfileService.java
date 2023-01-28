@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @Transactional(readOnly = true)
@@ -54,6 +55,9 @@ public class ProfileService {
         education.setStartDate(req.getStartDate());
         if (req.getIsLearning().equals("TRUE")) {
             education.setIsLearning(IsLearning.TRUE);
+            if (member.getBelong() == null) {
+                member.setBelong(req.getInstitution()+" "+req.getMajor());
+            }
         } else {
             education.setIsLearning(IsLearning.FALSE);
             education.setEndDate(req.getEndDate());
@@ -74,6 +78,9 @@ public class ProfileService {
         career.setStartDate(req.getStartDate());
         if (req.getIsWorking().equals("TRUE")) {
             career.setIsWorking(IsWorking.TRUE);
+            if (member.getBelong() == null) {
+                member.setBelong(req.getCompany()+" "+req.getPosition());
+            }
         } else {
             career.setIsWorking(IsWorking.FALSE);
             career.setEndDate(req.getEndDate());
@@ -92,24 +99,25 @@ public class ProfileService {
         res.setMemberIdx(memberIdx);
         res.setNickName(member.getNickname());
         res.setProfileEmail(member.getProfileEmail());
-        findCareerOrEducation(memberIdx, res);
+        if (member.getBelong() == null) {
+            findCareerOrEducation(memberIdx, res, member);
+        } else {
+            res.setBelong(member.getBelong());
+        }
         res.setContent(member.getContent());
         return res;
     }
 
     /** 소속중인 경력이나 교육 찾기 메서드(유저프로필조회 API)*/
-    private void findCareerOrEducation(long memberIdx, GetProfileRes res) {
+    private void findCareerOrEducation(long memberIdx, GetProfileRes res, Member member) {
         List<Education> major = profileRepository.findIsLearning(memberIdx);
         List<Career> career = profileRepository.findIsWorking(memberIdx);
         if (career.isEmpty() != true) {
-            res.setBelong(career.get(0).getCompany());
-            res.setBelong2(career.get(0).getPosition());
+            res.setBelong(career.get(0).getCompany() +" "+ career.get(0).getPosition());
+            member.setBelong(career.get(0).getCompany() +" "+ career.get(0).getPosition());
         } else if(major.isEmpty() != true) {
-            res.setBelong(major.get(0).getInstitution());
-            res.setBelong2(major.get(0).getMajor());
-        } else if (career.isEmpty() && major.isEmpty()) {
-            res.setBelong("소속이 없습니다.");
-            res.setBelong2("소속이 없습니다.");
+            res.setBelong(major.get(0).getInstitution() +" "+ major.get(0).getMajor());
+            member.setBelong(major.get(0).getInstitution() +" "+ major.get(0).getMajor());
         }
     }
 
@@ -134,35 +142,52 @@ public class ProfileService {
         return allEducation;
     }
 
-    /** GET 유저프로필 10명 API*/
+    /** GET 유저프로필 11명 API*/
     @Transactional
     public List<GetProfilesRes> getProfiles() {
 
         List<GetProfilesRes> resList = new ArrayList<>();
-        List<Member> members = profileRepository.findMembers();
+
+
+
+        //유저프로필 랜덤 10명 난수 설정
+        Long count = profileRepository.countMember();
+        int c = Math.toIntExact(count);
+        int a;
+        if (c <= 11) {
+            a = 0;
+        } else {
+            Random random = new Random();
+            random.setSeed(System.currentTimeMillis());
+            a = random.nextInt(c - 11);
+        }
+
+        List<Member> members = profileRepository.findMembers(a);
+
+
+
         for (int i = 0; i < members.size(); i++) {
 
             GetProfilesRes res = new GetProfilesRes();
             Long memberIdx = members.get(i).getMemberIdx();
             String nickname = members.get(i).getNickname();
+            String belong = members.get(i).getBelong();
             res.setMemberIdx(memberIdx);
             res.setNickName(nickname);
-            List<Education> major = profileRepository.findIsLearning(memberIdx);
-            List<Career> career = profileRepository.findIsWorking(memberIdx);
-
-            if (career.isEmpty() && major.isEmpty()) {
-                res.setBelong("소속이없습니다.");
-                res.setBelong2("소속이없습니다.");
-                resList.add(res);
-                continue;
-            }
-            if (career.size() > 0) {
-                res.setBelong(career.get(0).getCompany());
-                res.setBelong2(career.get(0).getPosition());
-            } else {
-                res.setBelong(major.get(0).getInstitution());
-                res.setBelong2(major.get(0).getMajor());
-            }
+            res.setBelong(belong);
+//            List<Education> major = profileRepository.findIsLearning(memberIdx);
+//            List<Career> career = profileRepository.findIsWorking(memberIdx);
+//
+//            if (career.isEmpty() && major.isEmpty()) {
+//                res.setBelong("소속이없습니다.");
+//                resList.add(res);
+//                continue;
+//            }
+//            if (career.size() > 0) {
+//                res.setBelong(career.get(0).getCompany() + " " + career.get(0).getPosition());
+//            } else {
+//                res.setBelong(major.get(0).getInstitution() + " " + major.get(0).getMajor() );
+//            }
             resList.add(res);
         }
         return resList;
@@ -175,5 +200,6 @@ public class ProfileService {
         member.setNickname(req.getNickName());
         member.setProfileEmail(req.getProfileEmail());
         member.setContent(req.getContent());
+        member.setBelong(req.getBelong());
     }
 }
