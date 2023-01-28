@@ -5,6 +5,7 @@ import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetCareerList;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetEducationList;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetSNSList;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -99,13 +100,19 @@ public class ProfileRepository {
         return career;
     }
 
-    public List<Member> findMembers() {
+    public List<Member> findMembers(int c) {
         String jpql = "SELECT m FROM Member m";
         List<Member> resultList = em.createQuery(jpql, Member.class)
-                .setFirstResult(0)
-                .setMaxResults(10)
+                .setFirstResult(c)
+                .setMaxResults(11)
                 .getResultList();
         return resultList;
+    }
+
+    public long countMember() {
+        Query jpql = em.createQuery("SELECT COUNT(m) FROM Member m");
+        Long singleResult = (Long) jpql.getSingleResult();
+        return singleResult;
     }
 
 }
