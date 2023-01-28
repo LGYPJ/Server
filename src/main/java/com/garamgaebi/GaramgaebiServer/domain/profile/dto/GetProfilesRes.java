@@ -10,5 +10,4 @@ public class GetProfilesRes {
     private Long memberIdx;
     private String nickName;
     private String Belong;
-    private String Belong2;
 }

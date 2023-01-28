@@ -32,6 +32,9 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column(name = "belong")
+    private  String belong;
+
     @Column(name = "profile_url",nullable = false)
     private String profileUrl;
 

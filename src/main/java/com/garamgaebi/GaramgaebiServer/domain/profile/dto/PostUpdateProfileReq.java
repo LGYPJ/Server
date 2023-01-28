@@ -9,6 +9,7 @@ import lombok.*;
 public class PostUpdateProfileReq {
     private Long memberIdx;
     private String nickName;
+    private String belong;
     private String profileEmail;
     private String content;
 }

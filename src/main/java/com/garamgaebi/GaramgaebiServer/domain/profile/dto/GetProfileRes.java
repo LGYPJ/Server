@@ -14,6 +14,5 @@ public class GetProfileRes {
     private String nickName;
     private String profileEmail;
     private String belong;
-    private String belong2;
     private String content;
 }

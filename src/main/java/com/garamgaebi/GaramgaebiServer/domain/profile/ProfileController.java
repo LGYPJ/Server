@@ -120,10 +120,9 @@ public class ProfileController {
     }
 
     /**
-     * GET 프로필 10명 추천 API
-     * 10명 추천의 난수? 기준 정하기
+     * GET 프로필 11명 추천 API
      */
-    @Operation(summary = "Profile", description = "GET 프로필 10명 추천 API")
+    @Operation(summary = "Profile", description = "GET 프로필 11명 추천 API")
     @ResponseBody
     @GetMapping("/profiles")
     public BaseResponse<List<GetProfilesRes>> getProfiles() {
