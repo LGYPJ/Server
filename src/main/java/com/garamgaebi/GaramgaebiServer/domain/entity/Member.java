@@ -32,14 +32,16 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(name = "belong")
-    private  String belong;
-
     @Column(name = "profile_url",nullable = false)
     private String profileUrl;
 
+    @Column(name = "belong")
+    private  String belong;
+
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
+
+
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<Education> educations = new ArrayList<Education>();
 
@@ -59,6 +61,7 @@ public class Member extends BaseTimeEntity {
                   String uniEmail,
                   String content,
                   String profileUrl,
+                  String belong,
                   MemberStatus status) {
         this.nickname = nickname;
         this.profileEmail = profileEmail;
@@ -66,6 +69,7 @@ public class Member extends BaseTimeEntity {
         this.uniEmail = uniEmail;
         this.content = content;
         this.profileUrl = profileUrl;
+        this.belong = belong;
         this.status = status;
     }
 

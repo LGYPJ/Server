@@ -15,6 +15,8 @@ public class PostMemberReq {
     private String uniEmail;
     private String content;
     private String profileUrl;
+
+    private String belong;
     private MemberStatus status;
 
     @Builder
@@ -24,6 +26,7 @@ public class PostMemberReq {
                          String uniEmail,
                          String content,
                          String profileUrl,
+                         String belong,
                          MemberStatus status) {
         this.nickname = nickname;
         this.profileEmail = profileEmail;
@@ -31,6 +34,7 @@ public class PostMemberReq {
         this.uniEmail = uniEmail;
         this.content = content;
         this.profileUrl = profileUrl;
+        this.belong = belong;
         this.status = status;
     }
 
@@ -42,6 +46,7 @@ public class PostMemberReq {
                 .uniEmail(uniEmail)
                 .content(content)
                 .profileUrl(profileUrl)
+                .belong(belong)
                 .status(status)
                 .build();
     }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 //@Transactional
 @Service
@@ -21,18 +22,29 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     private boolean checkNicknameValidation(String nickname) {
-        // todo - 정규표현식 적용
-        return false;
+//        if (nickname.length() > 8) {
+//            return false;
+//        }
+//
+//        String pattern = String.valueOf(Pattern.compile("^[a-zA-Z0-9]*$"));  // 영문자와 숫자만 있는지 확인
+//
+//        boolean result = Pattern.matches(pattern, nickname);
+//        System.out.println(result);
+//
+//        return result;
+
+        return true;
     }
 
     @Transactional
     public PostMemberRes postMember(PostMemberReq postMemberReq) {
         if (checkNicknameValidation(postMemberReq.getNickname())) { // 유효한 닉네임
-            throw new RestApiException(ErrorCode.INVALID_NICKNAME);
-        } else { // 유효하지 않은 닉네임
             PostMemberRes postMemberRes = new PostMemberRes(memberRepository.save(postMemberReq.toEntity()).getMemberIdx());
             return postMemberRes;
+        } else { // 유효하지 않은 닉네임
+            throw new RestApiException(ErrorCode.INVALID_NICKNAME);
         }
+
     }
 
     @Transactional
