@@ -74,7 +74,8 @@ public class ProgramServiceImpl implements ProgramService {
                 program.getLocation(),
                 program.getProgramType(),
                 program.getIsPay(),
-                program.getThisMonthStatus()
+                program.getThisMonthStatus(),
+                program.isOpen()
         );
     }
 }

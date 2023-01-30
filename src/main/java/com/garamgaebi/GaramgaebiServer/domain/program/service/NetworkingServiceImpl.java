@@ -176,7 +176,8 @@ public class NetworkingServiceImpl implements NetworkingService {
                 program.getLocation(),
                 program.getProgramType(),
                 program.getIsPay(),
-                program.getThisMonthStatus()
+                program.getThisMonthStatus(),
+                program.isOpen()
         );
     }
 
