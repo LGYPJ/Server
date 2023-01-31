@@ -12,4 +12,5 @@ public class PostUpdateProfileReq {
     private String belong;
     private String profileEmail;
     private String content;
+    private String profileUrl;
 }

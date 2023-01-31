@@ -26,7 +26,12 @@ public class ProfileController {
     /**
      * POST 고객센터(QnA)신청 API
      */
-    @Operation(summary = "Profile", description = "POST 고객센터(QnA)신청 API")
+    @Operation(summary = "POST 고객센터(QnA)신청 API", description = "{\n" +
+            "    \"memberIdx\":\"1\",\n" +
+            "    \"email\":\"email@example.com\",\n" +
+            "    \"category\":\"문의문의9\",\n" +
+            "    \"content\":\"문의내용\"\n" +
+            "}")
     @ResponseBody
     @PostMapping("/qna")
     public BaseResponse<Boolean> saveQna(@RequestBody PostQnaReq req) {
@@ -42,7 +47,10 @@ public class ProfileController {
     /**
      * POST SNS추가 API
      */
-    @Operation(summary = "Profile", description = "POST SNS추가 API")
+    @Operation(summary = "POST SNS추가 API", description = "{\n" +
+            "    \"memberIdx\":\"1\",\n" +
+            "    \"address\":\"exampleinstagram.com\"\n" +
+            "}")
     @ResponseBody
     @PostMapping("/sns")
     public BaseResponse<Boolean> saveSns(@RequestBody PostSNSReq req) {
@@ -56,7 +64,15 @@ public class ProfileController {
     /**
      * POST 교육추가 API
      */
-    @Operation(summary = "Profile", description = "POST 교육추가 API")
+    @Operation(summary = "POST 교육추가 API", description = "{\n" +
+            "    \"memberIdx\" : \"1\",\n" +
+            "    \"institution\" : \"가천대학교\",\n" +
+            "    \"major\" : \"소프트웨어학과\",\n" +
+            "    \"isLearning\" : \"TRUE\",\n" +
+            "    \"startDate\" : \"2020-03\",\n" +
+            "    \"endDate\" : \"\"\n" +
+            "}\n" +
+            "*isLearning -> TRUE, FALSE")
     @ResponseBody
     @PostMapping("/education")
     public BaseResponse<Boolean> saveEducation(@RequestBody PostEducationReq req) {
@@ -67,7 +83,15 @@ public class ProfileController {
     /**
      * POST 경력추가 API
      */
-    @Operation(summary = "Profile", description = "POST 경력추가 API")
+    @Operation(summary = "POST 경력추가 API", description = "{\n" +
+            "    \"memberIdx\" : \"1\",\n" +
+            "    \"company\" : \"라인\",\n" +
+            "    \"position\" : \"풀스택\",\n" +
+            "    \"isWorking\" : \"FALSE\",\n" +
+            "    \"startDate\" : \"2022-06\",\n" +
+            "    \"endDate\" : \"2023-09\"\n" +
+            "}\n" +
+            "*isWorking -> TRUE, FALSE")
     @ResponseBody
     @PostMapping("/career")
     public BaseResponse<Boolean> saveCareer(@RequestBody PostCareerReq req) {
@@ -78,7 +102,7 @@ public class ProfileController {
     /**
      * GET 프로필 조회 API
      */
-    @Operation(summary = "Profile", description = "GET 프로필 조회 API")
+    @Operation(summary = "GET 프로필 조회 API", description = "유저프로필 조회")
     @ResponseBody
     @GetMapping("/{memberIdx}")
     public BaseResponse<GetProfileRes> getProfile(@PathVariable long memberIdx) {
@@ -89,7 +113,7 @@ public class ProfileController {
     /**
      * GET 프로필 SNS 조회 API
      */
-    @Operation(summary = "Profile", description = "GET 프로필 SNS 조회 API")
+    @Operation(summary = "GET 프로필 SNS 조회 API", description = "유저프로필 SNS 리스트조회")
     @ResponseBody
     @GetMapping("/sns/{memberIdx}")
     public BaseResponse<List<GetSNSList>> getSNSList(@PathVariable long memberIdx) {
@@ -100,7 +124,7 @@ public class ProfileController {
     /**
      * GET 프로필 경력 조회 API
      */
-    @Operation(summary = "Profile", description = "GET 프로필 경력 조회 API")
+    @Operation(summary = "GET 프로필 경력 조회 API", description = "유저프로필 경력 리스트조회")
     @ResponseBody
     @GetMapping("/career/{memberIdx}")
     public BaseResponse<List<GetCareerList>> getCareerList(@PathVariable long memberIdx) {
@@ -111,7 +135,7 @@ public class ProfileController {
     /**
      * GET 프로필 교육 조회 API
      */
-    @Operation(summary = "Profile", description = "GET 프로필 교육 조회 API")
+    @Operation(summary = "GET 프로필 교육 조회 API", description = "유저프로필 교육 리스트조회")
     @ResponseBody
     @GetMapping("/education/{memberIdx}")
     public BaseResponse<List<GetEducationList>> getEducationList(@PathVariable long memberIdx) {
@@ -122,7 +146,7 @@ public class ProfileController {
     /**
      * GET 프로필 11명 추천 API
      */
-    @Operation(summary = "Profile", description = "GET 프로필 11명 추천 API")
+    @Operation(summary = "GET 프로필 10명 추천 API", description = "유저프로필 10명 리스트추천")
     @ResponseBody
     @GetMapping("/profiles")
     public BaseResponse<List<GetProfilesRes>> getProfiles() {
@@ -133,7 +157,7 @@ public class ProfileController {
     /**
      * POST 프로필 수정 API
      */
-    @Operation(summary = "Profile", description = "POST 프로필 수정 API")
+    @Operation(summary = "POST 프로필 수정 API", description = "유저프로필 수정")
     @ResponseBody
     @PostMapping("/edit/{memberIdx}")
     public BaseResponse<Boolean> updateProfile(@RequestBody PostUpdateProfileReq req) {
