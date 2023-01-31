@@ -28,6 +28,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-mail' // 이메일 인증
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // validation
+	implementation 'com.google.firebase:firebase-admin:9.1.1' // firebase
 
 	/* Swagger */
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'

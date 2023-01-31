@@ -32,7 +32,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Collection;
 
 
-@Service
+//@Service
 @PropertySource("classpath:application.properties")
 public class KakaoUserService {
     private final MemberRepository memberRepository;

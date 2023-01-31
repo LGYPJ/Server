@@ -5,7 +5,7 @@ import com.garamgaebi.GaramgaebiServer.domain.email.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+//@RestController
 @RequiredArgsConstructor
 @RequestMapping("/email")
 public class EmailController {
