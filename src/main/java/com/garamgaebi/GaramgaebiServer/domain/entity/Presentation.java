@@ -17,7 +17,7 @@ public class Presentation {
     private Long idx;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "programIdx")
+    @JoinColumn(name = "program_idx")
     private Program program;
 
     private String title;
