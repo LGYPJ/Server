@@ -20,14 +20,14 @@ public class ApplyController {
     @Autowired
     public ApplyController(ApplyService applyService) {this.applyService = applyService;}
 
-    @PostMapping("/programs/{id}/enroll")
+    @PostMapping("/programs/enroll")
     public BaseResponse<Long> enroll(@RequestBody @Valid ApplyDto applyDto) {
 
 
         return new BaseResponse<>(applyService.enroll(applyDto));
     }
 
-    @PostMapping("/programs/{id}/leave")
+    @PostMapping("/programs/leave")
     public BaseResponse<Long> leave(@RequestBody @Valid ApplyCancelDto applyCancelDto) {
 
         return new BaseResponse<>(applyService.leave(applyCancelDto));
