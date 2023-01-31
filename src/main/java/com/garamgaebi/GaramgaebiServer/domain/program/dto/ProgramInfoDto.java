@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.dto;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramUserButtonStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class ProgramInfoDto {
     private LocalDateTime endDate;
     @Schema(description = "프로그램 상태 (오픈예정/오픈/마감)", allowableValues = {"READY_TO_OPEN", "OPEN", "CLOSED"})
     private ProgramStatus programStatus;
-    @Schema(description = "유저 버튼 상태(마감/신청완료/신청확인 중/신청하기/신청취소/오픈예정/에러)", allowableValues = {"Closed", "ApplyComplete", "BeforeConfirmApply", "Apply", "ApplyCancel", "NotOpen", "Error"})
-    private String userButtonStatus;
+    @Schema(description = "유저 버튼 상태(마감/신청완료/신청확인중/신청하기/신청취소)", allowableValues = {"CLOSED", "APPLY_COMPLETE", "BEFORE_APPLY_CONFIRM", "APPLY", "CANCEL"})
+    private ProgramUserButtonStatus userButtonStatus;
 
 }
