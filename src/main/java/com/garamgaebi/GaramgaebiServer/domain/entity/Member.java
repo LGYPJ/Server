@@ -54,6 +54,10 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<QnA> QnAs = new ArrayList<QnA>();
 
+    // 알림 관련 엔티티 연결
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MemberNotification> memberNotifications = new ArrayList<MemberNotification>();
+
     @Builder
     public Member(String nickname,
                   String profileEmail,
@@ -106,6 +110,13 @@ public class Member extends BaseTimeEntity {
         this.QnAs.add(qna);
         if (qna.getMember() != this) {
             qna.setMember(this);
+        }
+    }
+
+    public void addMemberNotifications(MemberNotification memberNotification) {
+        this.memberNotifications.add(memberNotification);
+        if(memberNotification.getMember() != this) {
+            memberNotification.setMember(this);
         }
     }
 }

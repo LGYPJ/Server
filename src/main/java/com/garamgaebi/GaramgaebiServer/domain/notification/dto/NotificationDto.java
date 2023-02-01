@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.dto;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.NotificationType;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import lombok.Setter;
 @Setter
 public class NotificationDto {
     @Schema(description = "알림 종류")
-    private String notificationType;
+    private NotificationType notificationType;
     @Schema(description = "알림 내용")
     private String content;
     @Schema(description = "관련 프로그램 idx")
