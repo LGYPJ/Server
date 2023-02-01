@@ -203,7 +203,8 @@ public class SeminarServiceImpl implements SeminarService {
                 program.getLocation(),
                 program.getProgramType(),
                 program.getIsPay(),
-                program.getThisMonthStatus()
+                program.getThisMonthStatus(),
+                program.isOpen()
         );
     }
 

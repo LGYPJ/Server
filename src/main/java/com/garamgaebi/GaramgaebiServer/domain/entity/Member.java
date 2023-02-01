@@ -1,17 +1,25 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
+import com.google.auto.value.AutoValue;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 @Entity
 @Table(name = "Member")
-public class Member extends BaseTimeEntity {
+public class Member extends BaseTimeEntity implements UserDetails {
     @Id
     @Column(name = "member_idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,19 +28,19 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(name = "profile_email",nullable = false)
+    @Column(name = "profile_email", nullable = false)
     private String profileEmail;
 
-    @Column(name = "social_email",nullable = false)
+    @Column(name = "social_email", nullable = false)
     private String socialEmail;
 
-    @Column(name = "uni_email",nullable = false)
+    @Column(name = "uni_email", nullable = false)
     private String uniEmail;
 
     @Column(nullable = false)
     private String content;
 
-    @Column(name = "profile_url",nullable = false)
+    @Column(name = "profile_url", nullable = false)
     private String profileUrl;
 
     @Column(name = "belong")
@@ -40,6 +48,13 @@ public class Member extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
+
+    @Column(nullable = false)
+    private String password;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
@@ -54,24 +69,24 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<QnA> QnAs = new ArrayList<QnA>();
 
-    @Builder
-    public Member(String nickname,
-                  String profileEmail,
-                  String socialEmail,
-                  String uniEmail,
-                  String content,
-                  String profileUrl,
-                  String belong,
-                  MemberStatus status) {
-        this.nickname = nickname;
-        this.profileEmail = profileEmail;
-        this.socialEmail = socialEmail;
-        this.uniEmail = uniEmail;
-        this.content = content;
-        this.profileUrl = profileUrl;
-        this.belong = belong;
-        this.status = status;
-    }
+//    @Builder
+//    public Member(String nickname,
+//                  String profileEmail,
+//                  String socialEmail,
+//                  String uniEmail,
+//                  String content,
+//                  String profileUrl,
+//                  String belong,
+//                  MemberStatus status) {
+//        this.nickname = nickname;
+//        this.profileEmail = profileEmail;
+//        this.socialEmail = socialEmail;
+//        this.uniEmail = uniEmail;
+//        this.content = content;
+//        this.profileUrl = profileUrl;
+//        this.belong = belong;
+//        this.status = status;
+//    }
 
     public void inactivedMember() {
         this.status = MemberStatus.INACTIVE;
@@ -107,5 +122,42 @@ public class Member extends BaseTimeEntity {
         if (qna.getMember() != this) {
             qna.setMember(this);
         }
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

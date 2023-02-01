@@ -1,5 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.dto;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramOpenStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramPayStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramThisMonthStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -26,7 +29,9 @@ public class ProgramDto {
     @Schema(description = "프로그램 종류")
     private ProgramType type;
     @Schema(description = "프로그램 유료/무료 여부(음수일 경우 ERROR)", allowableValues = {"PREMIUM", "FREE", "ERROR"})
-    private String payment;
+    private ProgramPayStatus payment;
     @Schema(description = "프로그램 상태(이번달/예정/마감)", allowableValues = {"THIS_MONTH", "READY", "CLOSED"})
-    private String status;
+    private ProgramThisMonthStatus status;
+    @Schema(description = "프로그램 오픈 여부", allowableValues = {"OPEN", "BEFORE_OPEN"})
+    private ProgramOpenStatus isOpen;
 }

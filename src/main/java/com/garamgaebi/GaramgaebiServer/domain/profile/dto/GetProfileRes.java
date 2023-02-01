@@ -15,4 +15,5 @@ public class GetProfileRes {
     private String profileEmail;
     private String belong;
     private String content;
+    private String profileUrl;
 }

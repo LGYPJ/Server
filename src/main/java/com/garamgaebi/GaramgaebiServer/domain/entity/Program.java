@@ -66,15 +66,15 @@ public class Program {
 
     // == 조회 메서드 == //
     // 유료 여부 조회
-    public String getIsPay() {
+    public ProgramPayStatus getIsPay() {
         if(fee > 0) {
-            return "PREMIUM";
+            return ProgramPayStatus.PREMIUM;
         }
         else if(fee == 0) {
-            return "FREE";
+            return ProgramPayStatus.FREE;
         }
         else {
-            return "ERROR";
+            return ProgramPayStatus.ERROR;
         }
     }
 
@@ -83,8 +83,9 @@ public class Program {
     public ProgramStatus getStatus() {
         if(this.status != ProgramStatus.DELETE && this.status != ProgramStatus.CLOSED_CONFIRM) {
             if (LocalDateTime.now().isAfter(getEndDate())) {
-                if (this.getIsPay().equals("FREE")){
+                if (this.getIsPay() == ProgramPayStatus.FREE){
                     this.setStatus(ProgramStatus.CLOSED_CONFIRM);
+                    // 신청 완료 알림 발송
                 }
                 else {
                     this.setStatus(ProgramStatus.CLOSED);
@@ -100,10 +101,16 @@ public class Program {
     }
 
     // 이번달, 예정, 지난 프로그램 구분
-    public String getThisMonthStatus() {
-        if(this.date.isBefore(LocalDateTime.now())) { return "CLOSED"; }
-        else if(this.date.isBefore((LocalDateTime) LocalDate.now().plusMonths(1).atStartOfDay())) { return "THIS_MONTH"; }
-        else { return "READY"; }
+    public ProgramThisMonthStatus getThisMonthStatus() {
+        if(this.date.isBefore(LocalDateTime.now())) { return ProgramThisMonthStatus.CLOSED; }
+        else if(this.date.isBefore((LocalDateTime) LocalDate.now().plusMonths(1).atStartOfDay())) { return ProgramThisMonthStatus.THIS_MONTH; }
+        else { return ProgramThisMonthStatus.READY; }
+    }
+
+    // 오픈여부 조회
+    public ProgramOpenStatus isOpen() {
+        if(this.getStatus() == ProgramStatus.READY_TO_OPEN) { return ProgramOpenStatus.BEFORE_OPEN; }
+        return ProgramOpenStatus.OPEN;
     }
 
 
@@ -131,6 +138,10 @@ public class Program {
                 if (apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY) {
                     // 신청확인 중 버튼 활성화
                     return "BeforeConfirmApply";
+                }
+                else if (apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.CANCEL) {
+                    // 신청확인 중 버튼 활성화
+                    return "ReadyToRefund";
                 }
             }
             // 마감 버튼 활성화
