@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class NotificationServiceImpl {
+public class NotificationServiceImpl implements NotificationService {
 
     @Value("${fcm.key.path}")
     private String FCM_PRIVATE_KEY_PATH;
@@ -42,10 +42,11 @@ public class NotificationServiceImpl {
     }
 
     // 알림 보내기
+    @Override
     public void sendByTokenList(List<String> tokenList, NotificationDto notificationDto) {
 
         List<Message> messages = tokenList.stream().map(token -> Message.builder()
-                .putData("notificationType", notificationDto.getNotificationType())
+                .putData("notificationType", notificationDto.getNotificationType().toString())
                 .putData("content", notificationDto.getContent())
                 .putData("resourceIdx", notificationDto.getResourceIdx().toString())
                 .putData("resourceType", notificationDto.getResourceType().toString())
