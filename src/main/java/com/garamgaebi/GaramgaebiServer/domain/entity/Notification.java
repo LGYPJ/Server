@@ -25,7 +25,7 @@ public class Notification {
     private Long resourceIdx;
     @Column(name = "resource_type")
     private ProgramType resourceType;
-    private String status;
+    private NotificationStatus status;
 
     @OneToMany(mappedBy = "notification")
     private List<MemberNotification> memberNotifications = new ArrayList<MemberNotification>();
