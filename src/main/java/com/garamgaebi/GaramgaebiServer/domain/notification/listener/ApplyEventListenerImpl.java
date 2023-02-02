@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Async("apply_async")
+@Async("applyThreadPoolExecutor")
 @Transactional
 @RequiredArgsConstructor
 public class ApplyEventListenerImpl implements ApplyEventListener {
