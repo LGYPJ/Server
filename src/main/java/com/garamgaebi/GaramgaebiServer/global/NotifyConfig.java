@@ -12,7 +12,7 @@ import java.util.concurrent.Executor;
 @Configuration
 public class NotifyConfig {
 
-    @Bean(name = "apply_async")
+    @Bean(name = "applyThreadPoolExecutor")
     public Executor applyThreadPoolExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 자원 절반 할당
@@ -27,7 +27,7 @@ public class NotifyConfig {
         return executor;
     }
 
-    @Bean(name = "program_async")
+    @Bean(name = "programThreadPoolExecutor")
     public Executor programThreadPoolExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 자원 절반 할당
