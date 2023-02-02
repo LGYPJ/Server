@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
-
+/*
 // 알림 Asynchronization 설정
 @EnableAsync
 @Configuration
@@ -15,8 +15,8 @@ public class NotifyConfig {
     @Bean(name = "applyThreadPoolExecutor")
     public Executor applyThreadPoolExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        // 자원 절반 할당
-        int processors = (Runtime.getRuntime().availableProcessors()) / 2;
+
+        int processors = (Runtime.getRuntime().availableProcessors());
 
         executor.setThreadNamePrefix("ApplyAsync-"); // thread 이름 설정
         executor.setCorePoolSize(processors); // 기본 스레드 수
@@ -30,8 +30,8 @@ public class NotifyConfig {
     @Bean(name = "programThreadPoolExecutor")
     public Executor programThreadPoolExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        // 자원 절반 할당
-        int processors = (Runtime.getRuntime().availableProcessors()) / 2;
+
+        int processors = (Runtime.getRuntime().availableProcessors());
 
         executor.setThreadNamePrefix("ProgramAsync-"); // thread 이름 설정
         executor.setCorePoolSize(processors); // 기본 스레드 수
@@ -42,3 +42,5 @@ public class NotifyConfig {
         return executor;
     }
 }
+
+ */

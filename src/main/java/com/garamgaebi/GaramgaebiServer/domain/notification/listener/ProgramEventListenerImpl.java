@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@Async("programThreadPoolExecutor")
+//@Async("programThreadPoolExecutor")
 @Transactional
 @RequiredArgsConstructor
 public class ProgramEventListenerImpl implements ProgramEventListener {
