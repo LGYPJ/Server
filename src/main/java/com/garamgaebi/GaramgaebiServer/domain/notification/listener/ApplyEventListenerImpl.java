@@ -9,13 +9,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 //@Async("applyThreadPoolExecutor")
-@Transactional
 @RequiredArgsConstructor
 public class ApplyEventListenerImpl implements ApplyEventListener {
 
@@ -23,7 +23,8 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
     private final NotificationRepository notificationRepository;
 
     @Override
-    @EventListener
+    @Async
+    @TransactionalEventListener
     public void handleApplyEvent(Apply apply) {
 
         Member member = apply.getMember();
@@ -59,7 +60,8 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
     }
 
     @Override
-    @EventListener
+    @Async
+    @TransactionalEventListener
     public void handleApplyCancelEvent(Apply apply) {
         Member member = apply.getMember();
 
@@ -94,7 +96,8 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
     }
 
     @Override
-    @EventListener
+    @Async
+    @TransactionalEventListener
     public void handleRefundEvent(List<Apply> applyList) {
         // 관리자 페이지 구현 나오면 결정
     }
