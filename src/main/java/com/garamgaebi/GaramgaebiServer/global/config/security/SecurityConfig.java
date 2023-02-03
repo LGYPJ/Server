@@ -19,6 +19,12 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate redisTemplate;
 
+    private static final String[] PERMIT_URL_ARRAY = {
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws  Exception {
         http
@@ -27,17 +33,12 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
+                .requestMatchers(PERMIT_URL_ARRAY).permitAll()
                 .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/member/login").permitAll()
                 .requestMatchers("/member/post").permitAll()
                 .requestMatchers("/email/emailconfirm").permitAll()
-                .requestMatchers("/member/**").hasRole("USER")
-                .requestMatchers("/profile/**").hasRole("USER")
-                .requestMatchers("/applies/**").hasRole("USER")
-                .requestMatchers("/notification/**").hasRole("USER")
-                .requestMatchers("/networkings/**").hasRole("USER")
-                .requestMatchers("/programs/**").hasRole("USER")
-                .requestMatchers("/seminars/**").hasRole("USER")
+                .requestMatchers("/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
