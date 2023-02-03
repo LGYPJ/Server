@@ -9,6 +9,8 @@ import lombok.*;
 public class GetProfilesRes {
     private Long memberIdx;
     private String nickName;
-    private String Belong;
+    private String belong;
     private String profileUrl;
+    private String group;
+    private String detail;
 }

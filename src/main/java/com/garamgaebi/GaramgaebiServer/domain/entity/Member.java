@@ -69,6 +69,29 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<QnA> QnAs = new ArrayList<QnA>();
 
+    // 알림 관련 엔티티 연결
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MemberNotification> memberNotifications = new ArrayList<MemberNotification>();
+
+    @Builder
+    public Member(String nickname,
+                  String profileEmail,
+                  String socialEmail,
+                  String uniEmail,
+                  String content,
+                  String profileUrl,
+                  String belong,
+                  MemberStatus status) {
+        this.nickname = nickname;
+        this.profileEmail = profileEmail;
+        this.socialEmail = socialEmail;
+        this.uniEmail = uniEmail;
+        this.content = content;
+        this.profileUrl = profileUrl;
+        this.belong = belong;
+        this.status = status;
+    }
+
     public void inactivedMember() {
         this.status = MemberStatus.INACTIVE;
     }
@@ -140,5 +163,12 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    
+    public void addMemberNotifications(MemberNotification memberNotification) {
+        this.memberNotifications.add(memberNotification);
+        if(memberNotification.getMember() != this) {
+            memberNotification.setMember(this);
+        }
     }
 }

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "ProgramController", description = "프로그램 컨트롤러")
+@Tag(name = "ProgramController", description = "프로그램 컨트롤러(담당자:로니)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/programs")

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "NetworkingController", description = "네트워킹 컨트롤러")
+@Tag(name = "NetworkingController", description = "네트워킹 컨트롤러(담당자:로니)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/networkings")
