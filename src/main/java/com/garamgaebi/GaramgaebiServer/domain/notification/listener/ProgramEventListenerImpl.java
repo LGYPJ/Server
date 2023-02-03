@@ -35,16 +35,11 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
         // 알림 메세지 내용 가공
         NotificationDto notificationDto = new NotificationDto(
-                NotificationType.모아보기,
+                NotificationType.COLLECTIONS,
                 "새로운 세미나가 오픈되었어요",
                 program.getIdx(),
                 program.getProgramType()
         );
-
-        // 알림 발송
-        if(fcmTokenList.size() != 0) {
-            notificationSender.sendByTokenList(fcmTokenList, notificationDto);
-        }
 
         // 알림 엔티티 insert
         Notification notification = new Notification();
@@ -60,6 +55,12 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
         // 리스트 저장
         notificationRepository.save(notification);
+
+        // 알림 발송
+        if(fcmTokenList.size() != 0) {
+            notificationSender.sendByTokenList(fcmTokenList, notificationDto);
+        }
+
     }
 
     @Override
@@ -75,16 +76,11 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
         // 알림 메세지 내용 가공
         NotificationDto notificationDto = new NotificationDto(
-                NotificationType.모아보기,
+                NotificationType.COLLECTIONS,
                 "새로운 네트워킹이 오픈되었어요",
                 program.getIdx(),
                 program.getProgramType()
         );
-
-        // 알림 발송
-        if(fcmTokenList.size() != 0) {
-            notificationSender.sendByTokenList(fcmTokenList, notificationDto);
-        }
 
         // 알림 엔티티 insert
         Notification notification = new Notification();
@@ -100,6 +96,11 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
         // 리스트 저장
         notificationRepository.save(notification);
+
+        // 알림 발송
+        if(fcmTokenList.size() != 0) {
+            notificationSender.sendByTokenList(fcmTokenList, notificationDto);
+        }
     }
 
     @Override
