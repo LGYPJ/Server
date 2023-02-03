@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/swagger-resources/**").permitAll()
                 .requestMatchers("/member/login").permitAll()
                 .requestMatchers("/member/post").permitAll()
                 .requestMatchers("/email/emailconfirm").permitAll()
