@@ -1,25 +1,43 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.member.dto.InactivedMemberRes;
-import com.garamgaebi.GaramgaebiServer.domain.member.dto.PostMemberReq;
-import com.garamgaebi.GaramgaebiServer.domain.member.dto.PostMemberRes;
+import com.garamgaebi.GaramgaebiServer.domain.entity.MemberRoles;
+import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRolesRepository;
+import com.garamgaebi.GaramgaebiServer.global.config.security.JwtTokenProvider;
+import com.garamgaebi.GaramgaebiServer.global.config.security.dto.TokenInfo;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-//@Transactional
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@PropertySource("classpath:application.properties")
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final MemberRolesRepository memberRolesRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final RedisTemplate redisTemplate;
+
+//    @Value("${jwt.secret}")
+//    private final String secret;
 
     private boolean checkNicknameValidation(String nickname) {
 //        if (nickname.length() > 8) {
@@ -40,6 +58,10 @@ public class MemberService {
     public PostMemberRes postMember(PostMemberReq postMemberReq) {
         if (checkNicknameValidation(postMemberReq.getNickname())) { // 유효한 닉네임
             PostMemberRes postMemberRes = new PostMemberRes(memberRepository.save(postMemberReq.toEntity()).getMemberIdx());
+            MemberRolesDto memberRolesDto = new MemberRolesDto();
+            memberRolesDto.setMemberIdx(postMemberRes.getMember_idx());
+            memberRolesDto.setRoles("USER");
+            memberRolesRepository.save(memberRolesDto.toEntity());
             return postMemberRes;
         } else { // 유효하지 않은 닉네임
             throw new RestApiException(ErrorCode.INVALID_NICKNAME);
@@ -59,5 +81,53 @@ public class MemberService {
         System.out.println(member.getStatus());
 
         return new InactivedMemberRes(true);
+    }
+
+    @Transactional
+    public TokenInfo login(MemberLoginReq memberLoginReq) {
+        // 1. ID/PW를 기반으로 Authentication 객체 생성
+        // 이 때, authentication은 인증 여부를 확인하는 authenticated 값이 false
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberLoginReq.getUniEmail(), memberLoginReq.getPassword());
+
+        // 2. 실제 검증 (사용자 비밀번호 체크)
+        // authenticate 메서드가 실행될 때 CustomUserDetailsService에서 만든 loadUserByUsername 메서드가 실행
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // 3. 인증 정보를 기반으로 JWT Token 생성
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+
+        // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
+        redisTemplate.opsForValue()
+                .set("RT: " + authentication.getName(),
+                        tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(),
+                        TimeUnit.MILLISECONDS);
+
+        return tokenInfo;
+    }
+
+    public MemberLogoutRes logout(MemberLogoutReq memberLogoutReq) {
+        // 1. Access Token 검증
+        if (!jwtTokenProvider.validateToken(memberLogoutReq.getAccessToken())) {
+            throw new RestApiException(ErrorCode.INVALID_NICKNAME);
+        }
+
+        // 2. Access Token에서 User email을 가져옴
+        Authentication authentication = jwtTokenProvider.getAuthentication(memberLogoutReq.getAccessToken());
+
+        // 3. Redis에서 해당 User email로 저장된 Refresh Token이 있는지 여부를 확인한 후 있으면 삭제
+        if (redisTemplate.opsForValue().get("RT: " + authentication.getName()) != null) {
+            // Refresh Token 삭제
+            redisTemplate.delete("RT: " + authentication.getName());
+        }
+
+        // 4. 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장
+        Long expiration = jwtTokenProvider.getExpiration(memberLogoutReq.getAccessToken());
+        redisTemplate.opsForValue()
+                .set(memberLogoutReq.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+
+        MemberLogoutRes memberLogoutRes = new MemberLogoutRes();
+        memberLogoutRes.setMemberInfo(authentication.getName());
+
+        return memberLogoutRes;
     }
 }

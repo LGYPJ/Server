@@ -1,7 +1,10 @@
 package com.garamgaebi.GaramgaebiServer.domain.email.controller;
 
 
+import com.garamgaebi.GaramgaebiServer.domain.email.dto.EmailReq;
+import com.garamgaebi.GaramgaebiServer.domain.email.dto.EmailRes;
 import com.garamgaebi.GaramgaebiServer.domain.email.service.EmailService;
+import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +15,8 @@ public class EmailController {
 
     private final EmailService emailService;
 
-    @PostMapping("/{email}/emailconfirm")
-    public String emailConfirm(@PathVariable(name = "email") String email) throws Exception {
-        String confirm = emailService.sendEmail(email);
-
-        return confirm;
+    @PostMapping("/emailconfirm")
+    public BaseResponse<EmailRes> emailConfirm(@RequestBody EmailReq emailReq) throws Exception {
+        return new BaseResponse<>(emailService.sendEmail(emailReq));
     }
 }

@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.global;
+package com.garamgaebi.GaramgaebiServer.global.config;
 
 import org.springframework.context.annotation.Configuration;
 

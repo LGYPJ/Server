@@ -19,6 +19,8 @@ public class PostMemberReq {
     private String belong;
     private MemberStatus status;
 
+    private String password;
+
     @Builder
     public PostMemberReq(String nickname,
                          String profileEmail,
@@ -27,7 +29,8 @@ public class PostMemberReq {
                          String content,
                          String profileUrl,
                          String belong,
-                         MemberStatus status) {
+                         MemberStatus status,
+                         String password) {
         this.nickname = nickname;
         this.profileEmail = profileEmail;
         this.socialEmail = socialEmail;
@@ -36,6 +39,7 @@ public class PostMemberReq {
         this.profileUrl = profileUrl;
         this.belong = belong;
         this.status = status;
+        this.password = password;
     }
 
     public Member toEntity() {
@@ -48,6 +52,7 @@ public class PostMemberReq {
                 .profileUrl(profileUrl)
                 .belong(belong)
                 .status(status)
+                .password(password)
                 .build();
     }
 }
