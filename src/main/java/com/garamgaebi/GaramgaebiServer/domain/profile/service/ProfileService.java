@@ -111,8 +111,8 @@ public class ProfileService {
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
-        GetProfileRes res = new GetProfileRes();
 
+        GetProfileRes res = new GetProfileRes();
         res.setMemberIdx(memberIdx);
         res.setNickName(member.getNickname());
         res.setProfileEmail(member.getProfileEmail());
@@ -132,10 +132,12 @@ public class ProfileService {
         List<Career> career = profileRepository.findIsWorking(memberIdx);
         if (career.isEmpty() != true) {
             res.setBelong(career.get(0).getCompany() +" "+ career.get(0).getPosition());
-            member.setBelong(career.get(0).getCompany() +" "+ career.get(0).getPosition());
-        } else if(major.isEmpty() != true) {
-            res.setBelong(major.get(0).getInstitution() +" "+ major.get(0).getMajor());
-            member.setBelong(major.get(0).getInstitution() +" "+ major.get(0).getMajor());
+//            member.setBelong(career.get(0).getCompany() +" "+ career.get(0).getPosition());
+        } else if (major.isEmpty() != true) {
+            res.setBelong(major.get(0).getInstitution() + " " + major.get(0).getMajor());
+//            member.setBelong(major.get(0).getInstitution() + " " + major.get(0).getMajor());
+        } else {
+            res.setBelong("belong이 없습니다");
         }
     }
 
@@ -191,11 +193,28 @@ public class ProfileService {
 
         List<Member> members = profileRepository.findMembers(a);
         for (int i = 0; i < members.size(); i++) {
+
             GetProfilesRes res = new GetProfilesRes();
             res.setMemberIdx(members.get(i).getMemberIdx());
             res.setNickName(members.get(i).getNickname());
             res.setBelong(members.get(i).getBelong());
             res.setProfileUrl(members.get(i).getProfileUrl());
+
+            List<Education> major = profileRepository.findIsLearning(members.get(i).getMemberIdx());
+            List<Career> career = profileRepository.findIsWorking(members.get(i).getMemberIdx());
+            if (career.isEmpty() && major.isEmpty()) {
+                res.setGroup("group이 없습니다.");
+                res.setDetail("detail이 없습니다.");
+                resList.add(res);
+                continue;
+            }
+            if (career.size() > 0) {
+                res.setGroup(career.get(0).getCompany());
+                res.setDetail(career.get(0).getPosition());
+            } else {
+                res.setGroup(major.get(0).getInstitution());
+                res.setDetail(major.get(0).getMajor());
+            }
             resList.add(res);
         }
         return resList;
