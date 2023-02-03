@@ -46,4 +46,9 @@ public class MemberNotification {
             notification.addMemberNotifications(this);
         }
     }
+
+    // 비즈니스 로직
+    public void read() {
+        this.isRead = true;
+    }
 }

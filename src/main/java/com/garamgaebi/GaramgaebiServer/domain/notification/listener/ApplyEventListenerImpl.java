@@ -34,16 +34,11 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
         // 알림 메세지 내용 가공
         NotificationDto notificationDto = new NotificationDto(
-                NotificationType.모아보기,
+                NotificationType.APPLY_COMPLETE,
                 apply.getProgram().getTitle() + " 신청이 완료되었어요",
                 apply.getProgram().getIdx(),
                 apply.getProgram().getProgramType()
         );
-
-        // 알림 발송
-        if (!fcmToken.isBlank()) {
-            notificationSender.sendByToken(fcmToken, notificationDto);
-        }
 
         // 알림 엔티티 insert
         Notification notification = new Notification();
@@ -57,6 +52,12 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
         // 리스트 저장
         notificationRepository.save(notification);
+
+        // 알림 발송
+        if (!fcmToken.isBlank()) {
+            notificationSender.sendByToken(fcmToken, notificationDto);
+        }
+
     }
 
     @Override
@@ -70,16 +71,11 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
         // 알림 메세지 내용 가공
         NotificationDto notificationDto = new NotificationDto(
-                NotificationType.모아보기,
+                NotificationType.APPLY_CANCEL_COMPLETE,
                 apply.getProgram().getTitle() + " 신청 취소가 완료되었어요",
                 apply.getProgram().getIdx(),
                 apply.getProgram().getProgramType()
         );
-
-        // 알림 발송
-        if(!fcmToken.isBlank()) {
-            notificationSender.sendByToken(fcmToken, notificationDto);
-        }
 
         // 알림 엔티티 insert
         Notification notification = new Notification();
@@ -93,6 +89,12 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
         // 리스트 저장
         notificationRepository.save(notification);
+
+        // 알림 발송
+        if(!fcmToken.isBlank()) {
+            notificationSender.sendByToken(fcmToken, notificationDto);
+        }
+
     }
 
     @Override
