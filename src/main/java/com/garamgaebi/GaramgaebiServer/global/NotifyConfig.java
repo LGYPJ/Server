@@ -6,12 +6,12 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
-/*
+
 // 알림 Asynchronization 설정
 @EnableAsync
 @Configuration
 public class NotifyConfig {
-
+/*
     @Bean(name = "applyThreadPoolExecutor")
     public Executor applyThreadPoolExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -41,6 +41,7 @@ public class NotifyConfig {
         executor.initialize(); // 초기화후 반환
         return executor;
     }
-}
 
  */
+}
+

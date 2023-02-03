@@ -9,13 +9,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 //@Async("programThreadPoolExecutor")
-@Transactional
 @RequiredArgsConstructor
 public class ProgramEventListenerImpl implements ProgramEventListener {
 
@@ -23,7 +23,8 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
     private final NotificationRepository notificationRepository;
 
     @Override
-    @EventListener
+    @Async
+    @TransactionalEventListener
     public void handleSeminarOpenEvent(Program program) {
 
         // 로그인 된 멤버 리스트 가져오기
@@ -62,7 +63,8 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
     }
 
     @Override
-    @EventListener
+    @Async
+    @TransactionalEventListener
     public void handleNetworkingOpenEvent(Program program) {
 
         // 로그인 된 멤버 리스트 가져오기
@@ -101,7 +103,8 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
     }
 
     @Override
-    @EventListener
+    @Async
+    @TransactionalEventListener
     public void handleProgramDeadlineEvent(Program program) {
         // 동적 스케줄링 알아보고 구현해보기
     }
