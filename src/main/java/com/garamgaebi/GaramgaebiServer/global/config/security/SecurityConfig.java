@@ -3,6 +3,7 @@ package com.garamgaebi.GaramgaebiServer.global.config.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
+    private final RedisTemplate redisTemplate;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws  Exception {
@@ -32,7 +34,7 @@ public class SecurityConfig {
                 .requestMatchers("/profile/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

@@ -1,10 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.controller;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.member.dto.InactivedMemberRes;
-import com.garamgaebi.GaramgaebiServer.domain.member.dto.MemberLoginReq;
-import com.garamgaebi.GaramgaebiServer.domain.member.dto.PostMemberReq;
-import com.garamgaebi.GaramgaebiServer.domain.member.dto.PostMemberRes;
+import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.service.MemberService;
 import com.garamgaebi.GaramgaebiServer.global.config.security.dto.TokenInfo;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
@@ -33,7 +30,11 @@ public class MemberController {
 
     @PostMapping("/login")
     public BaseResponse<TokenInfo> login(@RequestBody MemberLoginReq memberLoginReq) {
-        String uniEmail = memberLoginReq.getUniEmail();
         return new BaseResponse<>(memberService.login(memberLoginReq));
+    }
+
+    @PostMapping("/logout")
+    public BaseResponse<MemberLogoutRes> logout(@RequestBody MemberLogoutReq memberLogoutReq) {
+        return new BaseResponse<>(memberService.logout(memberLogoutReq));
     }
 }

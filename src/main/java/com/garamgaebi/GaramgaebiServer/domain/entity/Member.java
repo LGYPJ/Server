@@ -69,25 +69,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
     private List<QnA> QnAs = new ArrayList<QnA>();
 
-//    @Builder
-//    public Member(String nickname,
-//                  String profileEmail,
-//                  String socialEmail,
-//                  String uniEmail,
-//                  String content,
-//                  String profileUrl,
-//                  String belong,
-//                  MemberStatus status) {
-//        this.nickname = nickname;
-//        this.profileEmail = profileEmail;
-//        this.socialEmail = socialEmail;
-//        this.uniEmail = uniEmail;
-//        this.content = content;
-//        this.profileUrl = profileUrl;
-//        this.belong = belong;
-//        this.status = status;
-//    }
-
     public void inactivedMember() {
         this.status = MemberStatus.INACTIVE;
     }

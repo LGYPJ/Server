@@ -29,11 +29,14 @@ public class JwtTokenProvider {
     private final Key key = Keys.hmacShaKeyFor(keyBytes);
 
 //    private final Key key;
-
+//
 //    public JwtTokenProvider(@Value("${jwt.secret") String secretKey) {
 //        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 //        this.key = Keys.hmacShaKeyFor(keyBytes);
 //    }
+
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
 
     // 유저 정보를 가지고 AccessToken, RefreshToken 생성
     public TokenInfo generateToken(Authentication authentication) {
@@ -45,7 +48,7 @@ public class JwtTokenProvider {
         long now = (new Date()).getTime();
 
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
@@ -55,7 +58,7 @@ public class JwtTokenProvider {
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 86400000))
+                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
@@ -63,6 +66,7 @@ public class JwtTokenProvider {
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                 .build();
     }
 
@@ -110,5 +114,13 @@ public class JwtTokenProvider {
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
+    }
+
+    public Long getExpiration(String accessToken) {
+        // accessToken 남은 시간
+        Date expiration = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody().getExpiration();
+        // 현재 시간
+        Long now = new Date().getTime();
+        return (expiration.getTime() - now);
     }
 }

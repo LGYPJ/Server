@@ -3,6 +3,7 @@ package com.garamgaebi.GaramgaebiServer.global.config.security;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
