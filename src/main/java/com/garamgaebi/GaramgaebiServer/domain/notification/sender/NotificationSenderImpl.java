@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.notification.service;
+package com.garamgaebi.GaramgaebiServer.domain.notification.sender;
 
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class NotificationServiceImpl {
+public class NotificationSenderImpl implements NotificationSender {
 
     @Value("${fcm.key.path}")
     private String FCM_PRIVATE_KEY_PATH;
@@ -42,10 +42,11 @@ public class NotificationServiceImpl {
     }
 
     // 알림 보내기
+    @Override
     public void sendByTokenList(List<String> tokenList, NotificationDto notificationDto) {
 
         List<Message> messages = tokenList.stream().map(token -> Message.builder()
-                .putData("notificationType", notificationDto.getNotificationType())
+                .putData("notificationType", notificationDto.getNotificationType().toString())
                 .putData("content", notificationDto.getContent())
                 .putData("resourceIdx", notificationDto.getResourceIdx().toString())
                 .putData("resourceType", notificationDto.getResourceType().toString())
@@ -72,6 +73,29 @@ public class NotificationServiceImpl {
 
         } catch (FirebaseMessagingException e) {
             // 전체 알림 발송 실패 로그 찍기
+        }
+    }
+
+    // 하나의 멤버에게 알림 전송
+    @Override
+    public void sendByToken(String token, NotificationDto notificationDto) {
+        Message messages = Message.builder()
+                .putData("notificationType", notificationDto.getNotificationType().toString())
+                .putData("content", notificationDto.getContent())
+                .putData("resourceIdx", notificationDto.getResourceIdx().toString())
+                .putData("resourceType", notificationDto.getResourceType().toString())
+                .setToken(token)
+                .build();
+
+        String response;
+        try {
+            // firebase 서버로 알림 발송
+            // 성공 : 전송된 메세지 ID 문자열로 응답
+            // 실패 : FirebaseMessagingException 발생
+            response = FirebaseMessaging.getInstance().send(messages);
+
+        } catch (FirebaseMessagingException e) {
+            // 알림 발송 실패 로그 찍기
         }
     }
 }
