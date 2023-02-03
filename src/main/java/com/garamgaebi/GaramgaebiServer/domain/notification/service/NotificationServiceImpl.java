@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.notification.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.MemberNotification;
+import com.garamgaebi.GaramgaebiServer.domain.entity.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.MemberNotificationRepository;
@@ -32,7 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         Optional<Member> member = memberRepository.findById(memberIdx);
 
-        if(member.isEmpty()) {
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
