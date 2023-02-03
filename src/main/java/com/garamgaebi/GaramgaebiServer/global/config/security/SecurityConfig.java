@@ -27,11 +27,11 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
+                .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/member/login").permitAll()
                 .requestMatchers("/member/post").permitAll()
-                .requestMatchers("/member/**").hasRole("USER")
                 .requestMatchers("/email/emailconfirm").permitAll()
-                .requestMatchers("/profile/**").hasRole("USER")
+                .requestMatchers("/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
