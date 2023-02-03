@@ -1,5 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.email.service;
 
+import com.garamgaebi.GaramgaebiServer.domain.email.dto.EmailReq;
+import com.garamgaebi.GaramgaebiServer.domain.email.dto.EmailRes;
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -13,7 +15,8 @@ import java.util.Random;
 
 //@Service
 public class EmailServiceImpl implements EmailService {
-    JavaMailSenderImpl emailSender;
+    @Autowired
+    JavaMailSender emailSender;
 
     public static final String ePw = createKey();
 
@@ -73,14 +76,17 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public String sendEmail(String to) throws Exception {
-        MimeMessage message = createMessage(to);
+    public EmailRes sendEmail(EmailReq emailReq) throws Exception {
+        MimeMessage message = createMessage(emailReq.getEmail());
         try {
             emailSender.send(message);
         } catch(MailException es) {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        return ePw;
+        EmailRes res = new EmailRes();
+        res.setKey(ePw);
+
+        return res;
     }
 }
