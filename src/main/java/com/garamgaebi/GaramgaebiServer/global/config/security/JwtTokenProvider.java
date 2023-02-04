@@ -23,17 +23,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-//@PropertySource("classpath:application-garamgaebi.properties")
 public class JwtTokenProvider {
-    byte[] keyBytes = Decoders.BASE64.decode("VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa");
-    private final Key key = Keys.hmacShaKeyFor(keyBytes);
+    private final Key key;
 
-//    private final Key key;
-//
-//    public JwtTokenProvider(@Value("${jwt.secret") String secretKey) {
-//        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-//        this.key = Keys.hmacShaKeyFor(keyBytes);
-//    }
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
