@@ -1,5 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.global.config.security;
 
+import com.garamgaebi.GaramgaebiServer.global.response.exception.CustomAccessDeniedHandler;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.CustomAuthenticationEntryPoint;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.FilterExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +22,8 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate redisTemplate;
 
+    private final FilterExceptionHandler filterExceptionHandler;
+
     private static final String[] PERMIT_URL_ARRAY = {
             /* swagger v3 */
             "/v3/api-docs/**",
@@ -34,6 +39,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(PERMIT_URL_ARRAY).permitAll()
+                .requestMatchers("/images").permitAll()
                 .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/member/login").permitAll()
                 .requestMatchers("/member/post").permitAll()
@@ -41,7 +47,12 @@ public class SecurityConfig {
                 .requestMatchers("/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+                .and()
+                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(filterExceptionHandler, JwtAuthenticationFilter.class);
         return http.build();
     }
 

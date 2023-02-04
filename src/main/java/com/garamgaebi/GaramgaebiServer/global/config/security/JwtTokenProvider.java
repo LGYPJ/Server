@@ -1,6 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.global.config.security;
 
 import com.garamgaebi.GaramgaebiServer.global.config.security.dto.TokenInfo;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -99,6 +101,7 @@ public class JwtTokenProvider {
             log.info("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {
             log.info("JWT claims string is empty", e);
+            throw new RestApiException(ErrorCode.EMPTY_JWT_TOKEN);
         }
 
         return false;
