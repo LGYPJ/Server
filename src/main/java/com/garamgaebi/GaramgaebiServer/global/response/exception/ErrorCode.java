@@ -14,6 +14,8 @@ public enum ErrorCode {
     NOT_EXIST_PROGRAM(2002, "존재하지 않는 프로그램입니다."),
 
     INVALID_NICKNAME(2003, "유효하지 않은 닉네임입니다."),
+    NOT_EXIST_SEMINAR(2004, "존재하지 않는 세미나입니다."),
+    NOT_EXIST_PREWRAPPER(2005, "존재하지 않는 발표자료입니다."),
 
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 

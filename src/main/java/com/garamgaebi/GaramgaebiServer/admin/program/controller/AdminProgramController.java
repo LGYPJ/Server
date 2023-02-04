@@ -2,9 +2,14 @@ package com.garamgaebi.GaramgaebiServer.admin.program.controller;
 
 import com.garamgaebi.GaramgaebiServer.admin.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.admin.program.service.AdminProgramService;
+import com.garamgaebi.GaramgaebiServer.admin.program.service.AdminProgramServiceImpl;
+import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "AdminProgramController", description = "관리자 페이지 프로그램 컨트롤(담당자:줄리아)")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
@@ -15,83 +20,78 @@ public class AdminProgramController {
     // 세미나 등록
     @PostMapping("/seminar")
     @ResponseBody
-    public ProgramRes writeSeminar(@RequestBody SeminarDto seminarDto) {
-        // validation
+    public BaseResponse<ProgramRes> writeSeminar(@RequestBody @Valid SeminarDto seminarDto) {
 
-        return adminProgramService.addSeminar(seminarDto);
+        return new BaseResponse<>(adminProgramService.addSeminar(seminarDto));
     }
 
     // 네트워킹 등록
     @PostMapping("/networking")
     @ResponseBody
-    public ProgramRes writeNetworking(@RequestBody NetworkingDto networkingDto) {
-        // validation
+    public BaseResponse<ProgramRes> writeNetworking(@RequestBody @Valid NetworkingDto networkingDto) {
 
-        return adminProgramService.addNetworking(networkingDto);
+        return new BaseResponse<>(adminProgramService.addNetworking(networkingDto));
     }
 
     // 세미나 수정
     @PatchMapping("/seminar")
     @ResponseBody
-    public ProgramRes modifySeminar(@RequestBody PatchSeminarDto patchSeminarDto) {
-        // validation
+    public BaseResponse<ProgramRes> modifySeminar(@RequestBody @Valid PatchSeminarDto patchSeminarDto) {
 
-        return adminProgramService.modifySeminar(patchSeminarDto);
+        return new BaseResponse<>(adminProgramService.modifySeminar(patchSeminarDto));
     }
 
     // 네트워킹 수정
     @PatchMapping("/networking")
     @ResponseBody
-    public ProgramRes modifyNetworking(@RequestBody PatchNetworkingDto patchNetworkingDto) {
-        // validation
+    public BaseResponse<ProgramRes> modifyNetworking(@RequestBody @Valid PatchNetworkingDto patchNetworkingDto) {
 
-        return adminProgramService.modifyNetworking(patchNetworkingDto);
+        return new BaseResponse<>(adminProgramService.modifyNetworking(patchNetworkingDto));
     }
 
     // 글 삭제
     @DeleteMapping("/program/{program-idx}")
     @ResponseBody
     public void deleteProgram(@PathVariable(name = "program-idx") Long programIdx) {
-        // validation
 
         adminProgramService.deleteProgram(programIdx);
     }
+    //deleteProgram BaseResponse 적용을 어케...
+
 
     // 발표자료 추가
     @PostMapping("/seminar/{seminar-idx}/presentation")
     @ResponseBody
-    public PresentationRes writePresentation(@PathVariable(name = "seminar-idx") Long seminarIdx,
-                                  @RequestBody PostPresentationDto postPresentationDto) {
-        // validation
+    public BaseResponse<PresentationRes> writePresentation(@PathVariable(name = "seminar-idx") Long seminarIdx,
+                                  @RequestBody @Valid PostPresentationDto postPresentationDto) {
 
-        return adminProgramService.addPresentation(seminarIdx, postPresentationDto);
+        return new BaseResponse<>(adminProgramService.addPresentation(seminarIdx, postPresentationDto));
     }
 
     // 발표자료 수정
     @PatchMapping("/seminar/presentation")
     @ResponseBody
-    public PresentationRes modifyPresentation(@RequestBody PostPresentationDto postPresentationDto) {
-        // validation
+    public BaseResponse<PresentationRes> modifyPresentation(@RequestBody @Valid PostPresentationDto postPresentationDto) {
 
-        return adminProgramService.modifyPresentation(postPresentationDto);
+        return new BaseResponse<>(adminProgramService.modifyPresentation(postPresentationDto));
     }
 
     // 발표자료 삭제
     @DeleteMapping("/seminar/presentation/{presentation-idx}")
     @ResponseBody
     public void deletePresentation(@PathVariable(name = "presentation-idx") Long presentationIdx) {
-        // validation
 
         adminProgramService.deletePresentation(presentationIdx);
     }
+    //BaseResponse 적용 어떻게..?
 
     // 프로그램 오픈
     @PatchMapping("/program/{program-idx}/open")
     @ResponseBody
-    public ProgramRes openProgram(@PathVariable(name = "program-idx") Long programIdx) {
-        // validation
+    public BaseResponse<ProgramRes> openProgram(@PathVariable(name = "program-idx") Long programIdx) {
+        // validation..?
 
-        return adminProgramService.openProgram(programIdx);
+        return new BaseResponse<>(adminProgramService.openProgram(programIdx));
     }
 
 }
