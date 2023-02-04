@@ -13,10 +13,6 @@ public class PostMemberReq {
     private String profileEmail;
     private String socialEmail;
     private String uniEmail;
-    private String content;
-    private String profileUrl;
-
-    private String belong;
     private MemberStatus status;
 
     private String password;
@@ -26,18 +22,12 @@ public class PostMemberReq {
                          String profileEmail,
                          String socialEmail,
                          String uniEmail,
-                         String content,
-                         String profileUrl,
-                         String belong,
                          MemberStatus status,
                          String password) {
         this.nickname = nickname;
         this.profileEmail = profileEmail;
         this.socialEmail = socialEmail;
         this.uniEmail = uniEmail;
-        this.content = content;
-        this.profileUrl = profileUrl;
-        this.belong = belong;
         this.status = status;
         this.password = password;
     }
@@ -48,9 +38,9 @@ public class PostMemberReq {
                 .profileEmail(profileEmail)
                 .socialEmail(socialEmail)
                 .uniEmail(uniEmail)
-                .content(content)
-                .profileUrl(profileUrl)
-                .belong(belong)
+                .content(null)
+                .profileUrl(null)
+                .belong(null)
                 .status(status)
                 .password(password)
                 .build();
