@@ -1,17 +1,14 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberRoles;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRolesRepository;
 import com.garamgaebi.GaramgaebiServer.global.config.security.JwtTokenProvider;
 import com.garamgaebi.GaramgaebiServer.global.config.security.dto.TokenInfo;
-import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 @Service
 @Transactional(readOnly = true)
@@ -57,6 +53,14 @@ public class MemberService {
     @Transactional
     public PostMemberRes postMember(PostMemberReq postMemberReq) {
         if (checkNicknameValidation(postMemberReq.getNickname())) { // 유효한 닉네임
+            // 이미 존재하는 학교 이메일인지 확인
+            Optional<Member> member = memberRepository.findByUniEmail(postMemberReq.getUniEmail());
+            System.out.println("============");
+            System.out.println(member);
+            if (member.isEmpty() == false) {
+                throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
+            }
+
             PostMemberRes postMemberRes = new PostMemberRes(memberRepository.save(postMemberReq.toEntity()).getMemberIdx());
             MemberRolesDto memberRolesDto = new MemberRolesDto();
             memberRolesDto.setMemberIdx(postMemberRes.getMember_idx());
@@ -101,6 +105,11 @@ public class MemberService {
                 .set("RT: " + authentication.getName(),
                         tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(),
                         TimeUnit.MILLISECONDS);
+
+        // MemberLoginReq.uniEmail로 MemberIdx 조회 및 반환
+        Member member = memberRepository.findByUniEmail(memberLoginReq.getUniEmail())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+        tokenInfo.setMemberIdx(member.getMemberIdx());
 
         return tokenInfo;
     }

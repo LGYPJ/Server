@@ -17,6 +17,8 @@ public enum ErrorCode {
 
     INVALID_ACCESS_TOKEN(2004, "유효하지 않은 ACCESS_TOKEN입니다."),
 
+    ALREADY_EXIST_UNI_EMAIL(2005, "이미 존재하는 학교 이메일입니다."),
+
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
     NOT_ACCEPTABLE(406, "등록 상태가 아닙니다."),

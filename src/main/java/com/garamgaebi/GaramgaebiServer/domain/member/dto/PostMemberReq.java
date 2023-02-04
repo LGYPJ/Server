@@ -13,10 +13,6 @@ public class PostMemberReq {
     private String profileEmail;
     private String socialEmail;
     private String uniEmail;
-//    private String content;
-//    private String profileUrl;
-//
-//    private String belong;
     private MemberStatus status;
 
     private String password;
