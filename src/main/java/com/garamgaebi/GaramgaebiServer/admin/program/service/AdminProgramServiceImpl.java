@@ -7,6 +7,9 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.Presentation;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
+import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +27,6 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     @Transactional
     @Override
     public ProgramRes addSeminar(SeminarDto seminarDto) {
-        // validation
 
 
         Program program = new Program();
@@ -46,11 +48,11 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         Optional<Program> seminarWrapper = adminProgramRepository.findById(seminarIdx);
 
         if(seminarWrapper == null) {
-            // 없는 세미나 예외처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_SEMINAR);
         }
         Program seminar = seminarWrapper.get();
         if(seminar.getProgramType() != ProgramType.SEMINAR) {
-            //세미나가 아닌 프로그램 예외처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_SEMINAR);
         }
 
         postPresentationDto.setProgram(seminar);
@@ -66,7 +68,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         Optional<Presentation> presentationWrapper = adminPresentationRepository.findById(postPresentationDto.getIdx());
 
         if(presentationWrapper.isEmpty()) {
-            // 없는 발표자료 예외처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_PREWRAPPER);
         }
 
         Presentation presentation = presentationWrapper.get();
@@ -89,7 +91,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         Optional<Presentation> presentationWrapper = adminPresentationRepository.findById(presentationIdx);
 
         if(presentationWrapper.isEmpty()) {
-            // 없는 발표자료 예외처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_PREWRAPPER);
         }
 
         Presentation presentation = presentationWrapper.get();
@@ -104,7 +106,6 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     @Transactional
     @Override
     public ProgramRes addNetworking(NetworkingDto networkingDto) {
-        // validation
 
         Program program = new Program();
         program.setTitle(networkingDto.getTitle());
@@ -125,7 +126,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         Optional<Program> programWrapper = adminProgramRepository.findById(patchSeminarDto.getIdx());
 
         if(programWrapper.isEmpty()) {
-            // validation
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
 
         Program program = programWrapper.get();
@@ -145,9 +146,8 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     public ProgramRes modifyNetworking(PatchNetworkingDto patchNetworkingDto) {
         Optional<Program> programWrapper = adminProgramRepository.findById(patchNetworkingDto.getIdx());
 
-        // validation
         if (programWrapper.isEmpty()) {
-            // 없는 프로그램 예외처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
 
         Program program = programWrapper.get();
@@ -164,12 +164,11 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     @Transactional
     @Override
     public void deleteProgram(Long programIdx) {
-        // validation
 
         Optional<Program> programWrapper = adminProgramRepository.findById(programIdx);
 
         if(programWrapper.isEmpty()) {
-            // 없는 프로그램 예외처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
 
         Program program = programWrapper.get();
@@ -180,12 +179,11 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     @Transactional
     @Override
     public ProgramRes openProgram(Long programIdx) {
-        // validation
 
         Optional<Program> programWrapper = adminProgramRepository.findById(programIdx);
 
         if(programWrapper.isEmpty()) {
-            // 없는 프로그램 예외처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
 
         Program program = programWrapper.get();

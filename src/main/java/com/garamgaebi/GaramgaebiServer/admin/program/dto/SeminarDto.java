@@ -3,10 +3,9 @@ package com.garamgaebi.GaramgaebiServer.admin.program.dto;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,10 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter @Setter
+@Data
 public class SeminarDto {
 
+    @NotBlank(message = "세미나명을 입력해주세요.")
     private String title;
+    @NotBlank(message = "세미나 날짜를 입력해주세요.")
+    @Future
     private LocalDateTime date;
+    @NotBlank(message = "세미나 장소를 입력해주세요.")
     private String location;
     private Integer fee;
     private List<PostPresentationDto> presentations;
