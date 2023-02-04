@@ -32,8 +32,6 @@ public class MemberService {
 
     private final RedisTemplate redisTemplate;
 
-//    @Value("${jwt.secret}")
-//    private final String secret;
 
     private boolean checkNicknameValidation(String nickname) {
 //        if (nickname.length() > 8) {
@@ -55,8 +53,6 @@ public class MemberService {
         if (checkNicknameValidation(postMemberReq.getNickname())) { // 유효한 닉네임
             // 이미 존재하는 학교 이메일인지 확인
             Optional<Member> member = memberRepository.findByUniEmail(postMemberReq.getUniEmail());
-            System.out.println("============");
-            System.out.println(member);
             if (member.isEmpty() == false) {
                 throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
             }
