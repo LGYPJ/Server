@@ -1,5 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.global.config.security;
 
+import com.garamgaebi.GaramgaebiServer.global.response.exception.CustomAccessDeniedHandler;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.CustomAuthenticationEntryPoint;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.FilterExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate redisTemplate;
+
+    private final FilterExceptionHandler filterExceptionHandler;
 
     private static final String[] PERMIT_URL_ARRAY = {
             /* swagger v3 */
@@ -42,7 +47,12 @@ public class SecurityConfig {
                 .requestMatchers("/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+                .and()
+                .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(filterExceptionHandler, JwtAuthenticationFilter.class);
         return http.build();
     }
 
