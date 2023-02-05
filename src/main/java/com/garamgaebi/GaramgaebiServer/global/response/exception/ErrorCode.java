@@ -28,6 +28,7 @@ public enum ErrorCode {
     FAIL_AUTHORIZED_ACCESS(2011, "인증에 실패하였습니다."),
     NOT_EXIST_SEMINAR(20012, "존재하지 않는 세미나입니다."),
     NOT_EXIST_PREWRAPPER(2013, "존재하지 않는 발표자료입니다."),
+    FAIL_ACCESS_PROGRAM(2014, "접근할 수 없는 프로그램입니다."),
 
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 

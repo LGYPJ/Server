@@ -2,6 +2,8 @@ package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -15,10 +17,10 @@ public interface SeminarService {
     // 홈 화면 세미나 리스트
     public List<ProgramDto> findMainSeminarList();
     // 세미나 상세 페이지
-    public ProgramInfoDto findSeminarDetails(ProgramDetailReq programDetailReq);
+    public ProgramInfoDto findSeminarDetails(Long seminarIdx, Long memberIdx);
 
     // 세미나 신청자 리스트 조회
-    List<ParticipantDto> findSeminarParticipantsList(Long seminarIdx);
+    List<ParticipantDto> findSeminarParticipantsList(Long seminarIdx, Long memberIdx);
 
     // 세미나 상세정보 발표자료 조회
     List<PresentationDto> findSeminarPresentationList(Long seminarIdx);
