@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.admin.applicant.service;
 
 import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.GetFindAllApplicantRes;
+import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.PostUpdateApplicantReq;
 import com.garamgaebi.GaramgaebiServer.admin.applicant.repository.AdminApplicantRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Apply;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,15 @@ public class AdminApplicantService {
             resList.add(res);
         }
         return resList;
+    }
 
+    /**
+     * Admin 프로그램 신청자 상태 수정
+     */
+    @Transactional
+    public String updateApplicant(PostUpdateApplicantReq req) {
+        Apply apply = repository.findApply(req.getMemberIdx());
+        apply.setStatus(req.getStatus());
+        return "수정을 완료하였습니다.";
     }
 }
