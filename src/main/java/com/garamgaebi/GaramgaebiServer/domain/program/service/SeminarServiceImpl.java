@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
@@ -26,7 +27,7 @@ import java.util.Optional;
 public class SeminarServiceImpl implements SeminarService {
 
     private final ProgramRepository programRepository;
-    private final ProfileRepository profileRepository;
+    private final MemberRepository memberRepository;
 
 
     // 이번 달 세미나 조회
@@ -104,26 +105,27 @@ public class SeminarServiceImpl implements SeminarService {
     // 세미나 상세정보 상단 부분 조회
     @Transactional(readOnly = true)
     @Override
-    public ProgramInfoDto findSeminarDetails(ProgramDetailReq programDetailReq) {
-        Long memberIdx = programDetailReq.getMemberIdx();
-        Long seminarIdx = programDetailReq.getProgramIdx();
+    public ProgramInfoDto findSeminarDetails(Long seminarIdx, Long memberIdx) {
 
+        Optional<Member> member = memberRepository.findById(memberIdx);
 
-        Member member = profileRepository.findMember(memberIdx);
-
-        if(member == null || member.getStatus() == MemberStatus.INACTIVE) {
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            // 없는 멤버 예외 처리
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
         Optional<Program> seminarWrapper = programRepository.findById(seminarIdx);
 
-        if(seminarWrapper.isEmpty() || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR) {
-            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
+        if(seminarWrapper.isEmpty()
+                || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR
+                || seminarWrapper.get().getStatus() == ProgramStatus.DELETE) {
+            // 없는 네트워킹 예외 처리
+            throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
         Program seminar = seminarWrapper.get();
 
-        return new ProgramInfoDto(
+        ProgramInfoDto programInfoDto = new ProgramInfoDto(
                 seminar.getIdx(),
                 seminar.getTitle(),
                 seminar.getDate(),
@@ -132,27 +134,54 @@ public class SeminarServiceImpl implements SeminarService {
                 seminar.getEndDate(),
                 seminar.getStatus(),
                 seminar.checkMemberCanApply(memberIdx));
+
+        if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR)
+            throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
+
+        return programInfoDto;
     }
 
     // 세미나 신청자 리스트 조회
     @Transactional(readOnly = true)
     @Override
-    public List<ParticipantDto> findSeminarParticipantsList(Long seminarIdx) {
+    public List<ParticipantDto> findSeminarParticipantsList(Long seminarIdx, Long memberIdx) {
+
+        Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
+
+        if(memberWrapper.isEmpty() || memberWrapper.get().getStatus() == MemberStatus.INACTIVE) {
+            // 없는 멤버 예외 처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
+        }
 
         Optional<Program> seminarWrapper = programRepository.findById(seminarIdx);
 
-        if(seminarWrapper.isEmpty() || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR) {
+        if(seminarWrapper.isEmpty()
+                || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR
+                || seminarWrapper.get().getStatus() == ProgramStatus.DELETE) {
+            // 없는 네트워킹 예외 처리
             throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        if(seminarWrapper.get().getStatus() == ProgramStatus.READY_TO_OPEN) {
+            throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
         }
 
         Program seminar = seminarWrapper.get();
         List<ParticipantDto> participantDtos = new ArrayList<ParticipantDto>();
 
+        if(seminar.getParticipants().contains(memberWrapper.get())) {
+            participantDtos.add(new ParticipantDto(
+                    memberWrapper.get().getMemberIdx(),
+                    memberWrapper.get().getNickname(),
+                    memberWrapper.get().getProfileUrl()
+            ));
+        }
+
         for(Member member : seminar.getParticipants()) {
             if(member == null) {
                 participantDtos.add(null);
             }
-            else {
+            else if(member != memberWrapper.get()) {
                 participantDtos.add(new ParticipantDto(
                         member.getMemberIdx(),
                         member.getNickname(),

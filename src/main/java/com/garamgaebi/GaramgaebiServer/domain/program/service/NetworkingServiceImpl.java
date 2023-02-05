@@ -104,9 +104,7 @@ public class NetworkingServiceImpl implements NetworkingService {
     // 네트워킹 상세페이지 상단 정보
     @Transactional(readOnly = true)
     @Override
-    public ProgramInfoDto findNetworkingDetails(ProgramDetailReq programDetailReq) {
-        Long memberIdx = programDetailReq.getMemberIdx();
-        Long networkingIdx = programDetailReq.getProgramIdx();
+    public ProgramInfoDto findNetworkingDetails(Long networkingIdx, Long memberIdx) {
 
         Optional<Member> member = memberRepository.findById(memberIdx);
 
@@ -117,44 +115,72 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         Optional<Program> networkingWrapper = programRepository.findById(networkingIdx);
 
-        if(networkingWrapper.isEmpty() || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
+        if(networkingWrapper.isEmpty()
+                || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING
+                || networkingWrapper.get().getStatus() == ProgramStatus.DELETE) {
             // 없는 네트워킹 예외 처리
-            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
+            throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
-        Program seminar = networkingWrapper.get();
+        Program networking = networkingWrapper.get();
 
-        return new ProgramInfoDto(
-                seminar.getIdx(),
-                seminar.getTitle(),
-                seminar.getDate(),
-                seminar.getLocation(),
-                seminar.getFee(),
-                seminar.getEndDate(),
-                seminar.getStatus(),
-                seminar.checkMemberCanApply(memberIdx));
+        ProgramInfoDto programInfoDto = new ProgramInfoDto(
+                networking.getIdx(),
+                networking.getTitle(),
+                networking.getDate(),
+                networking.getLocation(),
+                networking.getFee(),
+                networking.getEndDate(),
+                networking.getStatus(),
+                networking.checkMemberCanApply(memberIdx));
+
+        if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR)
+            throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
+
+        return programInfoDto;
     }
 
     // 네트워킹 신청자 리스트 조회
     @Transactional(readOnly = true)
     @Override
-    public List<ParticipantDto> findNetworkingParticipantsList(Long networkingIdx) {
+    public List<ParticipantDto> findNetworkingParticipantsList(Long networkingIdx, Long memberIdx) {
+
+        Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
+
+        if(memberWrapper.isEmpty() || memberWrapper.get().getStatus() == MemberStatus.INACTIVE) {
+            // 없는 멤버 예외 처리
+            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
+        }
 
         Optional<Program> networkingWrapper = programRepository.findById(networkingIdx);
 
-        if(networkingWrapper.isEmpty() || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING) {
+        if(networkingWrapper.isEmpty()
+                || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING
+                || networkingWrapper.get().getStatus() == ProgramStatus.DELETE) {
             // 없는 네트워킹 예외 처리
             throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
-        Program seminar = networkingWrapper.get();
+        if(networkingWrapper.get().getStatus() == ProgramStatus.READY_TO_OPEN) {
+            throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
+        }
+
+        Program networking = networkingWrapper.get();
         List<ParticipantDto> participantDtos = new ArrayList<ParticipantDto>();
 
-        for(Member member : seminar.getParticipants()) {
+        if(networking.getParticipants().contains(memberWrapper.get())) {
+            participantDtos.add(new ParticipantDto(
+                    memberWrapper.get().getMemberIdx(),
+                    memberWrapper.get().getNickname(),
+                    memberWrapper.get().getProfileUrl()
+            ));
+        }
+
+        for(Member member : networking.getParticipants()) {
             if(member == null) {
                 participantDtos.add(null);
             }
-            else {
+            else if(member != memberWrapper.get()) {
                 participantDtos.add(new ParticipantDto(
                         member.getMemberIdx(),
                         member.getNickname(),

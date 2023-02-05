@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.global.response.exception;
 
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,16 @@ public enum ErrorCode {
 
     ALREADY_EXIST_UNI_EMAIL(2005, "이미 존재하는 학교 이메일입니다."),
 
+    INVALID_JWT_TOKEN(2006, "유효하지 않은 JWT 토큰입니다."),
+    EXPIRED_JWT_TOKEN(2007, "만료된 JWT 토큰입니다."),
+    EMPTY_JWT_TOKEN(2008, "JWT 토큰이 존재하지 않습니다."),
+    NOT_AUTHORIZED_ACCESS(2010, "접근이 거부 되었습니다."),
+
+    FAIL_AUTHORIZED_ACCESS(2011, "인증에 실패하였습니다."),
+    NOT_EXIST_SEMINAR(20012, "존재하지 않는 세미나입니다."),
+    NOT_EXIST_PREWRAPPER(2013, "존재하지 않는 발표자료입니다."),
+    FAIL_ACCESS_PROGRAM(2014, "접근할 수 없는 프로그램입니다."),
+
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
     NOT_ACCEPTABLE(406, "등록 상태가 아닙니다."),
@@ -28,4 +39,5 @@ public enum ErrorCode {
 
     private final Integer code;
     private final String message;
+
 }

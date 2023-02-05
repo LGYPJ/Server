@@ -14,6 +14,6 @@ public class GetEducationList {
     private String institution;
     private String major;
     private IsLearning isLearning;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
 }

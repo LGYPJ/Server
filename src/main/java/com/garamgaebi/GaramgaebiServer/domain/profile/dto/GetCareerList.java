@@ -14,6 +14,6 @@ public class GetCareerList {
     private String company;
     private String position;
     private IsWorking isWorking;
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
 }
