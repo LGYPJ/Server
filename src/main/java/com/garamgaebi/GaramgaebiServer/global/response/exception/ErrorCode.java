@@ -23,9 +23,11 @@ public enum ErrorCode {
     INVALID_JWT_TOKEN(2006, "유효하지 않은 JWT 토큰입니다."),
     EXPIRED_JWT_TOKEN(2007, "만료된 JWT 토큰입니다."),
     EMPTY_JWT_TOKEN(2008, "JWT 토큰이 존재하지 않습니다."),
-    FAIL_AUTHORIZED_ACCESS(2009, "인증에 실패하였습니다."),
     NOT_AUTHORIZED_ACCESS(2010, "접근이 거부 되었습니다."),
 
+    FAIL_AUTHORIZED_ACCESS(2011, "인증에 실패하였습니다."),
+    NOT_EXIST_SEMINAR(20012, "존재하지 않는 세미나입니다."),
+    NOT_EXIST_PREWRAPPER(2013, "존재하지 않는 발표자료입니다."),
 
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
