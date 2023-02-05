@@ -68,26 +68,29 @@ public class NetworkingController {
     // 네트워킹 상세 정보
     @Operation(summary = "네트워킹 상세정보 조회", description = "네트워킹 상세페이지 상단 상세 정보를 조회합니다.", responses = {
             @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리스소", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "알 수 없는 서버에러", content = @Content()),
             @ApiResponse(responseCode = "2001", description = "존재하지 않는 회원", content = @Content()),
-            @ApiResponse(responseCode = "2002", description = "존재하지 않는 프로그램", content = @Content()),
-            @ApiResponse(responseCode = "500", description = "알 수 없는 서버에러", content = @Content())
+            @ApiResponse(responseCode = "2014", description = "접근할 수 없는 프로그램입니다.", content = @Content())
     })
-    @GetMapping("/info")
-    public BaseResponse<ProgramInfoDto> getNetworkingDetailInfo(@RequestBody @Valid ProgramDetailReq programDetailReq) {
+    @GetMapping("/{networking-idx}/info")
+    public BaseResponse<ProgramInfoDto> getNetworkingDetailInfo(@PathVariable(name = "networking-idx") Long networkingIdx, @RequestParam("member-idx") Long memberIdx) {
 
-        return new BaseResponse<>(networkingService.findNetworkingDetails(programDetailReq));
+        return new BaseResponse<>(networkingService.findNetworkingDetails(networkingIdx, memberIdx));
     }
 
     // 네트워킹 신청자 리스트
     @Operation(summary = "네트워킹 신청자 리스트 조회", description = "네트워킹 신청자를 리스트로 조회합니다.", responses = {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
-            @ApiResponse(responseCode = "500", description = "알 수 없는 서버에러", content = @Content())
+            @ApiResponse(responseCode = "500", description = "알 수 없는 서버에러", content = @Content()),
+            @ApiResponse(responseCode = "2001", description = "존재하지 않는 회원", content = @Content()),
+            @ApiResponse(responseCode = "2014", description = "접근할 수 없는 프로그램입니다.", content = @Content())
     })
     @GetMapping("/{networking-idx}/participants")
-    public BaseResponse<List<ParticipantDto>> getNetworkingParticipantList(@PathVariable(name = "networking-idx") Long networkingIdx) {
+    public BaseResponse<List<ParticipantDto>> getNetworkingParticipantList(@PathVariable(name = "networking-idx") Long networkingIdx, @RequestParam("member-idx") Long memberIdx) {
 
-        return new BaseResponse<>(networkingService.findNetworkingParticipantsList(networkingIdx));
+        return new BaseResponse<>(networkingService.findNetworkingParticipantsList(networkingIdx, memberIdx));
     }
 
 }
