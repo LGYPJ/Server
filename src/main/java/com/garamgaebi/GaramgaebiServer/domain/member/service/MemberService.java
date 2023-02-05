@@ -74,11 +74,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
-        System.out.println(member.getStatus());
-
         member.inactivedMember();
-
-        System.out.println(member.getStatus());
 
         return new InactivedMemberRes(true);
     }
