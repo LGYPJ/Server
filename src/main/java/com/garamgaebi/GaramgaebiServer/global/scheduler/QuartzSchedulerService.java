@@ -54,6 +54,9 @@ public class QuartzSchedulerService {
 
         // 마감 기간 지난 경우 -> 바로 close
         if(program.getEndDate().isBefore(LocalDateTime.now())) {
+            // 기존에 등록된 스케줄이 있었다면 삭제해주고
+            deleteProgramJob(program);
+
             applicationContext.getBean(ProgramService.class).closeProgram(program.getIdx());
             return;
         }
@@ -62,15 +65,13 @@ public class QuartzSchedulerService {
             // 알림 전송
             System.out.println("알림 전송");
 
+            // 기존에 등록된 스케줄이 있었다면 삭제해주고
+            deleteProgramJob(program);
+
             closeTrigger = buildJobTrigger(program.getEndDate(), getCloseTriggerKey(program));
             closeJobDetail = buildJobDetail(CloseProgramJob.class, program, applicationContext);
             closeJobKey = getCloseJobKey(program);
 
-            if(isJobExist(closeJobKey)) {
-                schedulerFactory.getScheduler().rescheduleJob(closeTrigger.getKey(), closeTrigger);
-                return;
-                // 업데이트 로그
-            }
             schedulerFactory.getScheduler().scheduleJob(closeJobDetail, closeTrigger);
             // 성공 로그
             return;
@@ -101,8 +102,12 @@ public class QuartzSchedulerService {
         JobKey closeJobKey = getCloseJobKey(program);
         JobKey deadlineJobKey = getDeadlineJobKey(program);
 
-        schedulerFactory.getScheduler().deleteJob(closeJobKey);
-        schedulerFactory.getScheduler().deleteJob(deadlineJobKey);
+        if(isJobExist(closeJobKey)) {
+            schedulerFactory.getScheduler().deleteJob(closeJobKey);
+        }
+        if(isJobExist(deadlineJobKey)) {
+            schedulerFactory.getScheduler().deleteJob(deadlineJobKey);
+        }
         // 삭제했다는 로그
     }
 

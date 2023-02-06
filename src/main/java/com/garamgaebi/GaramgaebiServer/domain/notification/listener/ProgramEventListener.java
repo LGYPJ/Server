@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.listener;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.notification.dto.DeadlineEvent;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -18,5 +19,5 @@ public interface ProgramEventListener {
     // 프로그램 마감 임박 이벤트 핸들링
     @Async
     @TransactionalEventListener
-    public void handleProgramDeadlineEvent(Program program);
+    public void handleProgramDeadlineEvent(DeadlineEvent deadlineEvent);
 }
