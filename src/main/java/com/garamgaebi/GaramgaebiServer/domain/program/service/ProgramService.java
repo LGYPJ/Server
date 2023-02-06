@@ -10,4 +10,6 @@ public interface ProgramService {
 
     // 지난 내 모임 리스트 조회
     List<ProgramDto> findMemberClosedProgramList(Long memberIdx);
+
+    public void closeProgram(Long programIdx);
 }

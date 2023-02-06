@@ -1,8 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.entity.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
@@ -11,6 +9,7 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ public class ProgramServiceImpl implements ProgramService {
 
     // 예정된 내 모임 리스트 조회
     @Override
+    @Transactional(readOnly = true)
     public List<ProgramDto> findMemberReadyProgramList(Long memberIdx) {
 
         Optional<Member> member = memberRepository.findById(memberIdx);
@@ -45,6 +45,7 @@ public class ProgramServiceImpl implements ProgramService {
 
     // 지난 내 모임 리스트 조회
     @Override
+    @Transactional(readOnly = true)
     public List<ProgramDto> findMemberClosedProgramList(Long memberIdx) {
 
         Optional<Member> member = memberRepository.findById(memberIdx);
@@ -61,6 +62,35 @@ public class ProgramServiceImpl implements ProgramService {
         }
 
         return programDtos;
+    }
+
+    @Transactional
+    public void closeProgram(Long programIdx) {
+
+        Optional<Program> programWrapper = programRepository.findById(programIdx);
+
+        if(programWrapper.isEmpty()) {
+            // 프로그램 없음 로그 찍기
+            return;
+        }
+
+        Program program = programWrapper.get();
+
+        if(program.getIsPay() == ProgramPayStatus.FREE) {
+            program.setStatus(ProgramStatus.CLOSED_CONFIRM);
+            for(Apply apply : program.getApplies()) {
+                if(apply.getStatus() == ApplyStatus.APPLY) {
+                    apply.setStatus(ApplyStatus.APPLY_CONFIRM);
+                }
+                else if(apply.getStatus() == ApplyStatus.CANCEL){
+                    apply.setStatus(ApplyStatus.CANCEL_CONFIRM);
+                }
+            }
+        }
+        else {
+            program.setStatus(ProgramStatus.CLOSED);
+        }
+        programRepository.save(program);
     }
 
 

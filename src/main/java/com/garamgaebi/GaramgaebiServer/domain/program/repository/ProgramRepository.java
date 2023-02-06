@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.program.repository;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,5 +35,7 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     public List<Program> findMemberReadyPrograms(@Param("member") Member member);
     @Query("select p from Program p inner join Apply a where a.member = :member and (a.status = 'APPLY' or a.status = 'APPLY_CONFIRM') and p.date < current_timestamp and p not in (select tmp from Program tmp where tmp.status = 'DELETE') order by p.date desc")
     public List<Program> findMemberClosedPrograms(@Param("member") Member member);
+
+    public List<Program> findByStatus(ProgramStatus programStatus);
 
 }
