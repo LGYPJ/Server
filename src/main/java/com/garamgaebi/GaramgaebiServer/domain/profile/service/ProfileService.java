@@ -233,4 +233,20 @@ public class ProfileService {
         member.setBelong(req.getBelong());
         member.setProfileUrl(req.getProfileUrl());
     }
+
+    /**
+     * 프로필 이미지 저장/수정 API
+     */
+    @Transactional
+    public boolean imageProfile(S3Profile profile, String profileUrl) {
+        Member member = profileRepository.findMember(profile.getMemberIdx());
+        if (member.getProfileUrl() != null) {
+            String url = member.getProfileUrl(); //기존 프로필 url -> s3에 기존꺼 지울때 쓰려구
+            member.setProfileUrl(profileUrl);
+        } else {
+            member.setProfileUrl(profileUrl);
+        }
+        return true;
+
+    }
 }

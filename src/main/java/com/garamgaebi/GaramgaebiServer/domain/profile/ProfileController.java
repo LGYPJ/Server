@@ -1,13 +1,17 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile;
 
+import com.garamgaebi.GaramgaebiServer.domain.S3TestMemberDto;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.service.ProfileService;
+import com.garamgaebi.GaramgaebiServer.global.S3Uploader;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -17,9 +21,12 @@ public class ProfileController {
     //--------------------------------------------------------//
     @Autowired
     private final ProfileService profileService;
+    @Autowired
+    private final S3Uploader s3Uploader;
 
-    public ProfileController(ProfileService profileService) {
+    public ProfileController(ProfileService profileService, S3Uploader s3Uploader) {
         this.profileService = profileService;
+        this.s3Uploader = s3Uploader;
     }
     //--------------------------------------------------------//
 
@@ -164,4 +171,19 @@ public class ProfileController {
         profileService.updateProfile(req);
         return new BaseResponse<>(true);
     }
+
+    /**
+     * 이미지 저장 API
+     */
+    @Operation(summary = "POST 프로필 사진 저장/수정 (래리/최준현)", description= "유저프로필 사진 저장")
+    @PostMapping("/images")
+    public BaseResponse<Boolean> imageProfile(@RequestPart("info") S3Profile profile, @RequestPart("image") MultipartFile multipartFile)
+            throws IOException {
+
+        // S3Uploader.upload(업로드 할 이미지 파일, S3 디렉토리명) : S3에 저장된 이미지의 주소(url) 반환
+        String profileUrl = s3Uploader.upload(multipartFile, "profile");
+        boolean req = profileService.imageProfile(profile, profileUrl);
+        return new BaseResponse<>(req);
+    }
+
 }
