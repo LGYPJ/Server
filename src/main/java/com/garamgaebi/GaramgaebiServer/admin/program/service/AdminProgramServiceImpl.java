@@ -7,6 +7,7 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.Presentation;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
@@ -22,6 +23,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
     private final AdminProgramRepository adminProgramRepository;
     private final AdminPresentationRepository adminPresentationRepository;
+    private final GameService gameService;
 
     // 세미나 등록
     @Transactional
@@ -115,6 +117,8 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         program.setStatus(ProgramStatus.READY_TO_OPEN);
         program.setProgramType(ProgramType.NETWORKING);
         program = adminProgramRepository.save(program);
+
+        gameService.createRooms(program.getIdx());
 
         return new ProgramRes(program.getIdx());
     }

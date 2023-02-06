@@ -26,7 +26,7 @@ public class GameService {
 
     // 게임방 생성
     public List<GameRoom> createRooms(Long programIdx) {
-        List<GameRoom> rooms = null;
+        List<GameRoom> rooms = new ArrayList<>();
         String roomId;
 
         for (int i = 0; i < 5; i++) { // 방 5개씩 생성

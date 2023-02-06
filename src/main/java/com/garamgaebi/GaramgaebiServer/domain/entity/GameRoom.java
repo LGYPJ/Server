@@ -19,6 +19,6 @@ public class GameRoom {
     @Column(name = "program_idx", nullable = false)
     private Long programIdx;
 
-    @Column(nullable = false)
+    @Column(name = "room_id", nullable = false)
     private String roomId;
 }
