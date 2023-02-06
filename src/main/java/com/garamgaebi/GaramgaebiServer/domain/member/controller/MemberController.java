@@ -5,11 +5,13 @@ import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.service.MemberService;
 import com.garamgaebi.GaramgaebiServer.global.config.security.dto.TokenInfo;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@Tag(name = "MemberController", description = "멤버 컨트롤러(담당자:애플)")
 @RestController
 @RequestMapping("/member")
 public class MemberController {

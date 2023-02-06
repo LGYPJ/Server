@@ -59,7 +59,7 @@ public class MemberService {
 
             PostMemberRes postMemberRes = new PostMemberRes(memberRepository.save(postMemberReq.toEntity()).getMemberIdx());
             MemberRolesDto memberRolesDto = new MemberRolesDto();
-            memberRolesDto.setMemberIdx(postMemberRes.getMember_idx());
+            memberRolesDto.setMemberIdx(postMemberRes.getMemberIdx());
             memberRolesDto.setRoles("USER");
             memberRolesRepository.save(memberRolesDto.toEntity());
             return postMemberRes;
@@ -74,11 +74,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
-        System.out.println(member.getStatus());
-
         member.inactivedMember();
-
-        System.out.println(member.getStatus());
 
         return new InactivedMemberRes(true);
     }

@@ -33,7 +33,7 @@ public class EmailService {
         msgg+= "<div style='margin:100px;'>";
         msgg+= "<h1> 안녕하세요 가람개비입니다. </h1>";
         msgg+= "<br>";
-        msgg+= "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
+        msgg+= "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요.<p>";
         msgg+= "<br>";
         msgg+= "<p>감사합니다!<p>";
         msgg+= "<br>";
@@ -52,24 +52,8 @@ public class EmailService {
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
-        for (int i = 0; i < 8; i++) { // 인증코드 8자리
-            int index = rnd.nextInt(3); // 0~2 까지 랜덤
-
-            /* 영어 소문자, 대문자, 숫자 조합 */
-            switch (index) {
-                case 0:
-                    key.append((char) ((int) (rnd.nextInt(26)) + 97));
-                    //  a~z  (ex. 1+97=98 => (char)98 = 'b')
-                    break;
-                case 1:
-                    key.append((char) ((int) (rnd.nextInt(26)) + 65));
-                    //  A~Z
-                    break;
-                case 2:
-                    key.append((rnd.nextInt(10)));
-                    // 0~9
-                    break;
-            }
+        for (int i = 0; i < 6; i++) { // 인증코드 숫자 6자리
+            key.append((rnd.nextInt(10)));
         }
 
         return key.toString();
