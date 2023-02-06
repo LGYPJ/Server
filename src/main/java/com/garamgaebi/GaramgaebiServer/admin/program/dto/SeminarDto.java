@@ -5,6 +5,7 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class SeminarDto {
 
     @NotBlank(message = "세미나명을 입력해주세요.")
     private String title;
-    @NotBlank(message = "세미나 날짜를 입력해주세요.")
+    @NotNull
     @Future
     private LocalDateTime date;
     @NotBlank(message = "세미나 장소를 입력해주세요.")
