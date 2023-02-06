@@ -19,6 +19,8 @@ public class Program {
     // 모임 신청 마감일 정책 : 모임 날짜 1주 전
     @Transient
     private static final int closePolicyWeek = 1;
+    @Transient
+    private static final int deadlineAlertTimeInterval = 3;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,26 +79,13 @@ public class Program {
         }
     }
 
-
-    // 프로그램 상태 조회
-    public ProgramStatus getStatus() {
-        if (this.status != ProgramStatus.DELETE && this.status != ProgramStatus.CLOSED_CONFIRM) {
-            if (LocalDateTime.now().isAfter(getEndDate())) {
-                if (this.getIsPay() == ProgramPayStatus.FREE) {
-                    this.setStatus(ProgramStatus.CLOSED_CONFIRM);
-                    // 신청 완료 알림 발송
-                } else {
-                    this.setStatus(ProgramStatus.CLOSED);
-                }
-            }
-        }
-        return status;
-    }
-
     // 신청 마감일 조회
     public LocalDateTime getEndDate() {
         return getDate().minusWeeks(closePolicyWeek);
     }
+
+    // 마감 임박 알림 시간 조회
+    public LocalDateTime getDeadlineAlertTime() {return this.getEndDate().minusHours(deadlineAlertTimeInterval);}
 
     // 이번달, 예정, 지난 프로그램 구분
     public ProgramThisMonthStatus getThisMonthStatus() {
