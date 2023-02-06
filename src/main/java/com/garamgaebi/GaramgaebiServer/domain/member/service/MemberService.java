@@ -59,7 +59,7 @@ public class MemberService {
 
             PostMemberRes postMemberRes = new PostMemberRes(memberRepository.save(postMemberReq.toEntity()).getMemberIdx());
             MemberRolesDto memberRolesDto = new MemberRolesDto();
-            memberRolesDto.setMemberIdx(postMemberRes.getMember_idx());
+            memberRolesDto.setMemberIdx(postMemberRes.getMemberIdx());
             memberRolesDto.setRoles("USER");
             memberRolesRepository.save(memberRolesDto.toEntity());
             return postMemberRes;

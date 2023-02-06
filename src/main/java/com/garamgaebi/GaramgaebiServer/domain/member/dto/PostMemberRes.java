@@ -7,5 +7,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class PostMemberRes {
-    private Long member_idx;
+    private Long memberIdx;
 }
