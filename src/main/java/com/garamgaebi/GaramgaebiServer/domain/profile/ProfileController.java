@@ -181,7 +181,7 @@ public class ProfileController {
             throws IOException {
 
         // S3Uploader.upload(업로드 할 이미지 파일, S3 디렉토리명) : S3에 저장된 이미지의 주소(url) 반환
-        String profileUrl = s3Uploader.upload(multipartFile, "profile");
+        String profileUrl = s3Uploader.upload(multipartFile, "/S3resource/profile");
         boolean req = profileService.imageProfile(profile, profileUrl);
         return new BaseResponse<>(req);
     }
