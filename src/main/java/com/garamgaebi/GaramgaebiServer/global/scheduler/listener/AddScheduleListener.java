@@ -21,6 +21,7 @@ public class AddScheduleListener {
     public void addProgramSchedule(PostProgramEvent postProgramEvent) {
         try {
             quartzSchedulerService.addProgramJob(postProgramEvent.getProgram());
+            System.out.println("프로그램 등록 이벤트");
         } catch(SchedulerException e) {
             // 실패 로그 찍기
         }
@@ -31,6 +32,7 @@ public class AddScheduleListener {
     public void addProgramSchedule(PatchProgramEvent patchProgramEvent) {
         try {
             quartzSchedulerService.addProgramJob(patchProgramEvent.getProgram());
+            System.out.println("프로그램 수정 이벤트");
         } catch(SchedulerException e) {
             // 실패 로그 찍기
         }

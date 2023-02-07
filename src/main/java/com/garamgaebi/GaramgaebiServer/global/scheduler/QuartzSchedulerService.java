@@ -44,6 +44,10 @@ public class QuartzSchedulerService {
 
     // 스케줄러에 이미 있는 job이면 수정, 없는 job이면 추가
     public void addProgramJob(Program program) throws SchedulerException {
+
+        // 오픈된 프로그램만 등록
+        if(program.getStatus() != ProgramStatus.OPEN) {return;}
+
         JobKey closeJobKey = null;
         JobKey deadlineJobKey = null;
         JobDetail closeJobDetail;
@@ -53,21 +57,17 @@ public class QuartzSchedulerService {
 
         schedulerFactory.getScheduler().start();
 
+        // 기존에 등록된 스케줄이 있었다면 삭제해주고
+        deleteProgramJob(program);
 
         // 마감 기간 지난 경우 -> 바로 close
         if(program.getEndDate().isBefore(LocalDateTime.now())) {
-            // 기존에 등록된 스케줄이 있었다면 삭제해주고
-            deleteProgramJob(program);
 
             applicationContext.getBean(ProgramService.class).closeProgram(program.getIdx());
             return;
         }
-        System.out.println(program.getDeadlineAlertTime());
         // 알림 시간 지난 경우 -> close 스케줄만 등록
         if(program.getDeadlineAlertTime().isBefore(LocalDateTime.now())) {
-
-            // 기존에 등록된 스케줄이 있었다면 삭제해주고
-            deleteProgramJob(program);
 
             closeTrigger = buildJobTrigger(program.getEndDate(), getCloseTriggerKey(program));
             closeJobDetail = buildJobDetail(CloseProgramJob.class, program, applicationContext);
@@ -86,12 +86,6 @@ public class QuartzSchedulerService {
 
         closeJobKey = getCloseJobKey(program);
         deadlineJobKey = getDeadlineJobKey(program);
-        if(isJobExist(closeJobKey)) {
-            schedulerFactory.getScheduler().rescheduleJob(closeTrigger.getKey(), closeTrigger);
-            schedulerFactory.getScheduler().rescheduleJob(deadlineTrigger.getKey(), deadlineTrigger);
-            // 업데이트 했다는 로그
-            return;
-        }
 
         schedulerFactory.getScheduler().scheduleJob(closeJobDetail, closeTrigger);
         schedulerFactory.getScheduler().scheduleJob(deadlineJobDetail, deadlineTrigger);
