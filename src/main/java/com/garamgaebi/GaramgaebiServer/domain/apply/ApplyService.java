@@ -2,11 +2,14 @@ package com.garamgaebi.GaramgaebiServer.domain.apply;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
+import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyCancelEvent;
+import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyEvent;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.net.openssl.ciphers.Encryption;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ public class ApplyService {
     private final ApplyRepository applyRepository;
     private final MemberRepository memberRepository;
     private final ProgramRepository programRepository;
+    private final ApplicationEventPublisher publisher;
 
 
     @Transactional
@@ -49,6 +53,7 @@ public class ApplyService {
             newApply.setName(applyDto.getName());
             newApply.setNickname(applyDto.getNickname());
             newApply.setPhone(applyDto.getPhone());
+            newApply.setStatus(ApplyStatus.APPLY);
         }
 
         else if(apply.getStatus() != ApplyStatus.CANCEL) {
@@ -65,6 +70,9 @@ public class ApplyService {
 
 
         newApply = applyRepository.save(newApply);
+
+        // 신청완료 알림 이벤트 발생
+        publisher.publishEvent(new ApplyEvent(newApply));
 
         return newApply.getApply_idx();
     }
@@ -104,6 +112,9 @@ public class ApplyService {
 
 
         apply = applyRepository.save(apply);
+
+        // 신청취소 알림 이벤트 발생
+        publisher.publishEvent(new ApplyCancelEvent(apply));
 
         return apply.getApply_idx();
     }
