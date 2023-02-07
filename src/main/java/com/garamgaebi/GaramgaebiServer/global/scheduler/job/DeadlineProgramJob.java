@@ -1,7 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.global.scheduler.job;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.DeadlineEvent;
+import com.garamgaebi.GaramgaebiServer.domain.notification.event.DeadlineEvent;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -18,7 +18,6 @@ public class DeadlineProgramJob extends QuartzJobBean {
         Long programIdx = context.getJobDetail().getJobDataMap().getLong("programIdx");
         ApplicationContext applicationContext = (ApplicationContext) context.getJobDetail().getJobDataMap().get("applicationContext");
 
-        ApplicationEventPublisher publisher = applicationContext.getBean(ApplicationEventPublisher.class);
         Optional<Program> programWrapper = applicationContext.getBean(ProgramRepository.class).findById(programIdx);
 
         if(programWrapper.isEmpty()) {
@@ -26,8 +25,7 @@ public class DeadlineProgramJob extends QuartzJobBean {
             return;
         }
 
-        publisher.publishEvent(new DeadlineEvent(programWrapper.get()));
         // 알림 보내기
-        System.out.println("마감 임박 알림");
+        applicationContext.publishEvent(new DeadlineEvent(programWrapper.get()));
     }
 }
