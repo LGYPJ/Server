@@ -25,19 +25,11 @@ public class S3Uploader {
     public String bucket;
 
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        try {
-            Optional<File> uploadFile = convert(multipartFile);
 
-            if(uploadFile.isEmpty()) {
-                // 에러 로그
-                return "Error";
-            }
+        File uploadFile = convert(multipartFile).orElseThrow(() ->new IllegalArgumentException("파일 전환 실패"));
 
-            return upload(uploadFile.get(), dirName);
-        } catch(Exception e) {
-            e.printStackTrace();
-            return "Error";
-        }
+        return upload(uploadFile, dirName);
+
     }
 
     // S3로 파일 업로드하기
@@ -64,7 +56,7 @@ public class S3Uploader {
     }
 
     private Optional<File> convert(MultipartFile multipartFile) throws IOException {
-        File convertFile = new File(multipartFile.getOriginalFilename());
+        File convertFile = new File( "S3resource/" + multipartFile.getOriginalFilename());
         // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
