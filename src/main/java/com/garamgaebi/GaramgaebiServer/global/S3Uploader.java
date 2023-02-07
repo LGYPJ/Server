@@ -25,9 +25,19 @@ public class S3Uploader {
     public String bucket;
 
     public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
+        try {
+            Optional<File> uploadFile = convert(multipartFile);
 
-        return upload(uploadFile, dirName);
+            if(uploadFile.isEmpty()) {
+                // 에러 로그
+                return "Error";
+            }
+
+            return upload(uploadFile.get(), dirName);
+        } catch(Exception e) {
+            e.printStackTrace();
+            return "Error";
+        }
     }
 
     // S3로 파일 업로드하기
