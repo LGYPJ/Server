@@ -2,6 +2,8 @@ package com.garamgaebi.GaramgaebiServer.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "MemberNotification")
 @AllArgsConstructor
 @NoArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 @Getter @Setter
 public class MemberNotification {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
