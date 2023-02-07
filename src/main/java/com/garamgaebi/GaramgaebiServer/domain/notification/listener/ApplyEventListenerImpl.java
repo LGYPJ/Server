@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.listener;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyCancelEvent;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyEvent;
@@ -16,6 +17,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 //@Async("applyThreadPoolExecutor")
@@ -25,6 +27,8 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
     private final NotificationSender notificationSender;
     private final NotificationRepository notificationRepository;
 
+    private final MemberRepository memberRepository;
+
     @Override
     @Async
     @Transactional
@@ -33,7 +37,13 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
         Apply apply = applyEvent.getApply();
 
-        Member member = apply.getMember();
+        Optional<Member> memberWrapper = memberRepository.findById(apply.getMember().getMemberIdx());
+        if(memberWrapper.isEmpty()) {
+            // 없는 멤버 로그
+            return;
+        }
+
+        Member member = memberWrapper.get();
 
         // 신청한 멤버 토큰 가져와서 저장
         String fcmToken = new String();
@@ -78,7 +88,13 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
         Apply apply = applyCancelEvent.getApply();
 
-        Member member = apply.getMember();
+        Optional<Member> memberWrapper = memberRepository.findById(apply.getMember().getMemberIdx());
+        if(memberWrapper.isEmpty()) {
+            // 없는 멤버 로그
+            return;
+        }
+
+        Member member = memberWrapper.get();
 
         // 신청한 멤버 토큰 가져와서 저장
         String fcmToken = new String();
@@ -87,7 +103,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         // 알림 엔티티 insert
         Notification notification = Notification.builder()
                 .notificationType(NotificationType.APPLY_COMPLETE)
-                .content(apply.getProgram().getTitle() + " 신청이 완료되었어요")
+                .content(apply.getProgram().getTitle() + " 신청이 취소 되었어요")
                 .resourceIdx(apply.getProgram().getIdx())
                 .resourceType(apply.getProgram().getProgramType())
                 .build();
