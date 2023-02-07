@@ -11,7 +11,6 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +37,7 @@ public class NotificationServiceImpl implements NotificationService {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
-        List<MemberNotification> memberNotifications = memberNotificationRepository.findMemberNotificationList(member.get(), pageable);
+        List<MemberNotification> memberNotifications = memberNotificationRepository.findByMemberOrderByCreatedAtDesc(member.get(), pageable);
         List<GetNotificationDto> getNotificationDtos = new ArrayList<GetNotificationDto>();
 
         for(MemberNotification memberNotification : memberNotifications) {
@@ -55,5 +54,17 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         return getNotificationDtos;
+    }
+
+    @Override
+    @Transactional
+    public Boolean isMemberNotificationExist(Long memberIdx) {
+        Optional<Member> member = memberRepository.findById(memberIdx);
+
+        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
+        }
+
+        return memberNotificationRepository.existsByMemberAndIsReadFalse(member.get());
     }
 }
