@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(PERMIT_URL_ARRAY).permitAll()
+                .requestMatchers("/ws/**").permitAll()
                 .requestMatchers("/profile/**").permitAll()
                 .requestMatchers("/images").permitAll()
                 .requestMatchers("/admin/**").permitAll()

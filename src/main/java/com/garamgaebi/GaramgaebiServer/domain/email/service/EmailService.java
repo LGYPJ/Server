@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.email.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.email.dto.EmailReq;
 import com.garamgaebi.GaramgaebiServer.domain.email.dto.EmailRes;
+import io.netty.util.internal.ThreadLocalRandom;
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -50,6 +51,7 @@ public class EmailService {
     }
     public static String createKey() {
         StringBuffer key = new StringBuffer();
+        key.delete(0, key.length());
         Random rnd = new Random();
 
         for (int i = 0; i < 6; i++) { // 인증코드 숫자 6자리
