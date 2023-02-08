@@ -1,7 +1,11 @@
 package com.garamgaebi.GaramgaebiServer.global.config;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,13 +25,13 @@ public class AmazonS3Config {
     private String region;
 
     @Bean
-    public AmazonS3Client amazonS3Client() {
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-        System.out.println(region);
-        return (AmazonS3Client) AmazonS3ClientBuilder.standard()
-                .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .build();
+    public BasicAWSCredentials basicAWSCredentials() {
+        return new BasicAWSCredentials(accessKey, secretKey);
     }
-
+    @Bean
+    public AmazonS3Client amazonS3Client(AWSCredentials awsCredentials) {
+        AmazonS3Client amazonS3Client = new AmazonS3Client(awsCredentials);
+        amazonS3Client.setRegion(Region.getRegion(Regions.fromName(region)));
+        return amazonS3Client;
+    }
 }
