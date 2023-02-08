@@ -21,14 +21,13 @@ public class AdminApplicantController {
 
     /**
      * Admin 프로그램 신청자 조회
-     * 프로그램idx -> 멤버인덱스 이름 닉네임 전화번호 입금여부체크 입금여부 상태
-     * 너무 종류가 많은데??
+     * 이름 닉네임 전화번호 은행 계좌번호 입금여부 최종수정일자
      */
     @Operation(summary = "Admin 프로그램 신청자 조회")
     @GetMapping("/{programIdx}")
     @ResponseBody
-    public BaseResponse<List<GetFindAllApplicantRes>> findAllApplicant(@PathVariable long programIdx) {
-        List<GetFindAllApplicantRes> allApplicant = service.findAllApplicant(programIdx);
+    public BaseResponse<GetFindAllApplicantRes> findAllApplicant(@PathVariable long programIdx) {
+        GetFindAllApplicantRes allApplicant = service.findAllApplicant(programIdx);
         return new BaseResponse<>(allApplicant);
     }
 
@@ -40,7 +39,7 @@ public class AdminApplicantController {
     @Operation(summary = "Admin 프로그램 신청 입금여부, 상태 수정")
     @PostMapping
     @ResponseBody
-    public BaseResponse<String> updateApplicant(@RequestBody @Valid PostUpdateApplicantReq req) {
+    public BaseResponse<String> updateApplicant(@RequestBody PostUpdateApplicantReq req) {
         String res = service.updateApplicant(req);
         return new BaseResponse<>(res);
     }

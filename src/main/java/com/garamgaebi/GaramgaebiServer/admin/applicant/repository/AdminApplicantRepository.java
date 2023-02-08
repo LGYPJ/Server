@@ -19,9 +19,20 @@ public class AdminApplicantRepository {
         return em.find(Program.class, id);
     }
 
-    //한 프로그램에 대한 모든 신청자 찾기
-    public List<Apply> findAllApplicant(long programIdx) {
-        String jpql = "SELECT a FROM Apply a WHERE a.program.idx = :programIdx";
+    //한 프로그램에 대한 신청자 조회
+    //APPLY, APPLY_CONFIRM, APPLY_CANCEL
+    public List<Apply> findApplyList(long programIdx) {
+        String jpql = "SELECT a FROM Apply a WHERE a.program.idx = :programIdx AND a.status IN('APPLY','APPLY_CONFIRM','APPLY_CANCEL')";
+        List<Apply> applies = em.createQuery(jpql, Apply.class)
+                .setParameter("programIdx", programIdx)
+                .getResultList();
+        return applies;
+    }
+
+    //한 프로그램에 대한 취소자 조회
+    //CANCEL, CANCEL_REFUND, CANCEL_CONFIRM
+    public List<Apply> findCancelList(long programIdx) {
+        String jpql = "SELECT a FROM Apply a WHERE a.program.idx = :programIdx AND a.status IN('CANCEL','CANCEL_REFUND','CANCEL_CONFIRM')";
         List<Apply> applies = em.createQuery(jpql, Apply.class)
                 .setParameter("programIdx", programIdx)
                 .getResultList();
