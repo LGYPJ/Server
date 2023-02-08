@@ -31,7 +31,7 @@ public class AmazonS3Config {
     }
 
 
-
+/*
     @Bean
     public AmazonS3Client amazonS3Client(BasicAWSCredentials awsCredentials) {
         return (AmazonS3Client) AmazonS3ClientBuilder.standard()
@@ -39,17 +39,12 @@ public class AmazonS3Config {
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .build();
     }
+    */
 
-    /*
     @Bean
     public AmazonS3Client amazonS3Client(AWSCredentials awsCredentials) {
         AmazonS3Client amazonS3Client = new AmazonS3Client(awsCredentials);
         amazonS3Client.setRegion(Region.getRegion(Regions.fromName(region)));
         return amazonS3Client;
     }
-
-     */
-
-
-
 }
