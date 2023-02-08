@@ -57,7 +57,7 @@ public class ApplyService {
         }
 
         else if(apply.getStatus() != ApplyStatus.CANCEL) {
-            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
+            throw new RestApiException(ErrorCode.INACTIVE_MEMBER);
         }
 
         else {
