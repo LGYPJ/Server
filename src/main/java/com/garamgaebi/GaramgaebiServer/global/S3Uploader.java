@@ -42,6 +42,7 @@ public class S3Uploader {
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
+        System.out.println(bucket);
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
@@ -56,7 +57,7 @@ public class S3Uploader {
     }
 
     private Optional<File> convert(MultipartFile multipartFile) throws IOException {
-        File convertFile = new File( "S3resource/" + multipartFile.getOriginalFilename());
+        File convertFile = new File( "/S3resource/" + multipartFile.getOriginalFilename());
         // 바로 위에서 지정한 경로에 File이 생성됨 (경로가 잘못되었다면 생성 불가능)
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) { // FileOutputStream 데이터를 파일에 바이트 스트림으로 저장하기 위함
