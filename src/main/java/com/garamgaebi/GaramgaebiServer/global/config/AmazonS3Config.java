@@ -30,6 +30,7 @@ public class AmazonS3Config {
         return new BasicAWSCredentials(accessKey, secretKey);
     }
 
+    /*
 
     @Bean
     public AmazonS3Client amazonS3Client(BasicAWSCredentials awsCredentials) {
@@ -39,7 +40,8 @@ public class AmazonS3Config {
                 .build();
     }
 
-    /*
+     */
+
     @Bean
     public AmazonS3Client amazonS3Client(AWSCredentials awsCredentials) {
         AmazonS3Client amazonS3Client = new AmazonS3Client(awsCredentials);
@@ -47,6 +49,6 @@ public class AmazonS3Config {
         return amazonS3Client;
     }
 
-     */
+
 
 }
