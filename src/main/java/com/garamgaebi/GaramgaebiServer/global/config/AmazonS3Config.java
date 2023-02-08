@@ -44,7 +44,7 @@ public class AmazonS3Config {
     @Bean
     public AmazonS3Client amazonS3Client(AWSCredentials awsCredentials) {
         AmazonS3Client amazonS3Client = new AmazonS3Client(awsCredentials);
-        amazonS3Client.setRegion(Region.getRegion(Regions.fromName(region)));
+        amazonS3Client.setRegion(Region.getRegion(Regions.AP_NORTHEAST_2));
         return amazonS3Client;
     }
 }
