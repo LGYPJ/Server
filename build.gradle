@@ -27,6 +27,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // validation
 	implementation 'com.google.firebase:firebase-admin:9.1.1' // firebase
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE' // S3
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000') // AWS SDK
+	implementation 'com.amazonaws:aws-java-sdk-s3'
 	implementation group: 'org.quartz-scheduler', name: 'quartz',  version: '2.2.1' // quartz
 
 	/* Spring Security */
