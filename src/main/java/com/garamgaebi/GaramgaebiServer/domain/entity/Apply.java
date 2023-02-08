@@ -33,10 +33,10 @@ public class Apply {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
+    @Column
     private String bank;
 
-    @Column(nullable = false)
+    @Column
     private String account;
 
     @Enumerated(EnumType.STRING)
