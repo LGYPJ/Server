@@ -19,7 +19,7 @@ import java.util.Random;
 public class EmailService {
     private final JavaMailSender emailSender;
 
-    public static final String ePw = createKey();
+    public static String ePw = null;
 
     private MimeMessage createMessage(String to) throws Exception {
         System.out.println("받는 사람: " + to);
@@ -49,19 +49,19 @@ public class EmailService {
 
         return message;
     }
-    public static String createKey() {
+    public static void createKey() {
         StringBuffer key = new StringBuffer();
-        key.delete(0, key.length());
         Random rnd = new Random();
 
         for (int i = 0; i < 6; i++) { // 인증코드 숫자 6자리
             key.append((rnd.nextInt(10)));
         }
 
-        return key.toString();
+        ePw = key.toString();
     }
 
     public EmailRes sendEmail(EmailReq emailReq) throws Exception {
+        createKey();
         MimeMessage message = createMessage(emailReq.getEmail());
         try {
             emailSender.send(message);
