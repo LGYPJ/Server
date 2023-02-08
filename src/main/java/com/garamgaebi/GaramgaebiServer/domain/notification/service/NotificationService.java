@@ -8,4 +8,5 @@ import java.util.List;
 public interface NotificationService {
     public List<GetNotificationDto> getMemberNotificationList(Long memberIdx, Pageable pageable);
 
+    public Boolean isMemberNotificationExist(Long memberIdx);
 }

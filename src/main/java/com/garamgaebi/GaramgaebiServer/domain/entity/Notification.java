@@ -1,18 +1,21 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
+import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Notification")
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@DynamicInsert
+@DynamicUpdate
 @Getter @Setter
-@Builder(builderMethodName = "NotificationBuilder")
 public class Notification {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_idx")
@@ -29,18 +32,21 @@ public class Notification {
     @Column(name = "resource_type")
     @Enumerated(EnumType.STRING)
     private ProgramType resourceType;
+
     @Enumerated(EnumType.STRING)
     private NotificationStatus status;
 
     @OneToMany(mappedBy = "notification", fetch = FetchType.LAZY)
     private List<MemberNotification> memberNotifications = new ArrayList<MemberNotification>();
 
-    public static NotificationBuilder builder(NotificationDto notificationDto) {
-        return NotificationBuilder()
-                .notificationType(notificationDto.getNotificationType())
-                .content(notificationDto.getContent())
-                .resourceIdx(notificationDto.getResourceIdx())
-                .resourceType(notificationDto.getResourceType());
+    @Builder
+    private Notification(Long idx, NotificationType notificationType, String content, Long resourceIdx, ProgramType resourceType, NotificationStatus status) {
+        this.idx = idx;
+        this.notificationType =notificationType;
+        this.content = content;
+        this.resourceIdx = resourceIdx;
+        this.resourceType = resourceType;
+        this.status = status;
     }
 
     // 연관관계 메서드
