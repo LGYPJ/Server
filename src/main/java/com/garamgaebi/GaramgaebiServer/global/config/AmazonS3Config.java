@@ -44,6 +44,7 @@ public class AmazonS3Config {
     @Bean
     public AmazonS3Client amazonS3Client(AWSCredentials awsCredentials) {
         AmazonS3Client amazonS3Client = new AmazonS3Client(awsCredentials);
+        // 이거 일단 임시로 enum 바로 때려박음 문제 없으면 그냥 사용, 보안 문제 등 있으면 수정 방안 찾아보기
         amazonS3Client.setRegion(Region.getRegion(Regions.AP_NORTHEAST_2));
         return amazonS3Client;
     }
