@@ -14,17 +14,14 @@ public class ApplyCancelDto {
     private Long memberIdx;
     @NotNull
     private Long programIdx;
-    @NotEmpty
     private String bank;
-    @NotEmpty
     private String account;
 
     @Builder
     public ApplyCancelDto(Long memberIdx,
                     Long programIdx,
                     String bank,
-                    String account,
-                    String phone) {
+                    String account) {
         this.memberIdx = memberIdx;
         this.programIdx = programIdx;
         this.bank = bank;

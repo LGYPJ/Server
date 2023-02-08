@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 
 
 @Getter @Setter
@@ -42,6 +46,11 @@ public class Apply {
     @Enumerated(EnumType.STRING)
     private ApplyStatus status;
 
+    @CreatedDate
+    private LocalDateTime created_at;
+    @LastModifiedDate
+    private LocalDateTime updated_at;
+
     @Builder
     public Apply(Member member,
                  Program program,
@@ -50,7 +59,9 @@ public class Apply {
                  String phone,
                  String bank,
                  String account,
-                 ApplyStatus status) {
+                 ApplyStatus status,
+                 LocalDateTime created_at,
+                 LocalDateTime updated_at) {
         this.member = member;
         this.program = program;
         this.name = name;
@@ -59,6 +70,8 @@ public class Apply {
         this.bank = bank;
         this.account = account;
         this.status = status;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
     }
 
     //계좌 암호화하기
