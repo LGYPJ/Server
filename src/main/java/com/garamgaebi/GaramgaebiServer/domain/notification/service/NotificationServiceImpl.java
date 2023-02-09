@@ -37,7 +37,7 @@ public class NotificationServiceImpl implements NotificationService {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
-        List<MemberNotification> memberNotifications = memberNotificationRepository.findByMemberOrderByCreatedAtDesc(member.get(), pageable);
+        List<MemberNotification> memberNotifications = memberNotificationRepository.findByMember(member.get(), pageable);
         List<GetNotificationDto> getNotificationDtos = new ArrayList<GetNotificationDto>();
 
         for(MemberNotification memberNotification : memberNotifications) {

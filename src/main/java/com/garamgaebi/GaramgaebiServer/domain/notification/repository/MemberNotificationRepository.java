@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface MemberNotificationRepository extends JpaRepository<MemberNotification, Long> {
 
-    public List<MemberNotification> findByMemberOrderByCreatedAtDesc(@Param("member") Member member, Pageable pageable);
+    public List<MemberNotification> findByMember(@Param("member") Member member, Pageable pageable);
 
     public Boolean existsByMemberAndIsReadFalse(Member member);
 }
