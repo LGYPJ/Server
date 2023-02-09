@@ -2,6 +2,8 @@ package com.garamgaebi.GaramgaebiServer.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 
 @Getter @Setter
@@ -11,7 +13,7 @@ import lombok.*;
 public class Apply {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long apply_idx;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,10 +33,10 @@ public class Apply {
     @Column(nullable = false)
     private String phone;
 
-    @Column(nullable = false)
+    @Column
     private String bank;
 
-    @Column(nullable = false)
+    @Column
     private String account;
 
     @Enumerated(EnumType.STRING)

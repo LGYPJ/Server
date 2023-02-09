@@ -8,10 +8,16 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
+import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEvent;
+import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.garamgaebi.GaramgaebiServer.global.scheduler.event.DeleteProgramEvent;
+import com.garamgaebi.GaramgaebiServer.global.scheduler.event.PatchProgramEvent;
+import com.garamgaebi.GaramgaebiServer.global.scheduler.event.PostProgramEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +30,9 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     private final AdminProgramRepository adminProgramRepository;
     private final AdminPresentationRepository adminPresentationRepository;
     private final GameService gameService;
+
+    private final ApplicationEventPublisher publisher;
+    private final ProgramRepository programRepository;
 
     // 세미나 등록
     @Transactional
@@ -39,6 +48,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         program.setStatus(ProgramStatus.READY_TO_OPEN);
         program.setProgramType(ProgramType.SEMINAR);
         program = adminProgramRepository.save(program);
+
 
         return new ProgramRes(program.getIdx());
     }
@@ -140,6 +150,9 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         program.setLocation(patchSeminarDto.getLocation());
         program.setFee(patchSeminarDto.getFee());
 
+        // 기존 스케줄 삭제후 스케줄러에 등록
+        publisher.publishEvent(new PatchProgramEvent(program));
+
         return new ProgramRes(program.getIdx());
     }
 
@@ -161,6 +174,9 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         program.setLocation(patchNetworkingDto.getLocation());
         program.setFee(patchNetworkingDto.getFee());
 
+        // 기존 스케줄 삭제후 스케줄러에 등록
+        publisher.publishEvent(new PatchProgramEvent(program));
+
         return new ProgramRes(program.getIdx());
     }
 
@@ -177,6 +193,9 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
         Program program = programWrapper.get();
         program.setStatus(ProgramStatus.DELETE);
+
+        // 스케줄러에서 삭제
+        publisher.publishEvent(new DeleteProgramEvent(program));
     }
 
     // 프로그램 오픈
@@ -192,6 +211,13 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
         Program program = programWrapper.get();
         program.setStatus(ProgramStatus.OPEN);
+
+        programRepository.save(program);
+
+        // 스케줄러에 등록
+        publisher.publishEvent(new PostProgramEvent(program));
+        // 프로그램 오픈 알림 이벤트 발생
+        publisher.publishEvent(new ProgramOpenEvent(program));
 
         return new ProgramRes(program.getIdx());
     }

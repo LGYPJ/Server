@@ -1,16 +1,16 @@
 package com.garamgaebi.GaramgaebiServer.admin.applicant.dto;
 
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.ApplyStatus;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class GetFindAllApplicantRes {
-    private Long memberIdx;
-    private String name;
-    private String nickName;
-    private String phone;
-//    private ApplyStatus status;
+    private List<ApplyList> applyList;
+    private List<CancelList> cancelList;
 }

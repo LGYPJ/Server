@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.notification.dto;
+package com.garamgaebi.GaramgaebiServer.domain.notification.event;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
 import lombok.Getter;

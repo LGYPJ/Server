@@ -1,15 +1,21 @@
 package com.garamgaebi.GaramgaebiServer.admin.applicant.service;
 
+import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.ApplyList;
+import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.CancelList;
 import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.GetFindAllApplicantRes;
 import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.PostUpdateApplicantReq;
 import com.garamgaebi.GaramgaebiServer.admin.applicant.repository.AdminApplicantRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Apply;
+import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode.NOT_EXIST_SEMINAR;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,18 +27,55 @@ public class AdminApplicantService {
      * Admin 프로그램 신청자 조회
      */
     @Transactional
-    public List<GetFindAllApplicantRes> findAllApplicant(long programIdx) {
-        List<Apply> applies = repository.findAllApplicant(programIdx);
-        List<GetFindAllApplicantRes> resList = new ArrayList<>();
-        for (int i = 0; i < applies.size(); i++) {
-            GetFindAllApplicantRes res = new GetFindAllApplicantRes();
-            res.setMemberIdx(applies.get(i).getMember().getMemberIdx());
-            res.setName(applies.get(i).getName());
-            res.setNickName(applies.get(i).getNickname());
-            res.setPhone(applies.get(i).getPhone());
-            resList.add(res);
+    public GetFindAllApplicantRes findAllApplicant(long programIdx) {
+        Program program = repository.findProgram(programIdx);
+        if (program == null) {
+            throw new RestApiException(NOT_EXIST_SEMINAR);
         }
-        return resList;
+        GetFindAllApplicantRes res = new GetFindAllApplicantRes();
+        List<ApplyList> aList = new ArrayList<>();
+        List<CancelList> cList = new ArrayList<>();
+
+        //신청자 조회
+        List<Apply> applyList = repository.findApplyList(programIdx);
+        //신청자 입금상태 설정 및 리스트에 추가
+        for (int i = 0; i < applyList.size(); i++) {
+            ApplyList a = new ApplyList();
+            a.setMemberIdx(applyList.get(i).getMember().getMemberIdx());
+            a.setName(applyList.get(i).getName());
+            a.setNickName(applyList.get(i).getNickname());
+            a.setPhone(applyList.get(i).getPhone());
+            a.setBank(applyList.get(i).getBank());
+            a.setAccount(applyList.get(i).getAccount());
+            System.out.println(applyList.get(i).getStatus());
+            if (applyList.get(i).getStatus().toString().equals("APPLY_CONFIRM")) {
+                a.setStatus(true);
+            } else {
+                a.setStatus(false);
+            }
+            aList.add(a);
+        }
+        //취소자 조회
+        List<Apply> cancelList = repository.findCancelList(programIdx);
+        //취소자 환불상태 설정 및 리스트에 추가
+        for (int i = 0; i < cancelList.size(); i++) {
+            CancelList c = new CancelList();
+            c.setMemberIdx(cancelList.get(i).getMember().getMemberIdx());
+            c.setName(cancelList.get(i).getName());
+            c.setNickName(cancelList.get(i).getNickname());
+            c.setPhone(cancelList.get(i).getPhone());
+            c.setBank(cancelList.get(i).getBank());
+            c.setAccount(cancelList.get(i).getAccount());
+            if (cancelList.get(i).getStatus().toString().equals("CANCEL_REFUND")) {
+                c.setStatus(true);
+            } else {
+                c.setStatus(false);
+            }
+            cList.add(c);
+        }
+        res.setApplyList(aList);
+        res.setCancelList(cList);
+        return res;
     }
 
     /**
