@@ -13,7 +13,7 @@ public interface AdminProgramService {
     PresentationRes modifyPresentation(PostPresentationDto postPresentationDto);
 
     // 발표자료 삭제
-    void deletePresentation(Long presentationIdx);
+    PresentationRes deletePresentation(Long presentationIdx, DeletePresentationDto deletePresentationDto);
 
     // 네트워킹 등록
     ProgramRes addNetworking(NetworkingDto networkingDto);
@@ -25,7 +25,7 @@ public interface AdminProgramService {
     ProgramRes modifyNetworking(PatchNetworkingDto patchNetworkingDto);
 
     // 글 삭제
-    void deleteProgram(Long programIdx);
+    ProgramRes deleteProgram(Long programIdx, DeleteDto deleteDto);
 
     // 프로그램 오픈
     ProgramRes openProgram(Long programIdx);
