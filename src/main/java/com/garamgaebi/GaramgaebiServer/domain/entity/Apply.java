@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
+@DynamicInsert
 @Table(name = "Apply")
 public class Apply {
 
@@ -47,9 +48,12 @@ public class Apply {
     private ApplyStatus status;
 
     @CreatedDate
-    private LocalDateTime created_at;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
     @LastModifiedDate
-    private LocalDateTime updated_at;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Builder
     public Apply(Member member,
@@ -60,8 +64,8 @@ public class Apply {
                  String bank,
                  String account,
                  ApplyStatus status,
-                 LocalDateTime created_at,
-                 LocalDateTime updated_at) {
+                 LocalDateTime createdAt,
+                 LocalDateTime updatedAt) {
         this.member = member;
         this.program = program;
         this.name = name;
@@ -70,8 +74,8 @@ public class Apply {
         this.bank = bank;
         this.account = account;
         this.status = status;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     //계좌 암호화하기
