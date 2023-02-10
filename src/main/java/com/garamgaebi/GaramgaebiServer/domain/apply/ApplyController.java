@@ -34,6 +34,12 @@ public class ApplyController {
 
         return new BaseResponse<>(applyService.leave(applyCancelDto));
     }
+
+    @GetMapping("/{member-idx}/{program-idx}/info")
+    public BaseResponse<GetApplyRes> getApplyInfo(@PathVariable("member-idx") Long memberIdx, @PathVariable("program-idx") Long programIdx) {
+
+        return new BaseResponse<GetApplyRes>(applyService.findApplyInfo(memberIdx, programIdx));
+    }
 }
 
 

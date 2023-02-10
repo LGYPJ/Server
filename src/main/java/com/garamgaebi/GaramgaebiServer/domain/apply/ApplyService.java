@@ -9,6 +9,7 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.net.openssl.ciphers.Encryption;
+import org.hibernate.NonUniqueResultException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -117,6 +118,36 @@ public class ApplyService {
         publisher.publishEvent(new ApplyCancelEvent(apply));
 
         return apply.getApply_idx();
+    }
+
+    @Transactional(readOnly = true)
+    public GetApplyRes findApplyInfo(Long memberIdx, Long programIdx) {
+        Program program = programRepository.findById(programIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+        Member member = memberRepository.findById(memberIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(program.getStatus() == ProgramStatus.DELETE || member.getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        Apply apply;
+
+        try {
+            apply = applyRepository.findByProgramAndMember(program, member);
+        } catch(NonUniqueResultException e ) {
+            // 로그 찍기 : 신청 정보가 두 개 이상
+            throw new RestApiException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+        if(apply == null) {
+            // 로그 찍기 : 신청 정보가 없음
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        return GetApplyRes.builder()
+                .name(apply.getName())
+                .nickname(apply.getNickname())
+                .phone(apply.getPhone())
+                .build();
     }
 
 
