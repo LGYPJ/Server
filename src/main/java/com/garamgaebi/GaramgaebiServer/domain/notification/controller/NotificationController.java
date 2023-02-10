@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.controller;
 
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationDto;
+import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationResDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,14 +11,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,10 +41,10 @@ public class NotificationController {
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버에러", content = @Content())
     })
     @GetMapping("/{member-idx}")
-    public BaseResponse<List<GetNotificationDto>> getMemberNotification(@PathVariable("member-idx") Long memberIdx,
-                                                                        @PageableDefault(size=10, page=0) @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public BaseResponse<GetNotificationResDto> getMemberNotification(@PathVariable("member-idx") Long memberIdx,
+                                                                      @RequestParam(required = false) Long lastNotificationIdx) {
 
-        return new BaseResponse<>(notificationService.getMemberNotificationList(memberIdx, pageable));
+        return new BaseResponse<>(notificationService.getMemberNotificationList(memberIdx, lastNotificationIdx));
     }
 
     @Operation(summary = "유저의 읽지 않은 알림 존재 여부", description = "유저가 읽지 않은 알림이 존재한다면 TRUE, 그렇지 않으면 FALSE를 반환합니다.")
