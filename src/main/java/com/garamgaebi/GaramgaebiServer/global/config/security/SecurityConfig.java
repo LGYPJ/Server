@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers(PERMIT_URL_ARRAY).permitAll()
+                .requestMatchers("/programs/**").permitAll()
                 .requestMatchers("/applies/**").permitAll()
                 .requestMatchers("/seminars/**").permitAll()
                 .requestMatchers("/notification/**").permitAll()

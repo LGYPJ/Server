@@ -31,9 +31,9 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     @Query("select p from Program p where p.date > :start and p.programType = :programType and p not in (select tmp from Program tmp where tmp.status = 'DELETE') order by p.date asc")
     public List<Program> findReadyProgramList(@Param("start") LocalDateTime now, @Param("programType") ProgramType programType);
 
-    @Query("select p from Program p inner join Apply a where a.member = :member and (a.status = 'APPLY' or a.status = 'APPLY_CONFIRM') and p.date > current_timestamp and p not in (select tmp from Program tmp where tmp.status = 'DELETE') order by p.date asc")
+    @Query("select p from Program p join Apply a on p = a.program where a.member = :member and (a.status = 'APPLY' or a.status = 'APPLY_CONFIRM') and p.date > current_timestamp and p not in (select tmp from Program tmp where tmp.status = 'DELETE') order by p.date asc")
     public List<Program> findMemberReadyPrograms(@Param("member") Member member);
-    @Query("select p from Program p inner join Apply a where a.member = :member and (a.status = 'APPLY' or a.status = 'APPLY_CONFIRM') and p.date < current_timestamp and p not in (select tmp from Program tmp where tmp.status = 'DELETE') order by p.date desc")
+    @Query("select p from Program p join Apply a on p = a.program where a.member = :member and (a.status = 'APPLY' or a.status = 'APPLY_CONFIRM') and p.date < current_timestamp and p not in (select tmp from Program tmp where tmp.status = 'DELETE') order by p.date desc")
     public List<Program> findMemberClosedPrograms(@Param("member") Member member);
 
     public List<Program> findByStatus(ProgramStatus programStatus);
