@@ -53,6 +53,7 @@ public class AdminApplicantService {
             } else {
                 a.setStatus(false);
             }
+            a.setUpdatedAt(applyList.get(i).getUpdatedAt());
             aList.add(a);
         }
         //취소자 조회
@@ -71,6 +72,7 @@ public class AdminApplicantService {
             } else {
                 c.setStatus(false);
             }
+            c.setUpdatedAt(cancelList.get(i).getUpdatedAt());
             cList.add(c);
         }
         res.setApplyList(aList);
