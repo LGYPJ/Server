@@ -3,6 +3,9 @@ package com.garamgaebi.GaramgaebiServer.admin.applicant.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -15,5 +18,5 @@ public class ApplyList {
     private String bank;
     private String account;
     private Boolean status;
-//    private String date;
+    private LocalDateTime updatedAt;
 }
