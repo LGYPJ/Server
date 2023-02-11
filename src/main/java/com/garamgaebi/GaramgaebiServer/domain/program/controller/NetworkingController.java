@@ -95,19 +95,4 @@ public class NetworkingController {
         return new BaseResponse<>(networkingService.findNetworkingParticipantsList(networkingIdx, memberIdx));
     }
 
-    // 네트워킹 게임 참가 가능 여부 조회
-    @Operation(summary = "네트워킹 게임 참가 가능 여부 조회", description = "네트워킹 게임참가 버튼 활성화 여부를 반환 합니다.", responses = {
-            @ApiResponse(responseCode = "200", description = "성공"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
-            @ApiResponse(responseCode = "500", description = "알 수 없는 서버에러", content = @Content()),
-            @ApiResponse(responseCode = "2014", description = "접근할 수 없는 프로그램입니다.", content = @Content())
-    })
-    @GetMapping("/{networking-idx}/game/{member-idx}")
-    public BaseResponse<Map<String, Boolean>> CanJoinNetworkingGame(@PathVariable("networking-idx")Long networkingIdx, @PathVariable("member-idx")Long memberIdx) {
-
-        Map<String, Boolean> result = new ConcurrentHashMap<String, Boolean>();
-        result.put("isGameActive", networkingService.isNetworkingGameActive(networkingIdx, memberIdx));
-        return new BaseResponse<>(result);
-    }
-
 }

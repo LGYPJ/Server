@@ -1,10 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDetailReq;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
-import org.springframework.transaction.annotation.Transactional;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 
 import java.util.List;
 
@@ -21,7 +17,5 @@ public interface NetworkingService {
     public ProgramInfoDto findNetworkingDetails(Long networkingIdx, Long memberIdx);
     // 네트워킹 신청자 리스트 조회
     public List<ParticipantDto> findNetworkingParticipantsList(Long networkingIdx, Long memberIdx);
-    // 게임 버튼 활성화 여부 조회
-    public Boolean isNetworkingGameActive(Long networkingIdx, Long memberIdx);
 
 }

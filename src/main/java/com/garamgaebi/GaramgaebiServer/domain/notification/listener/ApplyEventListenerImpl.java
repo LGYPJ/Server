@@ -102,7 +102,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         // 알림 메세지 내용 가공
         // 알림 엔티티 insert
         Notification notification = Notification.builder()
-                .notificationType(NotificationType.APPLY_COMPLETE)
+                .notificationType(NotificationType.APPLY_CANCEL_COMPLETE)
                 .content(apply.getProgram().getTitle() + " 신청이 취소 되었어요")
                 .resourceIdx(apply.getProgram().getIdx())
                 .resourceType(apply.getProgram().getProgramType())
