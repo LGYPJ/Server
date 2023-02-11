@@ -43,6 +43,9 @@ public class ApplyService {
         if(program.isEmpty() || program.get().getStatus() == ProgramStatus.DELETE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
+        if(program.get().getStatus() != ProgramStatus.OPEN) {
+            throw new RestApiException(ErrorCode.PROGRAM_NOT_OPEN);
+        }
 
         Apply apply = applyRepository.findByProgramAndMember(program.get(), member.get());
         Apply newApply = null;
@@ -57,8 +60,8 @@ public class ApplyService {
             newApply.setStatus(ApplyStatus.APPLY);
         }
 
-        else if(apply.getStatus() != ApplyStatus.CANCEL) {
-            throw new RestApiException(ErrorCode.INACTIVE_MEMBER);
+        else if(apply.getStatus() == ApplyStatus.APPLY) {
+            throw new RestApiException(ErrorCode.ALREADY_APPLY_PROGRAM);
         }
 
         else {
@@ -67,6 +70,7 @@ public class ApplyService {
             newApply.setNickname(applyDto.getNickname());
             newApply.setPhone(applyDto.getPhone());
             newApply.setStatus(ApplyStatus.APPLY);
+            newApply.setUpdatedAt(LocalDateTime.now());
         }
 
 
@@ -92,16 +96,19 @@ public class ApplyService {
         if(program.isEmpty() || program.get().getStatus() == ProgramStatus.DELETE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
+        if(program.get().getStatus() != ProgramStatus.OPEN) {
+            throw new RestApiException(ErrorCode.PROGRAM_NOT_OPEN);
+        }
 
         Apply apply = applyRepository.findByProgramAndMember(program.get(), member.get());
 
 
         if(apply == null) {
-            throw new RestApiException(ErrorCode.NOT_ACCEPTABLE);
+            throw new RestApiException(ErrorCode.NOT_APPLY_STATUS);
         }
 
         else if(apply.getStatus() != ApplyStatus.APPLY) {
-            throw new RestApiException(ErrorCode.NOT_ACCEPTABLE);
+            throw new RestApiException(ErrorCode.NOT_APPLY_STATUS);
         }
 
         else {
@@ -109,6 +116,7 @@ public class ApplyService {
             apply.setAccount(applyCancelDto.getAccount());
             // newApply.setAccount(Encryption(applyCancelDto.getAccount())); 계좌 암호화 알고리즘으로 암호화하기
             apply.setStatus(ApplyStatus.CANCEL);
+            apply.setUpdatedAt(LocalDateTime.now());
         }
 
 

@@ -59,6 +59,7 @@ public class QuartzSchedulerService {
 
         // 기존에 등록된 스케줄이 있었다면 삭제해주고
         deleteProgramJob(program);
+        System.out.println(program.getIdx() + "스케줄 등록");
 
         // 마감 기간 지난 경우 -> 바로 close
         if(program.getEndDate().isBefore(LocalDateTime.now())) {
@@ -89,6 +90,7 @@ public class QuartzSchedulerService {
 
         schedulerFactory.getScheduler().scheduleJob(closeJobDetail, closeTrigger);
         schedulerFactory.getScheduler().scheduleJob(deadlineJobDetail, deadlineTrigger);
+        System.out.println(program.getIdx() + " 마감 임박까지 스케줄 등록");
         // 성공했다는 로그
     }
 

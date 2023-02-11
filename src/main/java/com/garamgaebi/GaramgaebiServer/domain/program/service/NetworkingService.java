@@ -18,8 +18,10 @@ public interface NetworkingService {
     // 홈 화면 네트워킹 리스트
     public List<ProgramDto> findMainNetworkingList();
     // 네트워킹 상세 페이지
-    ProgramInfoDto findNetworkingDetails(Long networkingIdx, Long memberIdx);
+    public ProgramInfoDto findNetworkingDetails(Long networkingIdx, Long memberIdx);
     // 네트워킹 신청자 리스트 조회
-    List<ParticipantDto> findNetworkingParticipantsList(Long networkingIdx, Long memberIdx);
+    public List<ParticipantDto> findNetworkingParticipantsList(Long networkingIdx, Long memberIdx);
+    // 게임 버튼 활성화 여부 조회
+    public Boolean isNetworkingGameActive(Long networkingIdx, Long memberIdx);
 
 }
