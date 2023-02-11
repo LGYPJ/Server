@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
+import com.garamgaebi.GaramgaebiServer.domain.apply.ApplyRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
@@ -26,6 +27,7 @@ public class NetworkingServiceImpl implements NetworkingService {
 
     private final ProgramRepository programRepository;
     private final MemberRepository memberRepository;
+    private final ApplyRepository applyRepository;
 
     // 이번 달 네트워킹 조회
     @Transactional(readOnly = true)
@@ -189,6 +191,41 @@ public class NetworkingServiceImpl implements NetworkingService {
             }
         }
         return participantDtos;
+    }
+
+    // 네트워킹 게임 버튼 활성화 여부 조회
+    @Transactional(readOnly = true)
+    @Override
+    public Boolean isNetworkingGameActive(Long networkingIdx, Long memberIdx) {
+
+        Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
+
+        if(memberWrapper.isEmpty() || memberWrapper.get().getStatus() == MemberStatus.INACTIVE) {
+            // 없는 멤버 예외 처리
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        Optional<Program> networkingWrapper = programRepository.findById(networkingIdx);
+
+        if(networkingWrapper.isEmpty()
+                || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING
+                || networkingWrapper.get().getStatus() == ProgramStatus.DELETE) {
+            // 없는 네트워킹 예외 처리
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        if(networkingWrapper.get().getStatus() == ProgramStatus.READY_TO_OPEN) {
+            throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
+        }
+
+        Apply apply = applyRepository.findByProgramAndMember(networkingWrapper.get(), memberWrapper.get());
+
+        if(apply == null || apply.getStatus() != ApplyStatus.APPLY_CONFIRM) {
+            return false;
+        }
+
+        return true;
+
     }
 
 

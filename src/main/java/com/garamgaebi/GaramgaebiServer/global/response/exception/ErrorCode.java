@@ -29,11 +29,14 @@ public enum ErrorCode {
     NOT_EXIST_SEMINAR(20012, "존재하지 않는 세미나입니다."),
     NOT_EXIST_PREWRAPPER(2013, "존재하지 않는 발표자료입니다."),
     FAIL_ACCESS_PROGRAM(2014, "접근할 수 없는 프로그램입니다."),
-    INACTIVE_MEMBER(2015, "이미 신청한 프로그램입니다."),
+
+
+    ALREADY_APPLY_PROGRAM(2015, "이미 신청한 프로그램입니다."),
+    PROGRAM_NOT_OPEN(2017, "오픈되지 않은 프로그램입니다."),
+    NOT_APPLY_STATUS(2016, "신청 내역이 없습니다."),
+
 
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
-
-    NOT_ACCEPTABLE(406, "등록 상태가 아닙니다."),
 
     INTERNAL_SERVER_ERROR(500, "서버 오류입니다.");
 
