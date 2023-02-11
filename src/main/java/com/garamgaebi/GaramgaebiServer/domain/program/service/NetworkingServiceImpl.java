@@ -3,10 +3,7 @@ package com.garamgaebi.GaramgaebiServer.domain.program.service;
 import com.garamgaebi.GaramgaebiServer.domain.apply.ApplyRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDetailReq;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
@@ -170,6 +167,7 @@ public class NetworkingServiceImpl implements NetworkingService {
         Program networking = networkingWrapper.get();
         List<ParticipantDto> participantDtos = new ArrayList<ParticipantDto>();
 
+        // 요정한 유저가 리스트에 있는지 check
         if(networking.getParticipants().contains(memberWrapper.get())) {
             participantDtos.add(new ParticipantDto(
                     memberWrapper.get().getMemberIdx(),
@@ -178,6 +176,7 @@ public class NetworkingServiceImpl implements NetworkingService {
             ));
         }
 
+        // 신청자 list DTO로 변환
         for(Member member : networking.getParticipants()) {
             if(member == null) {
                 participantDtos.add(null);
@@ -190,44 +189,9 @@ public class NetworkingServiceImpl implements NetworkingService {
                 ));
             }
         }
+
         return participantDtos;
     }
-
-    // 네트워킹 게임 버튼 활성화 여부 조회
-    @Transactional(readOnly = true)
-    @Override
-    public Boolean isNetworkingGameActive(Long networkingIdx, Long memberIdx) {
-
-        Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
-
-        if(memberWrapper.isEmpty() || memberWrapper.get().getStatus() == MemberStatus.INACTIVE) {
-            // 없는 멤버 예외 처리
-            throw new RestApiException(ErrorCode.NOT_FOUND);
-        }
-
-        Optional<Program> networkingWrapper = programRepository.findById(networkingIdx);
-
-        if(networkingWrapper.isEmpty()
-                || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING
-                || networkingWrapper.get().getStatus() == ProgramStatus.DELETE) {
-            // 없는 네트워킹 예외 처리
-            throw new RestApiException(ErrorCode.NOT_FOUND);
-        }
-
-        if(networkingWrapper.get().getStatus() == ProgramStatus.READY_TO_OPEN) {
-            throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
-        }
-
-        Apply apply = applyRepository.findByProgramAndMember(networkingWrapper.get(), memberWrapper.get());
-
-        if(apply == null || apply.getStatus() != ApplyStatus.APPLY_CONFIRM) {
-            return false;
-        }
-
-        return true;
-
-    }
-
 
     // programDto 빌더
     private ProgramDto programDtoBuilder(Program program) {
