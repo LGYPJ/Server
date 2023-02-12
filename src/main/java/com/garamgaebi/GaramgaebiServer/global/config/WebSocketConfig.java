@@ -1,8 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.global.config;
 
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.StompHandler;
+import com.garamgaebi.GaramgaebiServer.global.util.StompHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

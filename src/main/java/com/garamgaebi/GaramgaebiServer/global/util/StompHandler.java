@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.ice_breaking;
+package com.garamgaebi.GaramgaebiServer.global.util;
 
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;

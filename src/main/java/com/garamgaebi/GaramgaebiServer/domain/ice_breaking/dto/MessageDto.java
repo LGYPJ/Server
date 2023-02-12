@@ -18,6 +18,5 @@ public class MessageDto {
     private String roomId; // 게임방 ID
     private String sender; // 보내는 사람
     private String message; // 사진 index
-
     private String profileUrl; // profile image url
 }

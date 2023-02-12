@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.global.config.security;
+package com.garamgaebi.GaramgaebiServer.global.security;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;

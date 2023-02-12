@@ -1,14 +1,11 @@
-package com.garamgaebi.GaramgaebiServer.global.config.security;
+package com.garamgaebi.GaramgaebiServer.global.security;
 
-import com.garamgaebi.GaramgaebiServer.global.config.security.dto.TokenInfo;
-import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
-import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.garamgaebi.GaramgaebiServer.global.security.dto.TokenInfo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.global.config.security;
+package com.garamgaebi.GaramgaebiServer.global.security;
 
 import com.garamgaebi.GaramgaebiServer.global.response.exception.CustomAccessDeniedHandler;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.CustomAuthenticationEntryPoint;
