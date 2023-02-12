@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.entity;
+package com.garamgaebi.GaramgaebiServer.domain.entity.status.member;
 
 /*
 유저 상태

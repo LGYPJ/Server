@@ -1,9 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramOpenStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramPayStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramThisMonthStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramOpenStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramPayStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramThisMonthStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

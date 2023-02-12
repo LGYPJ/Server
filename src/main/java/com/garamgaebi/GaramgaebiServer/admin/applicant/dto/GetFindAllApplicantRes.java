@@ -1,7 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.admin.applicant.dto;
 
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.ApplyStatus;
 import lombok.*;
 
 import java.util.List;

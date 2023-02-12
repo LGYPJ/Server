@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.listener;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.notification.NotificationType;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyCancelEvent;
@@ -15,8 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Component

@@ -1,7 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.global.scheduler;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.notification.event.DeadlineEvent;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.ProgramService;
 import com.garamgaebi.GaramgaebiServer.global.scheduler.job.CloseProgramJob;

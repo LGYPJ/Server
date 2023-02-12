@@ -1,12 +1,11 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsWorking;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
 
 
 @Entity
