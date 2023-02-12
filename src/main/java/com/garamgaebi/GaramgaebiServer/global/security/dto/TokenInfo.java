@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.global.config.security.dto;
+package com.garamgaebi.GaramgaebiServer.global.security.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

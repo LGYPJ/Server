@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.global.config.security;
+package com.garamgaebi.GaramgaebiServer.global.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

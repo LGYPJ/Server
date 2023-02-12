@@ -4,10 +4,11 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRolesRepository;
-import com.garamgaebi.GaramgaebiServer.global.config.security.JwtTokenProvider;
-import com.garamgaebi.GaramgaebiServer.global.config.security.dto.TokenInfo;
+import com.garamgaebi.GaramgaebiServer.global.security.JwtTokenProvider;
+import com.garamgaebi.GaramgaebiServer.global.security.dto.TokenInfo;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.garamgaebi.GaramgaebiServer.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,7 +31,7 @@ public class MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final RedisTemplate redisTemplate;
+    private final RedisUtil redisUtil;
 
 
     private boolean checkNicknameValidation(String nickname) {
@@ -93,10 +94,13 @@ public class MemberService {
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
-        redisTemplate.opsForValue()
-                .set("RT: " + authentication.getName(),
-                        tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(),
-                        TimeUnit.MILLISECONDS);
+        redisUtil.setDataExpire("RT: " + authentication.getName(),
+                tokenInfo.getRefreshToken(),
+                tokenInfo.getRefreshTokenExpirationTime());
+//        redisTemplate.opsForValue()
+//                .set("RT: " + authentication.getName(),
+//                        tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(),
+//                        TimeUnit.MILLISECONDS);
 
         // MemberLoginReq.uniEmail로 MemberIdx 조회 및 반환
         Member member = memberRepository.findByUniEmail(memberLoginReq.getUniEmail())
@@ -116,15 +120,18 @@ public class MemberService {
         Authentication authentication = jwtTokenProvider.getAuthentication(memberLogoutReq.getAccessToken());
 
         // 3. Redis에서 해당 User email로 저장된 Refresh Token이 있는지 여부를 확인한 후 있으면 삭제
-        if (redisTemplate.opsForValue().get("RT: " + authentication.getName()) != null) {
+        if (redisUtil.getData("RT: " + authentication.getName()) != null) {
             // Refresh Token 삭제
-            redisTemplate.delete("RT: " + authentication.getName());
+            redisUtil.deleteData("RT: " + authentication.getName());
         }
 
         // 4. 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장
         Long expiration = jwtTokenProvider.getExpiration(memberLogoutReq.getAccessToken());
-        redisTemplate.opsForValue()
-                .set(memberLogoutReq.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
+        redisUtil.setDataExpire(memberLogoutReq.getAccessToken(),
+                "logout",
+                expiration);
+//        redisTemplate.opsForValue()
+//                .set(memberLogoutReq.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 
         MemberLogoutRes memberLogoutRes = new MemberLogoutRes();
         memberLogoutRes.setMemberInfo(authentication.getName());
