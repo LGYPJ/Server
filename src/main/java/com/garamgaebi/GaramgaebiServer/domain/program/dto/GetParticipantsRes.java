@@ -13,11 +13,11 @@ public class GetParticipantsRes {
     @Schema(description = "신청자 리스트")
     private List<ParticipantDto> participantList = new ArrayList<>();
     @Schema(description = "멤버 포함 여부")
-    private Boolean isEnroll;
+    private Boolean isApply;
 
     @Builder
-    public GetParticipantsRes(List<ParticipantDto> participantList, Boolean isEnroll) {
+    public GetParticipantsRes(List<ParticipantDto> participantList, Boolean isApply) {
         this.participantList = participantList;
-        this.isEnroll = isEnroll;
+        this.isApply = isApply;
     }
 }

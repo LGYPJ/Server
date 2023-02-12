@@ -90,7 +90,7 @@ public class NetworkingController {
             @ApiResponse(responseCode = "2014", description = "접근할 수 없는 프로그램입니다.", content = @Content())
     })
     @GetMapping("/{networking-idx}/participants")
-    public BaseResponse<List<ParticipantDto>> getNetworkingParticipantList(@PathVariable(name = "networking-idx") Long networkingIdx, @RequestParam("member-idx") Long memberIdx) {
+    public BaseResponse<GetParticipantsRes> getNetworkingParticipantList(@PathVariable(name = "networking-idx") Long networkingIdx, @RequestParam("member-idx") Long memberIdx) {
 
         return new BaseResponse<>(networkingService.findNetworkingParticipantsList(networkingIdx, memberIdx));
     }
