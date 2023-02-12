@@ -11,13 +11,15 @@ public class StompHandler implements ChannelInterceptor {
     @Override
     public void postSend(Message message, MessageChannel channel, boolean sent) {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
+        System.out.println("message: " + message);
+        System.out.println("accessor: " + accessor);
         String sessionId = accessor.getSessionId();
         switch (accessor.getCommand()) {
             case CONNECT:
-                System.out.println("connected" + sessionId);
+                System.out.println("connected: " + sessionId);
                 break;
             case DISCONNECT:
-                System.out.println("disconnected" + sessionId);
+                System.out.println("disconnected: " + sessionId);
                 break;
             default:
                 break;
