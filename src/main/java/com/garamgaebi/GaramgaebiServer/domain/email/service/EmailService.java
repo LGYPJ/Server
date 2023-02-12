@@ -84,6 +84,8 @@ public class EmailService {
     public EmailRes verifyEmail(VerifyEmailReq verifyEmailReq) {
         String savedKey = redisUtil.getData(verifyEmailReq.getEmail());
         if (savedKey != null) {
+            System.out.println("savedKey: " + savedKey);
+            System.out.println("reqKey: " + verifyEmailReq.getKey());
             if (savedKey == verifyEmailReq.getKey()) {
                 redisUtil.deleteData(verifyEmailReq.getEmail());
             } else {
