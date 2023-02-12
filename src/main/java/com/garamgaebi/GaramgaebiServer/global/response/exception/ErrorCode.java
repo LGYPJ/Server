@@ -35,6 +35,8 @@ public enum ErrorCode {
     PROGRAM_NOT_OPEN(2017, "오픈되지 않은 프로그램입니다."),
     NOT_APPLY_STATUS(2016, "신청 내역이 없습니다."),
 
+    FAIL_IMAGE_UPLOAD(3000, "이미지 업로드에 실패하였습니다."),
+
 
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
