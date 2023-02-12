@@ -86,7 +86,7 @@ public class EmailService {
         if (savedKey != null) {
             System.out.println("savedKey: " + savedKey);
             System.out.println("reqKey: " + verifyEmailReq.getKey());
-            if (savedKey == verifyEmailReq.getKey()) {
+            if (savedKey.equals(verifyEmailReq.getKey())) {
                 redisUtil.deleteData(verifyEmailReq.getEmail());
             } else {
                 throw new RestApiException(ErrorCode.NOT_CORRECT_VERIFY);
