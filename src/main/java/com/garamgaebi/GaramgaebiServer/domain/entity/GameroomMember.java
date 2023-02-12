@@ -9,16 +9,16 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 @Entity
-@Table(name = "GameRoom")
-public class GameRoom {
+@Table(name = "GameroomMember")
+public class GameroomMember {
     @Id
-    @Column(name = "game_room_idx")
+    @Column(name = "game_room_member_idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long gameRoomIdx;
+    private Long gameRoomMemberIdx;
 
-    @Column(name = "program_idx", nullable = false)
-    private Long programIdx;
-
-    @Column(name = "room_id", nullable = false)
+    @Column(name = "room_id")
     private String roomId;
+
+    @Column(name = "member_idx")
+    private Long memberIdx;
 }

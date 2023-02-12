@@ -31,6 +31,8 @@ public enum ErrorCode {
     FAIL_ACCESS_PROGRAM(2014, "접근할 수 없는 프로그램입니다."),
     INACTIVE_MEMBER(2015, "이미 신청한 프로그램입니다."),
 
+    NOT_EXIST_GAME_ROOM(2016, "존재하지 않는 게임방입니다."),
+
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
     NOT_ACCEPTABLE(406, "등록 상태가 아닙니다."),
