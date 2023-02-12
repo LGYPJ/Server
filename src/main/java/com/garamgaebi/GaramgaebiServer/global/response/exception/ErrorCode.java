@@ -46,6 +46,8 @@ public enum ErrorCode {
 
     NOT_EXIST_VERIFY_EMAIL(2020, "해당 이메일로 전송된 인증번호가 없습니다."),
 
+    NOT_CORRECT_VERIFY(2021, "인증번호가 일치하지 않습니다."),
+
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
     INTERNAL_SERVER_ERROR(500, "서버 오류입니다.");

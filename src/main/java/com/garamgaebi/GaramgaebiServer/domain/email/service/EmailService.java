@@ -84,7 +84,11 @@ public class EmailService {
     public EmailRes verifyEmail(VerifyEmailReq verifyEmailReq) {
         String savedKey = redisUtil.getData(verifyEmailReq.getEmail());
         if (savedKey != null) {
-            redisUtil.deleteData(verifyEmailReq.getEmail());
+            if (savedKey == verifyEmailReq.getKey()) {
+                redisUtil.deleteData(verifyEmailReq.getEmail());
+            } else {
+                throw new RestApiException(ErrorCode.NOT_CORRECT_VERIFY);
+            }
         } else {
             throw new RestApiException(ErrorCode.NOT_EXIST_VERIFY_EMAIL);
         }
