@@ -16,6 +16,6 @@ public interface NetworkingService {
     // 네트워킹 상세 페이지
     public ProgramInfoDto findNetworkingDetails(Long networkingIdx, Long memberIdx);
     // 네트워킹 신청자 리스트 조회
-    public List<ParticipantDto> findNetworkingParticipantsList(Long networkingIdx, Long memberIdx);
+    public GetParticipantsRes findNetworkingParticipantsList(Long networkingIdx, Long memberIdx);
 
 }

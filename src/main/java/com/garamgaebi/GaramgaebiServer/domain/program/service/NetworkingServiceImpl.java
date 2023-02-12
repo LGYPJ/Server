@@ -11,6 +11,7 @@ import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.google.api.services.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -146,7 +147,7 @@ public class NetworkingServiceImpl implements NetworkingService {
     // 네트워킹 신청자 리스트 조회
     @Transactional(readOnly = true)
     @Override
-    public List<ParticipantDto> findNetworkingParticipantsList(Long networkingIdx, Long memberIdx) {
+    public GetParticipantsRes findNetworkingParticipantsList(Long networkingIdx, Long memberIdx) {
 
         Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
 
@@ -170,6 +171,7 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         Program networking = networkingWrapper.get();
         List<ParticipantDto> participantDtos = new ArrayList<ParticipantDto>();
+        Boolean isApply = false;
 
         // 요정한 유저가 리스트에 있는지 check
         if(networking.getParticipants().contains(memberWrapper.get())) {
@@ -178,6 +180,7 @@ public class NetworkingServiceImpl implements NetworkingService {
                     memberWrapper.get().getNickname(),
                     memberWrapper.get().getProfileUrl()
             ));
+            isApply = true;
         }
 
         // 신청자 list DTO로 변환
@@ -194,7 +197,10 @@ public class NetworkingServiceImpl implements NetworkingService {
             }
         }
 
-        return participantDtos;
+        return GetParticipantsRes.builder()
+                .participantList(participantDtos)
+                .isApply(isApply)
+                .build();
     }
 
     // programDto 빌더
