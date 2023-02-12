@@ -9,4 +9,5 @@ import lombok.*;
 public class PostSNSReq {
     private Long memberIdx;
     private String address;
+    private String type;
 }

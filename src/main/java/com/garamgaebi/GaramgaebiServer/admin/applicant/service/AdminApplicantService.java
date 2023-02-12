@@ -15,8 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.garamgaebi.GaramgaebiServer.domain.entity.ApplyStatus.APPLY_CONFIRM;
-import static com.garamgaebi.GaramgaebiServer.domain.entity.ApplyStatus.CANCEL_CONFIRM;
+
+import static com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus.APPLY_CONFIRM;
+import static com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus.CANCEL_CONFIRM;
 import static com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode.NOT_EXIST_SEMINAR;
 
 @Service
@@ -69,7 +70,8 @@ public class AdminApplicantService {
             c.setPhone(cancelList.get(i).getPhone());
             c.setBank(cancelList.get(i).getBank());
             c.setAccount(cancelList.get(i).getAccount());
-            if (cancelList.get(i).getStatus().toString().equals("CANCEL_REFUND")) {
+            if (cancelList.get(i).getStatus().toString().equals("CANCEL_REFUND") ||
+                    cancelList.get(i).getStatus().toString().equals("CANCEL_CONFIRM")) {
                 c.setStatus(true);
             } else {
                 c.setStatus(false);

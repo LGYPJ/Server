@@ -22,6 +22,11 @@ public class ProfileRepository {
         return em.find(Member.class, id);
     }
 
+    public SNS findSNS(Long id){ return em.find(SNS.class, id);}
+
+    public void deleteSNS(SNS sns) {
+        em.remove(sns);
+    }
     public void saveQna(QnA qna) {
         em.persist(qna);
     }
@@ -34,7 +39,19 @@ public class ProfileRepository {
         em.persist(education);
     }
 
+    public Education findEducation(Long id){ return em.find(Education.class, id);}
+
+    public void deleteEducation(Education education) {
+        em.remove(education);
+    }
+
     public void saveCareer(Career career){ em.persist(career);}
+
+    public Career findCareer(Long id){return em.find(Career.class, id);}
+
+    public void deleteCareer(Career career) {
+        em.remove(career);
+    }
 
     public List<GetSNSList> findAllSNS(Long id) {
         Member member = em.find(Member.class, id);
@@ -45,6 +62,7 @@ public class ProfileRepository {
             GetSNSList sns = new GetSNSList();
             sns.setSnsIdx(s.get(i).getSnsIdx());
             sns.setAddress(s.get(i).getAddress());
+            sns.setType(s.get(i).getType());
             snsList.add(sns);
         }
         return snsList;
