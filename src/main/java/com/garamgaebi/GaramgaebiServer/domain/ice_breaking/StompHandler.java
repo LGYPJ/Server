@@ -21,8 +21,13 @@ public class StompHandler implements ChannelInterceptor {
             case DISCONNECT:
                 System.out.println("disconnected: " + sessionId);
                 break;
+            case SUBSCRIBE:
+                System.out.println("subscribe: " + sessionId);
+                break;
             default:
                 break;
         }
     }
+
+    // roomId까지는 가져올 수 있는데 memberIdx가 아닌 sessionId로 와서,, 못 쓸 듯 이건
 }

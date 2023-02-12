@@ -2,6 +2,8 @@ package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.controller;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramGameroom;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomReq;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetReq;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
@@ -29,5 +31,19 @@ public class GameController {
     @ResponseBody
     public BaseResponse<List<MembersGetRes>> getMembers(@RequestBody MembersGetReq membersGetReq) {
         return new BaseResponse<>(gameService.getMembersByGameRoomIdx(membersGetReq.getRoomId()));
+    }
+
+    // gameRoom에 member 등록
+    @PostMapping("/member")
+    @ResponseBody
+    public BaseResponse<MemberRoomRes> postMemberToGameRoom(@RequestBody MemberRoomReq memberRoomReq) {
+        return new BaseResponse<>(gameService.registerMemberToGameRoom(memberRoomReq));
+    }
+
+    // gameRoom에 member 삭제
+    @DeleteMapping("/member")
+    @ResponseBody
+    public BaseResponse<MemberRoomRes> deleteMemberFromGameRoom(@RequestBody MemberRoomReq memberRoomReq) {
+        return new BaseResponse<>(gameService.deleteMemberFromGameRoom(memberRoomReq));
     }
 }
