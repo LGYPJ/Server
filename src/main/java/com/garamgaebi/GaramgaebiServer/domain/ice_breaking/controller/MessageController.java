@@ -16,7 +16,7 @@ public class MessageController {
         if (MessageDto.MessageType.ENTER.equals(message.getType())) {
             message.setMessage(message.getSender() + "님이 입장하였습니다.");
         }
-        sendingOperations.convertAndSend("/topic/game/room" + message.getRoomId(), message);
+        sendingOperations.convertAndSend("/topic/game/room/" + message.getRoomId(), message);
 
         System.out.println(message);
     }
