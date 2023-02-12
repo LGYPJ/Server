@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface GameRepository extends JpaRepository<ProgramGameroom, Long> {
+public interface ProgramGameroomRepository extends JpaRepository<ProgramGameroom, Long> {
     @Query("select r from ProgramGameroom r where r.programIdx = :programIdx")
     public Optional<List<ProgramGameroom>> findRoomsByProgramIdx(@Param("programIdx") Long programIdx);
 

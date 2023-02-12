@@ -11,11 +11,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MessageDto {
     public enum MessageType {
-        ENTER, TALK
+        ENTER, EXIT, TALK
     }
 
-    private MessageType type;
+    private MessageType type; // message type
     private String roomId; // 게임방 ID
     private String sender; // 보내는 사람
-    private String message; // 내용
+    private String message; // 사진 index
+
+    private String profileUrl; // profile image url
 }

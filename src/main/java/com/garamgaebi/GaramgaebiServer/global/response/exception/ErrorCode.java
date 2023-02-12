@@ -40,6 +40,8 @@ public enum ErrorCode {
     FAIL_IMAGE_UPLOAD(3000, "이미지 업로드에 실패하였습니다."),
 
 
+    NOT_EXIST_GAME_ROOM(2016, "존재하지 않는 게임방입니다."),
+
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
     INTERNAL_SERVER_ERROR(500, "서버 오류입니다.");
