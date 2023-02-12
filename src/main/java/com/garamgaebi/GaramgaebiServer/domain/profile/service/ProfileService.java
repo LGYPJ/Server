@@ -1,6 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsLearning;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsWorking;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
@@ -222,16 +225,18 @@ public class ProfileService {
 
     /** POST 유저 프로필 수정 API*/
     @Transactional
-    public void updateProfile(PostUpdateProfileReq req) {
+    public Long updateProfile(PostUpdateProfileReq req, String profileUrl) {
         Member member = profileRepository.findMember(req.getMemberIdx());
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
-        member.setNickname(req.getNickName());
+        member.setNickname(req.getNickname());
         member.setProfileEmail(req.getProfileEmail());
         member.setContent(req.getContent());
         member.setBelong(req.getBelong());
-        member.setProfileUrl(req.getProfileUrl());
+        member.setProfileUrl(profileUrl);
+
+        return member.getMemberIdx();
     }
 
     /**

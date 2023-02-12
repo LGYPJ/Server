@@ -1,9 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.IsLearning;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsLearning;
 import lombok.*;
-
-import java.util.Date;
 
 @Getter
 @Setter

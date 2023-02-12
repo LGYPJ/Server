@@ -5,6 +5,8 @@ import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.service.ProfileService;
 import com.garamgaebi.GaramgaebiServer.global.S3Uploader;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.Map;
 
 @RestController
 @Slf4j
@@ -167,14 +171,23 @@ public class ProfileController {
     @Operation(summary = "POST 프로필 수정 API (래리/최준현)", description = "유저프로필 수정")
     @ResponseBody
     @PostMapping("/edit/{memberIdx}")
-    public BaseResponse<Boolean> updateProfile(@RequestBody PostUpdateProfileReq req) {
-        profileService.updateProfile(req);
-        return new BaseResponse<>(true);
+    public BaseResponse<ProfileRes> updateProfile(@RequestPart("info") PostUpdateProfileReq req, @RequestPart("image") MultipartFile multipartFile) {
+
+        String profileUrl;
+        try {
+            // S3Uploader.upload(업로드 할 이미지 파일, S3 디렉토리명) : S3에 저장된 이미지의 주소(url) 반환
+            profileUrl = s3Uploader.upload(multipartFile, "profile");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
+        }
+
+        return new BaseResponse<>(new ProfileRes(profileService.updateProfile(req, profileUrl)));
     }
 
     /**
      * 이미지 저장 API
-     */
+
     @Operation(summary = "POST 프로필 사진 저장/수정 (래리/최준현)", description= "유저프로필 사진 저장")
     @PostMapping("/images")
     public BaseResponse<Boolean> imageProfile(@RequestPart("info") S3Profile profile, @RequestPart("image") MultipartFile multipartFile)
@@ -185,5 +198,6 @@ public class ProfileController {
         boolean req = profileService.imageProfile(profile, profileUrl);
         return new BaseResponse<>(req);
     }
+     */
 
 }

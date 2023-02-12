@@ -5,12 +5,11 @@ import com.garamgaebi.GaramgaebiServer.admin.program.repository.AdminPresentatio
 import com.garamgaebi.GaramgaebiServer.admin.program.repository.AdminProgramRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Presentation;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEvent;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
-import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.scheduler.event.DeleteProgramEvent;

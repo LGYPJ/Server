@@ -2,8 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.notification.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.MemberNotification;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Notification;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationResDto;
@@ -11,7 +10,6 @@ import com.garamgaebi.GaramgaebiServer.domain.notification.repository.MemberNoti
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
-import com.google.api.services.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;

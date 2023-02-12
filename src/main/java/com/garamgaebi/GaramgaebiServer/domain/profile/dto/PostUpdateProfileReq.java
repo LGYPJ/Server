@@ -8,9 +8,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostUpdateProfileReq {
     private Long memberIdx;
-    private String nickName;
+    private String nickname;
     private String belong;
     private String profileEmail;
     private String content;
-    private String profileUrl;
 }

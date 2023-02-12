@@ -1,10 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.dto;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import lombok.*;
-
-import java.sql.Date;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
