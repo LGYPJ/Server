@@ -35,7 +35,7 @@ public class AdminApplicantController {
      * Admin 프로그램 신청자 상태 수정
      */
     @Operation(summary = "Admin 프로그램 신청 입금여부, 상태 수정")
-    @PostMapping
+    @PostMapping("/{programIdx}")
     @ResponseBody
     public BaseResponse<String> updateApplicant(@RequestBody PostUpdateApplicantReq req) {
         String res = service.updateApplicant(req);

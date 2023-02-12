@@ -36,11 +36,9 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
         Program program = seminarOpenEvent.getProgram();
 
-        // 로그인 된 멤버 리스트 가져오기
+        // 멤버 리스트 가져오기
         List<Member> memberList = memberRepository.findByStatus(MemberStatus.ACTIVE);
 
-        // 전체 멤버에게 알림 -> 전체 멤버 토큰 받아오기
-        List<String> fcmTokenList = new ArrayList<>();
 
         // 알림 메세지 내용 가공
 
@@ -81,6 +79,16 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
                 notification.getResourceType()
         );
 
+        // 전체 멤버에게 알림 -> 전체 멤버 토큰 받아오기
+        List<String> fcmTokenList = new ArrayList<>();
+
+        // fcm 토큰 리스트 추가
+        for(Member member : memberList) {
+            for(MemberFcm memberFcm : member.getMemberFcms()) {
+                fcmTokenList.add(memberFcm.getFcmToken());
+            }
+        }
+
         // 알림 발송
         if(fcmTokenList.size() != 0) {
             notificationSender.sendByTokenList(fcmTokenList, notificationDto);
@@ -98,9 +106,6 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
         // 전체 멤버 리스트 가져오기
         List<Member> memberList = memberRepository.findByStatus(MemberStatus.ACTIVE);
-
-        // 푸시 알림 허용한 멤버의 fcm 토큰 리스트
-        List<String> fcmTokenList = new ArrayList<>();
 
         // 알림 엔티티에 메세지 insert
         Notification notification = Notification.builder()
@@ -126,6 +131,16 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
                 notification.getResourceIdx(),
                 notification.getResourceType()
         );
+
+        // 전체 멤버에게 알림 -> 전체 멤버 토큰 받아오기
+        List<String> fcmTokenList = new ArrayList<>();
+
+        // fcm 토큰 리스트 추가
+        for(Member member : memberList) {
+            for(MemberFcm memberFcm : member.getMemberFcms()) {
+                fcmTokenList.add(memberFcm.getFcmToken());
+            }
+        }
 
         // 알림 발송
         if(fcmTokenList.size() != 0) {

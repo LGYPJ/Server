@@ -38,6 +38,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(PERMIT_URL_ARRAY).permitAll()
                 .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/applies/**").permitAll()
                 .requestMatchers("/profile/**").permitAll()
                 .requestMatchers("/images").permitAll()
                 .requestMatchers("/admin/**").permitAll()

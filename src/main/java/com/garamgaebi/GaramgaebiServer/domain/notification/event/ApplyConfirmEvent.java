@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class RefundEvent {
+public class ApplyConfirmEvent {
     private List<Apply> applies = new ArrayList<Apply>();
     private Program program;
 }
