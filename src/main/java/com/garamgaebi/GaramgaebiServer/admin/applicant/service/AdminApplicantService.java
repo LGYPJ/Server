@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.garamgaebi.GaramgaebiServer.domain.entity.ApplyStatus.APPLY_CONFIRM;
+import static com.garamgaebi.GaramgaebiServer.domain.entity.ApplyStatus.CANCEL_CONFIRM;
 import static com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode.NOT_EXIST_SEMINAR;
 
 @Service
@@ -85,8 +87,35 @@ public class AdminApplicantService {
      */
     @Transactional
     public String updateApplicant(PostUpdateApplicantReq req) {
-        Apply apply = repository.findApply(req.getMemberIdx());
-        apply.setStatus(req.getStatus());
+        int applyTrue = 0;
+        for (int i = 0; i < req.getApplyList().size(); i++) {
+            Boolean status = req.getApplyList().get(i).getStatus();
+            //상태값이 모두 트루인지 확인
+            if (status.equals(Boolean.FALSE)) {
+                applyTrue = 1;
+            }
+            Apply apply = repository.findOneProgramApply(req.getApplyList().get(i).getMemberIdx(), req.getProgramIdx());
+            if (status.equals(Boolean.TRUE)) {
+                apply.setStatus(APPLY_CONFIRM);
+            }
+        }
+        int cancelTrue = 0;
+        for (int i = 0; i < req.getCancelList().size(); i++) {
+            Boolean status = req.getCancelList().get(i).getStatus();
+            //상태값이 모두 트루인지 확인
+            if (status.equals(Boolean.FALSE)) {
+                cancelTrue = 1;
+            }
+            Apply apply = repository.findOneProgramApply(req.getCancelList().get(i).getMemberIdx(), req.getProgramIdx());
+            if (status.equals(Boolean.TRUE)) {
+                apply.setStatus(CANCEL_CONFIRM);
+            }
+        }
+
+        //모든 상태가 체크표시 되어있기에 프로그램 상태를 변환
+        if (applyTrue == 0 && cancelTrue == 0) {
+
+        }
         return "수정을 완료하였습니다.";
     }
 }
