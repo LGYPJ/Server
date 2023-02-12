@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/member/login").permitAll()
                 .requestMatchers("/member/post").permitAll()
-                .requestMatchers("/email/emailconfirm").permitAll()
+                .requestMatchers("/email/**").permitAll()
                 .requestMatchers("/**").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()

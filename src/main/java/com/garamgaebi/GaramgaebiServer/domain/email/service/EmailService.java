@@ -1,13 +1,15 @@
 package com.garamgaebi.GaramgaebiServer.domain.email.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.email.dto.EmailReq;
+import com.garamgaebi.GaramgaebiServer.domain.email.dto.SendEmailReq;
 import com.garamgaebi.GaramgaebiServer.domain.email.dto.EmailRes;
-import io.netty.util.internal.ThreadLocalRandom;
+import com.garamgaebi.GaramgaebiServer.domain.email.dto.VerifyEmailReq;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.garamgaebi.GaramgaebiServer.global.util.RedisUtil;
 import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender emailSender;
+    private final RedisUtil redisUtil;
 
     public static String ePw = null;
 
@@ -60,17 +63,34 @@ public class EmailService {
         ePw = key.toString();
     }
 
-    public EmailRes sendEmail(EmailReq emailReq) throws Exception {
-        createKey();
-        MimeMessage message = createMessage(emailReq.getEmail());
+    public EmailRes sendEmail(SendEmailReq sendEmailReq) throws Exception {
+        createKey(); // 인증번호 생성
+
+        redisUtil.setDataExpire(sendEmailReq.getEmail(), ePw, 60 * 3L); // 유효시간 3분
+
+        MimeMessage message = createMessage(sendEmailReq.getEmail()); // 메세지 생성
         try {
-            emailSender.send(message);
+            emailSender.send(message); // 이메일 전송
         } catch(MailException es) {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
         EmailRes res = new EmailRes();
-        res.setKey(ePw);
+        res.setMessage("이메일이 전송되었습니다.");
+
+        return res;
+    }
+
+    public EmailRes verifyEmail(VerifyEmailReq verifyEmailReq) {
+        String savedKey = redisUtil.getData(verifyEmailReq.getEmail());
+        if (savedKey != null) {
+            redisUtil.deleteData(verifyEmailReq.getEmail());
+        } else {
+            throw new RestApiException(ErrorCode.NOT_EXIST_VERIFY_EMAIL);
+        }
+
+        EmailRes res = new EmailRes();
+        res.setMessage("인증에 성공하였습니다.");
 
         return res;
     }

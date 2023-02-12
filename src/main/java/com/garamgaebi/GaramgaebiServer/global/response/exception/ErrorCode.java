@@ -44,6 +44,8 @@ public enum ErrorCode {
 
     NOT_REGISTERED_MEMBER_FROM_GAME_ROOM(2019, "게임방에 등록되지 않은 사용자입니다."),
 
+    NOT_EXIST_VERIFY_EMAIL(2020, "해당 이메일로 전송된 인증번호가 없습니다."),
+
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
     INTERNAL_SERVER_ERROR(500, "서버 오류입니다.");
