@@ -35,6 +35,8 @@ public enum ErrorCode {
     PROGRAM_NOT_OPEN(2017, "오픈되지 않은 프로그램입니다."),
     NOT_APPLY_STATUS(2016, "신청 내역이 없습니다."),
 
+    NOT_EXIST_PROFILE_INFO(2017,"존재하지 않는 SNS,경력,교육 입니다"),
+
     FAIL_IMAGE_UPLOAD(3000, "이미지 업로드에 실패하였습니다."),
 
 
