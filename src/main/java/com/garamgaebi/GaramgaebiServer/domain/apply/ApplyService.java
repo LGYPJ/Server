@@ -1,6 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.apply;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyCancelEvent;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyEvent;
@@ -8,14 +11,12 @@ import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramReposito
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Encryption;
 import org.hibernate.NonUniqueResultException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service

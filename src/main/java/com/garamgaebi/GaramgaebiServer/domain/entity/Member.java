@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
-import com.google.auto.value.AutoValue;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

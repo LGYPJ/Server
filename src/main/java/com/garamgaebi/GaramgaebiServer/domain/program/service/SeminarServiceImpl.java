@@ -1,21 +1,21 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramUserButtonStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
-import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.management.relation.RelationServiceNotRegisteredException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

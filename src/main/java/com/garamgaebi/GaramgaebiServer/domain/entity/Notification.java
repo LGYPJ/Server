@@ -1,7 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
-import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.notification.NotificationStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.notification.NotificationType;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;

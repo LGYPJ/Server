@@ -1,6 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsLearning;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsWorking;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;

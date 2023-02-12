@@ -2,6 +2,10 @@ package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.apply.ApplyRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramUserButtonStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
