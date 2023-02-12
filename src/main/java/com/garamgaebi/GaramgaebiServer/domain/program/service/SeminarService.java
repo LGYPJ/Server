@@ -20,8 +20,8 @@ public interface SeminarService {
     public ProgramInfoDto findSeminarDetails(Long seminarIdx, Long memberIdx);
 
     // 세미나 신청자 리스트 조회
-    List<ParticipantDto> findSeminarParticipantsList(Long seminarIdx, Long memberIdx);
+    public GetParticipantsRes findSeminarParticipantsList(Long seminarIdx, Long memberIdx);
 
     // 세미나 상세정보 발표자료 조회
-    List<PresentationDto> findSeminarPresentationList(Long seminarIdx);
+    public List<PresentationDto> findSeminarPresentationList(Long seminarIdx);
 }

@@ -1,10 +1,11 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.*;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -144,11 +145,15 @@ public class Program {
             for (Apply apply : this.applies) {
                 // 해당 멤버가 신청한 경우
                 if (apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY) {
-                    // 신청 취소 버튼 활성화
-                    return ProgramUserButtonStatus.CANCEL;
+                    // 무료이면 신청완료
+                    if(getIsPay() == ProgramPayStatus.FREE) {
+                        return ProgramUserButtonStatus.APPLY_COMPLETE;
+                    }
+                    // 유료이면 신청확인 중
+                    return ProgramUserButtonStatus.BEFORE_APPLY_CONFIRM;
                 }
             }
-            // 신청 버튼 활성화
+            // 신청 안한 경우 신청 버튼 활성화
             return ProgramUserButtonStatus.APPLY;
         }
         // 상세정보 진입이 불가능한 프로그램인 경우(삭제 또는 미오픈)

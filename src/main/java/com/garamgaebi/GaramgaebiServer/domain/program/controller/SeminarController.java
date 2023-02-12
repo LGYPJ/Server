@@ -82,7 +82,7 @@ public class SeminarController {
             @ApiResponse(responseCode = "2014", description = "접근할 수 없는 프로그램입니다.", content = @Content())
     })
     @GetMapping("/{seminar-idx}/participants")
-    public BaseResponse<List<ParticipantDto>> getSeminarParticipantList(@PathVariable(name = "seminar-idx") Long seminarIdx, @RequestParam("member-idx") Long memberIdx) {
+    public BaseResponse<GetParticipantsRes> getSeminarParticipantList(@PathVariable(name = "seminar-idx") Long seminarIdx, @RequestParam("member-idx") Long memberIdx) {
 
         return new BaseResponse<>(seminarService.findSeminarParticipantsList(seminarIdx, memberIdx));
     }

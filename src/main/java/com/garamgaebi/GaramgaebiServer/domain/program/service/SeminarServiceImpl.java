@@ -1,21 +1,21 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramUserButtonStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
-import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.management.relation.RelationServiceNotRegisteredException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -144,7 +144,7 @@ public class SeminarServiceImpl implements SeminarService {
     // 세미나 신청자 리스트 조회
     @Transactional(readOnly = true)
     @Override
-    public List<ParticipantDto> findSeminarParticipantsList(Long seminarIdx, Long memberIdx) {
+    public GetParticipantsRes findSeminarParticipantsList(Long seminarIdx, Long memberIdx) {
 
         Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
 
@@ -168,6 +168,7 @@ public class SeminarServiceImpl implements SeminarService {
 
         Program seminar = seminarWrapper.get();
         List<ParticipantDto> participantDtos = new ArrayList<ParticipantDto>();
+        Boolean isApply = false;
 
         if(seminar.getParticipants().contains(memberWrapper.get())) {
             participantDtos.add(new ParticipantDto(
@@ -175,6 +176,7 @@ public class SeminarServiceImpl implements SeminarService {
                     memberWrapper.get().getNickname(),
                     memberWrapper.get().getProfileUrl()
             ));
+            isApply = true;
         }
 
         for(Member member : seminar.getParticipants()) {
@@ -189,7 +191,10 @@ public class SeminarServiceImpl implements SeminarService {
                 ));
             }
         }
-        return participantDtos;
+        return GetParticipantsRes.builder()
+                .participantList(participantDtos)
+                .isApply(isApply)
+                .build();
     }
 
     // 세미나 상세정보 발표자료 조회

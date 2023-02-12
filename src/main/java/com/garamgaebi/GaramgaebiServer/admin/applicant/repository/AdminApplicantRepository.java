@@ -47,4 +47,14 @@ public class AdminApplicantRepository {
                 .getSingleResult();
         return res;
     }
+
+    //memberIdx와 programIdx를 통해 신청자 조회
+    public Apply findOneProgramApply(long memberIdx, long programIdx) {
+        String jpql = "SELECT a FROM Apply a WHERE a.member.memberIdx = :memberIdx AND a.program.idx = : programIdx";
+        Apply res = em.createQuery(jpql, Apply.class)
+                .setParameter("memberIdx", memberIdx)
+                .setParameter("programIdx", programIdx)
+                .getSingleResult();
+        return res;
+    }
 }

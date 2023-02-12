@@ -1,6 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.apply;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyCancelEvent;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyEvent;
@@ -8,13 +11,12 @@ import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramReposito
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Encryption;
+import org.hibernate.NonUniqueResultException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,6 +44,9 @@ public class ApplyService {
         if(program.isEmpty() || program.get().getStatus() == ProgramStatus.DELETE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
+        if(program.get().getStatus() != ProgramStatus.OPEN) {
+            throw new RestApiException(ErrorCode.PROGRAM_NOT_OPEN);
+        }
 
         Apply apply = applyRepository.findByProgramAndMember(program.get(), member.get());
         Apply newApply = null;
@@ -56,8 +61,8 @@ public class ApplyService {
             newApply.setStatus(ApplyStatus.APPLY);
         }
 
-        else if(apply.getStatus() != ApplyStatus.CANCEL) {
-            throw new RestApiException(ErrorCode.INACTIVE_MEMBER);
+        else if(apply.getStatus() == ApplyStatus.APPLY) {
+            throw new RestApiException(ErrorCode.ALREADY_APPLY_PROGRAM);
         }
 
         else {
@@ -66,6 +71,7 @@ public class ApplyService {
             newApply.setNickname(applyDto.getNickname());
             newApply.setPhone(applyDto.getPhone());
             newApply.setStatus(ApplyStatus.APPLY);
+            newApply.setUpdatedAt(LocalDateTime.now());
         }
 
 
@@ -91,16 +97,19 @@ public class ApplyService {
         if(program.isEmpty() || program.get().getStatus() == ProgramStatus.DELETE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
         }
+        if(program.get().getStatus() != ProgramStatus.OPEN) {
+            throw new RestApiException(ErrorCode.PROGRAM_NOT_OPEN);
+        }
 
         Apply apply = applyRepository.findByProgramAndMember(program.get(), member.get());
 
 
         if(apply == null) {
-            throw new RestApiException(ErrorCode.NOT_ACCEPTABLE);
+            throw new RestApiException(ErrorCode.NOT_APPLY_STATUS);
         }
 
         else if(apply.getStatus() != ApplyStatus.APPLY) {
-            throw new RestApiException(ErrorCode.NOT_ACCEPTABLE);
+            throw new RestApiException(ErrorCode.NOT_APPLY_STATUS);
         }
 
         else {
@@ -108,6 +117,7 @@ public class ApplyService {
             apply.setAccount(applyCancelDto.getAccount());
             // newApply.setAccount(Encryption(applyCancelDto.getAccount())); 계좌 암호화 알고리즘으로 암호화하기
             apply.setStatus(ApplyStatus.CANCEL);
+            apply.setUpdatedAt(LocalDateTime.now());
         }
 
 
@@ -117,6 +127,36 @@ public class ApplyService {
         publisher.publishEvent(new ApplyCancelEvent(apply));
 
         return apply.getApply_idx();
+    }
+
+    @Transactional(readOnly = true)
+    public GetApplyRes findApplyInfo(Long memberIdx, Long programIdx) {
+        Program program = programRepository.findById(programIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+        Member member = memberRepository.findById(memberIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(program.getStatus() == ProgramStatus.DELETE || member.getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        Apply apply;
+
+        try {
+            apply = applyRepository.findByProgramAndMember(program, member);
+        } catch(NonUniqueResultException e ) {
+            // 로그 찍기 : 신청 정보가 두 개 이상
+            throw new RestApiException(ErrorCode.INTERNAL_SERVER_ERROR);
+        }
+
+        if(apply == null) {
+            // 로그 찍기 : 신청 정보가 없음
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        return GetApplyRes.builder()
+                .name(apply.getName())
+                .nickname(apply.getNickname())
+                .phone(apply.getPhone())
+                .build();
     }
 
 

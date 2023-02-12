@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
-import com.google.auto.value.AutoValue;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -72,6 +72,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
     // 알림 관련 엔티티 연결
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MemberNotification> memberNotifications = new ArrayList<MemberNotification>();
+
+    // fcm 토큰 엔티티 연결
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<MemberFcm> memberFcms = new ArrayList<MemberFcm>();
 
     @Builder
     public Member(String nickname,
@@ -166,9 +170,20 @@ public class Member extends BaseTimeEntity implements UserDetails {
     }
     
     public void addMemberNotifications(MemberNotification memberNotification) {
-        this.memberNotifications.add(memberNotification);
+        if(!this.memberNotifications.contains(memberNotification)) {
+            this.memberNotifications.add(memberNotification);
+        }
         if(memberNotification.getMember() != this) {
             memberNotification.setMember(this);
+        }
+    }
+
+    public void addMemberFcms(MemberFcm memberFcm) {
+        if(!this.memberFcms.contains(memberFcm)) {
+            this.memberFcms.add(memberFcm);
+        }
+        if(memberFcm.getMember() != this) {
+            memberFcm.setMember(this);
         }
     }
 }

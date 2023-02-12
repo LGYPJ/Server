@@ -1,20 +1,22 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile;
 
-import com.garamgaebi.GaramgaebiServer.domain.S3TestMemberDto;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.service.ProfileService;
 import com.garamgaebi.GaramgaebiServer.global.S3Uploader;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
+@Tag(name = "ProfileController", description = "프로필 컨트롤러(담당자:래리)")
 @Slf4j
 @RequestMapping("/profile")
 public class ProfileController {
@@ -33,12 +35,7 @@ public class ProfileController {
     /**
      * POST 고객센터(QnA)신청 API
      */
-    @Operation(summary = "POST 고객센터(QnA)신청 API (래리/최준현)", description = "{\n" +
-            "    \"memberIdx\":\"1\",\n" +
-            "    \"email\":\"email@example.com\",\n" +
-            "    \"category\":\"문의문의9\",\n" +
-            "    \"content\":\"문의내용\"\n" +
-            "}")
+    @Operation(summary = "POST 고객센터(QnA)신청 API", description = "유저 QNA 추가")
     @ResponseBody
     @PostMapping("/qna")
     public BaseResponse<Boolean> saveQna(@RequestBody PostQnaReq req) {
@@ -54,10 +51,7 @@ public class ProfileController {
     /**
      * POST SNS추가 API
      */
-    @Operation(summary = "POST SNS추가 API (래리/최준현)", description = "{\n" +
-            "    \"memberIdx\":\"1\",\n" +
-            "    \"address\":\"exampleinstagram.com\"\n" +
-            "}")
+    @Operation(summary = "POST SNS추가 API", description = "유저 SNS 추가")
     @ResponseBody
     @PostMapping("/sns")
     public BaseResponse<Boolean> saveSns(@RequestBody PostSNSReq req) {
@@ -69,17 +63,31 @@ public class ProfileController {
     }
 
     /**
+     * PATCH SNS 수정
+     */
+    @Operation(summary = "PATCH sns 수정")
+    @ResponseBody
+    @PatchMapping("/sns")
+    public BaseResponse<Boolean> updateSNS(@RequestBody UpdateSNSReq req) {
+        Boolean res = profileService.updateSNS(req);
+        return new BaseResponse<>(res);
+    }
+
+    /**
+     * Delete SNS 삭제
+     */
+    @Operation(summary = "Delete SNS 삭제")
+    @ResponseBody
+    @DeleteMapping("/sns/{snsIdx}")
+    public BaseResponse<Boolean> deleteSNS(@PathVariable long snsIdx) {
+        Boolean res = profileService.deleteSNS(snsIdx);
+        return new BaseResponse<>(res);
+    }
+
+    /**
      * POST 교육추가 API
      */
-    @Operation(summary = "POST 교육추가 API (래리/최준현)", description = "{\n" +
-            "    \"memberIdx\" : \"1\",\n" +
-            "    \"institution\" : \"가천대학교\",\n" +
-            "    \"major\" : \"소프트웨어학과\",\n" +
-            "    \"isLearning\" : \"TRUE\",\n" +
-            "    \"startDate\" : \"2020-03\",\n" +
-            "    \"endDate\" : \"\"\n" +
-            "}\n" +
-            "*isLearning -> TRUE, FALSE")
+    @Operation(summary = "POST 교육추가 API", description = "유저 교육 추가")
     @ResponseBody
     @PostMapping("/education")
     public BaseResponse<Boolean> saveEducation(@RequestBody PostEducationReq req) {
@@ -88,17 +96,31 @@ public class ProfileController {
     }
 
     /**
+     * PATCH 교육 수정
+     */
+    @Operation(summary = "PATCH 교육 수정")
+    @ResponseBody
+    @PatchMapping("/education")
+    public BaseResponse<Boolean> updateEducation(@RequestBody UpdateEducationReq req) {
+        Boolean res = profileService.updateEducation(req);
+        return new BaseResponse<>(res);
+    }
+
+    /**
+     * Delete 교육 삭제
+     */
+    @Operation(summary = "Delete 교육 삭제")
+    @ResponseBody
+    @DeleteMapping("/education/{educationIdx}")
+    public BaseResponse<Boolean> deleteEducation(@PathVariable long educationIdx) {
+        Boolean res = profileService.deleteEducation(educationIdx);
+        return new BaseResponse<>(res);
+    }
+
+    /**
      * POST 경력추가 API
      */
-    @Operation(summary = "POST 경력추가 API (래리/최준현)", description = "{\n" +
-            "    \"memberIdx\" : \"1\",\n" +
-            "    \"company\" : \"라인\",\n" +
-            "    \"position\" : \"풀스택\",\n" +
-            "    \"isWorking\" : \"FALSE\",\n" +
-            "    \"startDate\" : \"2022-06\",\n" +
-            "    \"endDate\" : \"2023-09\"\n" +
-            "}\n" +
-            "*isWorking -> TRUE, FALSE")
+    @Operation(summary = "POST 경력추가 API", description = "유저 경력 추가")
     @ResponseBody
     @PostMapping("/career")
     public BaseResponse<Boolean> saveCareer(@RequestBody PostCareerReq req) {
@@ -107,9 +129,31 @@ public class ProfileController {
     }
 
     /**
+     * PATCH 경력 수정
+     */
+    @Operation(summary = "PATCH 경력 수정")
+    @ResponseBody
+    @PatchMapping("/career")
+    public BaseResponse<Boolean> updateCareer(@RequestBody UpdateCareerReq req) {
+        Boolean res = profileService.updateCareer(req);
+        return new BaseResponse<>(res);
+    }
+
+    /**
+     * Delete 경력 삭제
+     */
+    @Operation(summary = "Delete 경력 삭제")
+    @ResponseBody
+    @DeleteMapping("/career/{careerIdx}")
+    public BaseResponse<Boolean> deleteCareer(@PathVariable long careerIdx) {
+        Boolean res = profileService.deleteCareer(careerIdx);
+        return new BaseResponse<>(res);
+    }
+
+    /**
      * GET 프로필 조회 API
      */
-    @Operation(summary = "GET 프로필 조회 API (래리/최준현)", description = "유저프로필 조회")
+    @Operation(summary = "GET 프로필 조회 API", description = "유저프로필 조회")
     @ResponseBody
     @GetMapping("/{memberIdx}")
     public BaseResponse<GetProfileRes> getProfile(@PathVariable long memberIdx) {
@@ -120,7 +164,7 @@ public class ProfileController {
     /**
      * GET 프로필 SNS 조회 API
      */
-    @Operation(summary = "GET 프로필 SNS 조회 API (래리/최준현)", description = "유저프로필 SNS 리스트조회")
+    @Operation(summary = "GET 프로필 SNS 조회 API", description = "유저프로필 SNS 리스트조회")
     @ResponseBody
     @GetMapping("/sns/{memberIdx}")
     public BaseResponse<List<GetSNSList>> getSNSList(@PathVariable long memberIdx) {
@@ -131,7 +175,7 @@ public class ProfileController {
     /**
      * GET 프로필 경력 조회 API
      */
-    @Operation(summary = "GET 프로필 경력 조회 API (래리/최준현)", description = "유저프로필 경력 리스트조회")
+    @Operation(summary = "GET 프로필 경력 조회 API", description = "유저프로필 경력 리스트조회")
     @ResponseBody
     @GetMapping("/career/{memberIdx}")
     public BaseResponse<List<GetCareerList>> getCareerList(@PathVariable long memberIdx) {
@@ -142,7 +186,7 @@ public class ProfileController {
     /**
      * GET 프로필 교육 조회 API
      */
-    @Operation(summary = "GET 프로필 교육 조회 API (래리/최준현)", description = "유저프로필 교육 리스트조회")
+    @Operation(summary = "GET 프로필 교육 조회 API", description = "유저프로필 교육 리스트조회")
     @ResponseBody
     @GetMapping("/education/{memberIdx}")
     public BaseResponse<List<GetEducationList>> getEducationList(@PathVariable long memberIdx) {
@@ -153,7 +197,7 @@ public class ProfileController {
     /**
      * GET 프로필 11명 추천 API
      */
-    @Operation(summary = "GET 프로필 10명 추천 API (래리/최준현)", description = "유저프로필 10명 리스트추천")
+    @Operation(summary = "GET 프로필 10명 추천 API", description = "유저프로필 10명 리스트추천")
     @ResponseBody
     @GetMapping("/profiles")
     public BaseResponse<List<GetProfilesRes>> getProfiles() {
@@ -164,17 +208,26 @@ public class ProfileController {
     /**
      * POST 프로필 수정 API
      */
-    @Operation(summary = "POST 프로필 수정 API (래리/최준현)", description = "유저프로필 수정")
+    @Operation(summary = "POST 프로필 수정 API", description = "유저프로필 수정")
     @ResponseBody
     @PostMapping("/edit/{memberIdx}")
-    public BaseResponse<Boolean> updateProfile(@RequestBody PostUpdateProfileReq req) {
-        profileService.updateProfile(req);
-        return new BaseResponse<>(true);
+    public BaseResponse<ProfileRes> updateProfile(@RequestPart("info") PostUpdateProfileReq req, @RequestPart("image") MultipartFile multipartFile) {
+
+        String profileUrl;
+        try {
+            // S3Uploader.upload(업로드 할 이미지 파일, S3 디렉토리명) : S3에 저장된 이미지의 주소(url) 반환
+            profileUrl = s3Uploader.upload(multipartFile, "profile");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
+        }
+
+        return new BaseResponse<>(new ProfileRes(profileService.updateProfile(req, profileUrl)));
     }
 
     /**
      * 이미지 저장 API
-     */
+
     @Operation(summary = "POST 프로필 사진 저장/수정 (래리/최준현)", description= "유저프로필 사진 저장")
     @PostMapping("/images")
     public BaseResponse<Boolean> imageProfile(@RequestPart("info") S3Profile profile, @RequestPart("image") MultipartFile multipartFile)
@@ -185,5 +238,6 @@ public class ProfileController {
         boolean req = profileService.imageProfile(profile, profileUrl);
         return new BaseResponse<>(req);
     }
+     */
 
 }

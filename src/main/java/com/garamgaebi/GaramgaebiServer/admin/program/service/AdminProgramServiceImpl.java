@@ -5,12 +5,11 @@ import com.garamgaebi.GaramgaebiServer.admin.program.repository.AdminPresentatio
 import com.garamgaebi.GaramgaebiServer.admin.program.repository.AdminProgramRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Presentation;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEvent;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
-import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.scheduler.event.DeleteProgramEvent;
@@ -99,7 +98,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 발표자료 삭제
     @Transactional
     @Override
-    public void deletePresentation(Long presentationIdx) {
+    public PresentationRes deletePresentation(Long presentationIdx, DeletePresentationDto deletePresentationDto) {
         Optional<Presentation> presentationWrapper = adminPresentationRepository.findById(presentationIdx);
 
         if(presentationWrapper.isEmpty()) {
@@ -110,6 +109,8 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
         presentation.getProgram().getPresentations().remove(presentation);
         adminPresentationRepository.delete(presentation);
+
+        return new PresentationRes(presentation.getIdx());
 
     }
 
@@ -183,7 +184,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 글 삭제
     @Transactional
     @Override
-    public void deleteProgram(Long programIdx) {
+    public ProgramRes deleteProgram(Long programIdx, DeleteDto deleteDto) {
 
         Optional<Program> programWrapper = adminProgramRepository.findById(programIdx);
 
@@ -196,6 +197,8 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
         // 스케줄러에서 삭제
         publisher.publishEvent(new DeleteProgramEvent(program));
+
+        return new ProgramRes(program.getIdx());
     }
 
     // 프로그램 오픈

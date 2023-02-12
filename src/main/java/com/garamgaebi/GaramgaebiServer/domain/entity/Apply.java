@@ -1,14 +1,19 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 
 
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
+@DynamicInsert
 @Table(name = "Apply")
 public class Apply {
 
@@ -42,6 +47,14 @@ public class Apply {
     @Enumerated(EnumType.STRING)
     private ApplyStatus status;
 
+    @CreatedDate
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
     @Builder
     public Apply(Member member,
                  Program program,
@@ -50,7 +63,9 @@ public class Apply {
                  String phone,
                  String bank,
                  String account,
-                 ApplyStatus status) {
+                 ApplyStatus status,
+                 LocalDateTime createdAt,
+                 LocalDateTime updatedAt) {
         this.member = member;
         this.program = program;
         this.name = name;
@@ -59,6 +74,8 @@ public class Apply {
         this.bank = bank;
         this.account = account;
         this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     //계좌 암호화하기

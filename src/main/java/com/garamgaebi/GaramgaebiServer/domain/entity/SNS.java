@@ -21,8 +21,11 @@ public class SNS {
     @Column(name = "address", nullable = false)
     private String address;
 
+    @Column(name = "type", nullable = false)
+    private String type;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx",nullable = false)
+    @JoinColumn(name = "member_idx", nullable = false)
     private Member member;
 
     //== 연관관계 메서드 == //

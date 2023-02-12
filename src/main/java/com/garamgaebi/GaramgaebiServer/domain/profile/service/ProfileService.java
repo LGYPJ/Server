@@ -1,6 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsLearning;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsWorking;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
@@ -47,8 +50,32 @@ public class ProfileService {
         SNS sns = new SNS();
         sns.setMember(member);
         sns.setAddress(req.getAddress());
+        sns.setType(req.getType());
 
         profileRepository.saveSns(sns);
+    }
+
+    /** PATCH SNS 수정 API*/
+    @Transactional
+    public Boolean updateSNS(UpdateSNSReq req) {
+        SNS sns = profileRepository.findSNS(req.getSnsIdx());
+        if (sns == null) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
+        }
+        sns.setType(req.getType());
+        sns.setAddress(req.getAddress());
+        return true;
+    }
+
+    /** PATCH SNS 삭제 API*/
+    @Transactional
+    public Boolean deleteSNS(long snsIdx) {
+        SNS sns = profileRepository.findSNS(snsIdx);
+        if (sns == null) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
+        }
+        profileRepository.deleteSNS(sns);
+        return true;
     }
 
     /** POST 교육추가 API*/
@@ -77,6 +104,38 @@ public class ProfileService {
         profileRepository.saveEducation(education);
     }
 
+    /** PATCH 교육 수정*/
+    @Transactional
+    public Boolean updateEducation(UpdateEducationReq req) {
+        Education education = profileRepository.findEducation(req.getEducationIdx());
+        if (education == null) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
+        }
+        education.setInstitution(req.getInstitution());
+        education.setMajor(req.getMajor());
+        education.setStartDate(req.getStartDate());
+        if (req.getIsLearning().equals("TRUE")) {
+            education.setIsLearning(IsLearning.TRUE);
+            education.setEndDate(null);
+        } else {
+            education.setEndDate(req.getEndDate());
+        }
+
+        return true;
+    }
+
+    /** DELETE 교육 삭제*/
+    @Transactional
+    public Boolean deleteEducation(long educationIdx) {
+        Education education = profileRepository.findEducation(educationIdx);
+        if (education == null) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
+        }
+        profileRepository.deleteEducation(education);
+
+        return true;
+    }
+
     /** POST 경력추가 API*/
     @Transactional
     public void saveCareer(PostCareerReq req) {
@@ -101,6 +160,38 @@ public class ProfileService {
         }
 
         profileRepository.saveCareer(career);
+    }
+
+    /** PATCH 경력 수정*/
+    @Transactional
+    public Boolean updateCareer(UpdateCareerReq req) {
+        Career career = profileRepository.findCareer(req.getCareerIdx());
+        if (career == null) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
+        }
+        career.setCompany(req.getCompany());
+        career.setPosition(req.getPosition());
+        career.setStartDate(req.getStartDate());
+        if (req.getIsWorking().equals("TRUE")) {
+            career.setIsWorking(IsWorking.TRUE);
+            career.setEndDate(null);
+        } else {
+            career.setEndDate(req.getEndDate());
+        }
+
+        return true;
+    }
+
+    /** DELETE 경력 삭제*/
+    @Transactional
+    public Boolean deleteCareer(long careerIdx) {
+        Career career = profileRepository.findCareer(careerIdx);
+        if (career == null) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
+        }
+        profileRepository.deleteCareer(career);
+
+        return true;
     }
 
     /** GET 유저프로필조회 API*/
@@ -222,16 +313,18 @@ public class ProfileService {
 
     /** POST 유저 프로필 수정 API*/
     @Transactional
-    public void updateProfile(PostUpdateProfileReq req) {
+    public Long updateProfile(PostUpdateProfileReq req, String profileUrl) {
         Member member = profileRepository.findMember(req.getMemberIdx());
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
-        member.setNickname(req.getNickName());
+        member.setNickname(req.getNickname());
         member.setProfileEmail(req.getProfileEmail());
         member.setContent(req.getContent());
         member.setBelong(req.getBelong());
-        member.setProfileUrl(req.getProfileUrl());
+        member.setProfileUrl(profileUrl);
+
+        return member.getMemberIdx();
     }
 
     /**

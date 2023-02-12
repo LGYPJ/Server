@@ -52,11 +52,11 @@ public class AdminProgramController {
     // 글 삭제
     @DeleteMapping("/program/{program-idx}")
     @ResponseBody
-    public void deleteProgram(@PathVariable(name = "program-idx") Long programIdx) {
+    public BaseResponse<ProgramRes> deleteProgram(@PathVariable(name = "program-idx") Long programIdx,
+                                        @RequestBody DeleteDto deleteDto) {
 
-        adminProgramService.deleteProgram(programIdx);
+        return new BaseResponse<>(adminProgramService.deleteProgram(programIdx, deleteDto));
     }
-    //deleteProgram BaseResponse 적용을 어케...
 
 
     // 발표자료 추가
@@ -79,17 +79,16 @@ public class AdminProgramController {
     // 발표자료 삭제
     @DeleteMapping("/seminar/presentation/{presentation-idx}")
     @ResponseBody
-    public void deletePresentation(@PathVariable(name = "presentation-idx") Long presentationIdx) {
+    public BaseResponse<PresentationRes> deletePresentation(@PathVariable(name = "presentation-idx") Long presentationIdx,
+                                                       @RequestBody DeletePresentationDto deletePresentationDto) {
 
-        adminProgramService.deletePresentation(presentationIdx);
+        return new BaseResponse<>(adminProgramService.deletePresentation(presentationIdx, deletePresentationDto));
     }
-    //BaseResponse 적용 어떻게..?
 
     // 프로그램 오픈
     @PatchMapping("/program/{program-idx}/open")
     @ResponseBody
     public BaseResponse<ProgramRes> openProgram(@PathVariable(name = "program-idx") Long programIdx) {
-        // validation..?
 
         return new BaseResponse<>(adminProgramService.openProgram(programIdx));
     }

@@ -33,11 +33,9 @@ public class AdminApplicantController {
 
     /**
      * Admin 프로그램 신청자 상태 수정
-     * 입금 여부에 대한 엔티티 상태 컬럼이 필요하다.
-     * 로직 자체를 PM과 상의해봐야할듯...
      */
     @Operation(summary = "Admin 프로그램 신청 입금여부, 상태 수정")
-    @PostMapping
+    @PostMapping("/{programIdx}")
     @ResponseBody
     public BaseResponse<String> updateApplicant(@RequestBody PostUpdateApplicantReq req) {
         String res = service.updateApplicant(req);

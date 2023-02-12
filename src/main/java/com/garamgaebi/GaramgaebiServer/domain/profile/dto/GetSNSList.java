@@ -9,5 +9,6 @@ import lombok.*;
 public class GetSNSList {
     private Long snsIdx;
     private String address;
+    private String type;
 
 }

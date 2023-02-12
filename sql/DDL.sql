@@ -130,3 +130,22 @@ alter table Presentation change organization organization varchar(255) not null;
 MemberSeminar 테이블에 phone 컬럼 추가
 */
 alter table MemberSeminar add column phone varchar(255) not null;
+
+/*
+2023/02/10 로니
+Apply 테이블에 생성 수정 시각 컬럼 추가
+ */
+alter table Apply add created_at datetime not null default current_timestamp;
+alter table Apply add updated_at datetime not null default current_timestamp;
+
+/*
+2023/02/12 로니
+알림 FCM 토큰 저장 테이블 추가
+ */
+create table MemberFcm (
+member_fcm_idx bigint primary key,
+member_idx bigint not null,
+fcm_token text not null,
+created_at datetime not null default current_timestamp,
+foreign key (member_idx) references Member(member_idx)
+);

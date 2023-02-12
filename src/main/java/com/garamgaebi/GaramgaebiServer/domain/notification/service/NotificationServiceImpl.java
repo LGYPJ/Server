@@ -2,15 +2,16 @@ package com.garamgaebi.GaramgaebiServer.domain.notification.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.MemberNotification;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationDto;
+import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationResDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.MemberNotificationRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     @Transactional
-    public List<GetNotificationDto> getMemberNotificationList(Long memberIdx, Pageable pageable) {
+    public GetNotificationResDto getMemberNotificationList(Long memberIdx, Long lastNotificationIdx) {
 
         Optional<Member> member = memberRepository.findById(memberIdx);
 
@@ -37,10 +38,25 @@ public class NotificationServiceImpl implements NotificationService {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
-        List<MemberNotification> memberNotifications = memberNotificationRepository.findByMember(member.get(), pageable);
+        Slice<MemberNotification> memberNotifications = new SliceImpl<MemberNotification>(new ArrayList<>());
+
+        if(lastNotificationIdx == null) {
+            memberNotifications = memberNotificationRepository.findByMemberOrderByIdxDesc(member.get(), PageRequest.of(0, 10));
+        }
+        else {
+            Optional<MemberNotification> lastMemberNotification = memberNotificationRepository.findById(lastNotificationIdx);
+
+            if(lastMemberNotification.isEmpty()) {
+                throw new RestApiException(ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+
+            memberNotifications = memberNotificationRepository.findByIdxLessThanAndMemberOrderByIdxDesc(lastNotificationIdx, member.get(), PageRequest.of(0, 10));
+        }
+
         List<GetNotificationDto> getNotificationDtos = new ArrayList<GetNotificationDto>();
 
-        for(MemberNotification memberNotification : memberNotifications) {
+
+        for(MemberNotification memberNotification : memberNotifications.getContent()) {
             getNotificationDtos.add(GetNotificationDto.builder()
                             .notificationIdx(memberNotification.getIdx())
                                 .content(memberNotification.getNotification().getContent())
@@ -53,7 +69,7 @@ public class NotificationServiceImpl implements NotificationService {
             memberNotificationRepository.save(memberNotification);
         }
 
-        return getNotificationDtos;
+        return new GetNotificationResDto(getNotificationDtos, memberNotifications.hasNext());
     }
 
     @Override

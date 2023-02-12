@@ -1,16 +1,16 @@
 package com.garamgaebi.GaramgaebiServer.admin.applicant.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.ApplyStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus;
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class PostUpdateApplicantReq {
-    private Long memberIdx;
-    private String name;
-    private String phone;
-    private String deposit;
-    private ApplyStatus status;
+    private long programIdx;
+    private List<ApplyList> applyList;
+    private List<CancelList> cancelList;
 }

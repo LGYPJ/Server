@@ -1,14 +1,17 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
+import com.garamgaebi.GaramgaebiServer.domain.apply.ApplyRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramUserButtonStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDetailReq;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramInfoDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.google.api.services.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ public class NetworkingServiceImpl implements NetworkingService {
 
     private final ProgramRepository programRepository;
     private final MemberRepository memberRepository;
+    private final ApplyRepository applyRepository;
 
     // 이번 달 네트워킹 조회
     @Transactional(readOnly = true)
@@ -143,7 +147,7 @@ public class NetworkingServiceImpl implements NetworkingService {
     // 네트워킹 신청자 리스트 조회
     @Transactional(readOnly = true)
     @Override
-    public List<ParticipantDto> findNetworkingParticipantsList(Long networkingIdx, Long memberIdx) {
+    public GetParticipantsRes findNetworkingParticipantsList(Long networkingIdx, Long memberIdx) {
 
         Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
 
@@ -167,15 +171,19 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         Program networking = networkingWrapper.get();
         List<ParticipantDto> participantDtos = new ArrayList<ParticipantDto>();
+        Boolean isApply = false;
 
+        // 요정한 유저가 리스트에 있는지 check
         if(networking.getParticipants().contains(memberWrapper.get())) {
             participantDtos.add(new ParticipantDto(
                     memberWrapper.get().getMemberIdx(),
                     memberWrapper.get().getNickname(),
                     memberWrapper.get().getProfileUrl()
             ));
+            isApply = true;
         }
 
+        // 신청자 list DTO로 변환
         for(Member member : networking.getParticipants()) {
             if(member == null) {
                 participantDtos.add(null);
@@ -188,9 +196,12 @@ public class NetworkingServiceImpl implements NetworkingService {
                 ));
             }
         }
-        return participantDtos;
-    }
 
+        return GetParticipantsRes.builder()
+                .participantList(participantDtos)
+                .isApply(isApply)
+                .build();
+    }
 
     // programDto 빌더
     private ProgramDto programDtoBuilder(Program program) {
