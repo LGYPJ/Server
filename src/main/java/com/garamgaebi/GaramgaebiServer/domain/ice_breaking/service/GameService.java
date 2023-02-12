@@ -3,12 +3,15 @@ package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service;
 import com.garamgaebi.GaramgaebiServer.domain.entity.GameroomMember;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramGameroom;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomReq;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.GameRoomMemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.ProgramGameroomRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -79,4 +82,40 @@ public class GameService {
         return members;
     }
 
+    // roomId에 member 등록
+    public MemberRoomRes registerMemberToGameRoom(MemberRoomReq memberRoomReq) {
+        memberRepository.findById(memberRoomReq.getMemberIdx())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+
+        programGameroomRepository.findByRoomId(memberRoomReq.getRoomId())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
+
+        GameroomMember gameroomMember = GameroomMember.builder().roomId(memberRoomReq.getRoomId()).memberIdx(memberRoomReq.getMemberIdx()).build();
+        gameRoomMemberRepository.save(gameroomMember);
+
+        MemberRoomRes memberRoomRes = new MemberRoomRes();
+        memberRoomRes.setMessage("게임방 입장에 성공하였습니다.");
+
+        return memberRoomRes;
+    }
+
+    // roomId에 member 삭제
+    @Transactional
+    public MemberRoomRes deleteMemberFromGameRoom(MemberRoomReq memberRoomReq) {
+        memberRepository.findById(memberRoomReq.getMemberIdx())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+
+        programGameroomRepository.findByRoomId(memberRoomReq.getRoomId())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
+
+        gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomReq.getRoomId(), memberRoomReq.getMemberIdx())
+                        .orElseThrow(() -> new RestApiException(ErrorCode.NOT_REGISTERED_MEMBER_FROM_GAME_ROOM));
+
+        gameRoomMemberRepository.deleteByMemberIdx(memberRoomReq.getMemberIdx());
+
+        MemberRoomRes memberRoomRes = new MemberRoomRes();
+        memberRoomRes.setMessage("게임방 퇴장에 성공하였습니다.");
+
+        return memberRoomRes;
+    }
 }

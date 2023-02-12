@@ -12,5 +12,7 @@ public interface ProgramGameroomRepository extends JpaRepository<ProgramGameroom
     @Query("select r from ProgramGameroom r where r.programIdx = :programIdx")
     public Optional<List<ProgramGameroom>> findRoomsByProgramIdx(@Param("programIdx") Long programIdx);
 
+    public Optional<List<ProgramGameroom>> findByRoomId(String roomId);
+
     public Optional<List<ProgramGameroom>> deleteByProgramIdx(Long programIdx);
 }

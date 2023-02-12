@@ -26,7 +26,7 @@ public enum ErrorCode {
     NOT_AUTHORIZED_ACCESS(2010, "접근이 거부 되었습니다."),
 
     FAIL_AUTHORIZED_ACCESS(2011, "인증에 실패하였습니다."),
-    NOT_EXIST_SEMINAR(20012, "존재하지 않는 세미나입니다."),
+    NOT_EXIST_SEMINAR(2012, "존재하지 않는 세미나입니다."),
     NOT_EXIST_PREWRAPPER(2013, "존재하지 않는 발표자료입니다."),
     FAIL_ACCESS_PROGRAM(2014, "접근할 수 없는 프로그램입니다."),
 
@@ -40,7 +40,9 @@ public enum ErrorCode {
     FAIL_IMAGE_UPLOAD(3000, "이미지 업로드에 실패하였습니다."),
 
 
-    NOT_EXIST_GAME_ROOM(2016, "존재하지 않는 게임방입니다."),
+    NOT_EXIST_GAME_ROOM(2018, "존재하지 않는 게임방입니다."),
+
+    NOT_REGISTERED_MEMBER_FROM_GAME_ROOM(2019, "게임방에 등록되지 않은 사용자입니다."),
 
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
