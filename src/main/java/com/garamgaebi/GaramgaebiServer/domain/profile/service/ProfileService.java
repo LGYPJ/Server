@@ -270,7 +270,7 @@ public class ProfileService {
     public List<GetProfilesRes> getProfiles() {
 
         List<GetProfilesRes> resList = new ArrayList<>();
-        //유저프로필 랜덤 10명 난수 설정
+        //유저프로필 랜덤 11명 난수 설정
         Long count = profileRepository.countMember();
         int c = Math.toIntExact(count);
         int a;

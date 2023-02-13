@@ -1,7 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.admin.applicant.service;
 
-import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.ApplyList;
-import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.CancelList;
+import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.GetApplyList;
+import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.GetCancelList;
 import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.GetFindAllApplicantRes;
 import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.PostUpdateApplicantReq;
 import com.garamgaebi.GaramgaebiServer.admin.applicant.repository.AdminApplicantRepository;
@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import static com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus.APPLY_CONFIRM;
-import static com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus.CANCEL_CONFIRM;
+import static com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus.*;
+import static com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus.CLOSED_CONFIRM;
 import static com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode.NOT_EXIST_SEMINAR;
 
 @Service
@@ -36,14 +36,14 @@ public class AdminApplicantService {
             throw new RestApiException(NOT_EXIST_SEMINAR);
         }
         GetFindAllApplicantRes res = new GetFindAllApplicantRes();
-        List<ApplyList> aList = new ArrayList<>();
-        List<CancelList> cList = new ArrayList<>();
+        List<GetApplyList> aList = new ArrayList<>();
+        List<GetCancelList> cList = new ArrayList<>();
 
         //신청자 조회
         List<Apply> applyList = repository.findApplyList(programIdx);
         //신청자 입금상태 설정 및 리스트에 추가
         for (int i = 0; i < applyList.size(); i++) {
-            ApplyList a = new ApplyList();
+            GetApplyList a = new GetApplyList();
             a.setMemberIdx(applyList.get(i).getMember().getMemberIdx());
             a.setName(applyList.get(i).getName());
             a.setNickName(applyList.get(i).getNickname());
@@ -63,15 +63,14 @@ public class AdminApplicantService {
         List<Apply> cancelList = repository.findCancelList(programIdx);
         //취소자 환불상태 설정 및 리스트에 추가
         for (int i = 0; i < cancelList.size(); i++) {
-            CancelList c = new CancelList();
+            GetCancelList c = new GetCancelList();
             c.setMemberIdx(cancelList.get(i).getMember().getMemberIdx());
             c.setName(cancelList.get(i).getName());
             c.setNickName(cancelList.get(i).getNickname());
             c.setPhone(cancelList.get(i).getPhone());
             c.setBank(cancelList.get(i).getBank());
             c.setAccount(cancelList.get(i).getAccount());
-            if (cancelList.get(i).getStatus().toString().equals("CANCEL_REFUND") ||
-                    cancelList.get(i).getStatus().toString().equals("CANCEL_CONFIRM")) {
+            if (cancelList.get(i).getStatus().toString().equals("CANCEL_REFUND")) {
                 c.setStatus(true);
             } else {
                 c.setStatus(false);
@@ -88,36 +87,38 @@ public class AdminApplicantService {
      * Admin 프로그램 신청자 상태 수정
      */
     @Transactional
-    public String updateApplicant(PostUpdateApplicantReq req) {
-        int applyTrue = 0;
+    public Boolean updateApplicant(PostUpdateApplicantReq req) {
+        //true(체크) -> false(체크안함) // 상태 APPLY 로 바꿈
+        //false(체크안함) -> true(체크) // 상태 CANCEL 로 바꿈
+
+        //신청자
         for (int i = 0; i < req.getApplyList().size(); i++) {
-            Boolean status = req.getApplyList().get(i).getStatus();
-            //상태값이 모두 트루인지 확인
-            if (status.equals(Boolean.FALSE)) {
-                applyTrue = 1;
-            }
-            Apply apply = repository.findOneProgramApply(req.getApplyList().get(i).getMemberIdx(), req.getProgramIdx());
-            if (status.equals(Boolean.TRUE)) {
+            if (req.getApplyList().get(i).getStatus().equals(Boolean.TRUE)) {
+                Apply apply = repository.findOneProgramApply(req.getApplyList().get(i).getMemberIdx(),req.getProgramIdx());
                 apply.setStatus(APPLY_CONFIRM);
             }
+            if (req.getApplyList().get(i).getStatus().equals(Boolean.FALSE)) {
+                Apply apply = repository.findOneProgramApply(req.getApplyList().get(i).getMemberIdx(),req.getProgramIdx());
+                apply.setStatus(APPLY_CANCEL);
+            }
         }
-        int cancelTrue = 0;
+
+        //취소자
         for (int i = 0; i < req.getCancelList().size(); i++) {
-            Boolean status = req.getCancelList().get(i).getStatus();
-            //상태값이 모두 트루인지 확인
-            if (status.equals(Boolean.FALSE)) {
-                cancelTrue = 1;
+            if (req.getCancelList().get(i).getStatus().equals(Boolean.TRUE)) {
+                Apply cancel = repository.findOneProgramApply(req.getCancelList().get(i).getMemberIdx(),req.getProgramIdx());
+                cancel.setStatus(CANCEL_REFUND);
             }
-            Apply apply = repository.findOneProgramApply(req.getCancelList().get(i).getMemberIdx(), req.getProgramIdx());
-            if (status.equals(Boolean.TRUE)) {
-                apply.setStatus(CANCEL_CONFIRM);
+            if (req.getCancelList().get(i).getStatus().equals(Boolean.FALSE)) {
+                Apply cancel = repository.findOneProgramApply(req.getCancelList().get(i).getMemberIdx(),req.getProgramIdx());
+                cancel.setStatus(CANCEL_CONFIRM); // 주의!
             }
         }
 
-        //모든 상태가 체크표시 되어있기에 프로그램 상태를 변환
-        if (applyTrue == 0 && cancelTrue == 0) {
+        //프로그램 상태 마감
+        Program program = repository.findProgram(req.getProgramIdx());
+        program.setStatus(CLOSED_CONFIRM);
 
-        }
-        return "수정을 완료하였습니다.";
+        return true;
     }
 }

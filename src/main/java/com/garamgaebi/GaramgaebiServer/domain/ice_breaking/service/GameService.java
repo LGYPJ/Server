@@ -1,12 +1,14 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.GameroomMember;
+import com.garamgaebi.GaramgaebiServer.domain.entity.IceBreakingImages;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramGameroom;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomReq;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.GameRoomMemberRepository;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.IceBreakingImagesRepository;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.ProgramGameroomRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
@@ -25,6 +27,7 @@ public class GameService {
     private final ProgramGameroomRepository programGameroomRepository;
     private final GameRoomMemberRepository gameRoomMemberRepository;
     private final MemberRepository memberRepository;
+    private final IceBreakingImagesRepository iceBreakingImagesRepository;
 
     // Program index로 게임방 불러오기
     public List<ProgramGameroom> getRoomsByProgram(Long programIdx) {
@@ -117,5 +120,12 @@ public class GameService {
         memberRoomRes.setMessage("게임방 퇴장에 성공하였습니다.");
 
         return memberRoomRes;
+    }
+
+    public List<String> getImageUrls(Long seed) {
+        List<String> images = iceBreakingImagesRepository.findAllImages();
+        Collections.shuffle(images, new Random(seed));
+
+        return images;
     }
 }
