@@ -1,15 +1,13 @@
 package com.garamgaebi.GaramgaebiServer.admin.applicant.dto;
 
-
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class GetFindAllApplicantRes {
-    private List<GetApplyList> applyList;
-    private List<GetCancelList> cancelList;
+public class UpdateCancelList {
+    private Long memberIdx;
+    private String name;
+    private Boolean status;
 }

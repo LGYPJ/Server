@@ -11,6 +11,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class PostUpdateApplicantReq {
     private long programIdx;
-    private List<ApplyList> applyList;
-    private List<CancelList> cancelList;
+    private List<UpdateApplyList> applyList;
+    private List<UpdateCancelList> cancelList;
 }

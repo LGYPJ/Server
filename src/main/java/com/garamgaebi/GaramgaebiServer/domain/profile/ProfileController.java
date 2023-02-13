@@ -197,7 +197,7 @@ public class ProfileController {
     /**
      * GET 프로필 11명 추천 API
      */
-    @Operation(summary = "GET 프로필 10명 추천 API", description = "유저프로필 10명 리스트추천")
+    @Operation(summary = "GET 프로필 11명 추천 API", description = "유저프로필 11명 리스트추천")
     @ResponseBody
     @GetMapping("/profiles")
     public BaseResponse<List<GetProfilesRes>> getProfiles() {
@@ -210,7 +210,7 @@ public class ProfileController {
      */
     @Operation(summary = "POST 프로필 수정 API", description = "유저프로필 수정")
     @ResponseBody
-    @PostMapping("/edit/{memberIdx}")
+    @PostMapping("/edit")
     public BaseResponse<ProfileRes> updateProfile(@RequestPart("info") PostUpdateProfileReq req, @RequestPart("image") MultipartFile multipartFile) {
 
         String profileUrl;
