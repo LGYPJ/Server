@@ -22,16 +22,6 @@ public class AdminProgramController {
 
     private final AdminProgramService adminProgramService;
 
-
-    // 세미나 글 조회
-
-    // 네트워킹 글 조회
-
-    // 발표자료 리스트 조회
-
-    // 발표자료 상세 조회
-
-
     // 세미나 글 목록 조회
     @GetMapping("/seminar")
     @ResponseBody
@@ -41,6 +31,14 @@ public class AdminProgramController {
                                                              @RequestParam(name = "period-end", required = false) LocalDateTime end)
     {
         return new BaseResponse<>(adminProgramService.findSeminarList(payment, status, start, end));
+    }
+
+    // 세미나 글 조회
+    @GetMapping("/seminar/{seminar-idx}")
+    @ResponseBody
+    public BaseResponse<GetProgramDto> findSeminar(@PathVariable("seminar-idx") Long seminarIdx) {
+
+        return new BaseResponse<>(adminProgramService.findSeminar(seminarIdx));
     }
 
     // 세미나 등록
@@ -60,6 +58,14 @@ public class AdminProgramController {
                                                              @RequestParam(name = "period-end", required = false) LocalDateTime end)
     {
         return new BaseResponse<>(adminProgramService.findNetworkingList(payment, status, start, end));
+    }
+
+    // 네트워킹 글 조회
+    @GetMapping("/networking/{networking-idx}")
+    @ResponseBody
+    public BaseResponse<GetProgramDto> findNetworking(@PathVariable("seminar-idx") Long networkingIdx) {
+
+        return new BaseResponse<>(adminProgramService.findNetworking(networkingIdx));
     }
 
     // 네트워킹 등록
@@ -93,6 +99,20 @@ public class AdminProgramController {
                                         @RequestBody DeleteDto deleteDto) {
 
         return new BaseResponse<>(adminProgramService.deleteProgram(programIdx, deleteDto));
+    }
+
+    // 발표자료 리스트 조회
+    @GetMapping("/seminar/{seminar-idx}/presentation")
+    @ResponseBody
+    public BaseResponse<List<GetPresentationDto>> findPresentationList(@PathVariable("seminar-idx") Long seminarIdx) {
+        return new BaseResponse<>(adminProgramService.findPresentationList(seminarIdx));
+    }
+
+    // 발표자료 상세 조회
+    @GetMapping("/presentation/{presentation-idx}")
+    @ResponseBody
+    public BaseResponse<GetPresentationDto> findPresentation(@PathVariable("presentation-idx") Long presentationIdx) {
+        return new BaseResponse<>(adminProgramService.findPresentation(presentationIdx));
     }
 
     // 발표자료 추가

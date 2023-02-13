@@ -10,7 +10,6 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatu
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEvent;
-import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.util.scheduler.event.DeleteProgramEvent;
@@ -58,6 +57,27 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         return getProgramRes;
     }
 
+    // 세미나 글 조회
+    @Transactional(readOnly = true)
+    @Override
+    public GetProgramDto findSeminar(Long seminarIdx) {
+        Program program = adminProgramRepository.findById(seminarIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(program.getStatus() == ProgramStatus.DELETE || program.getProgramType() != ProgramType.SEMINAR) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        return GetProgramDto.builder()
+                .idx(program.getIdx())
+                .title(program.getTitle())
+                .location(program.getLocation())
+                .fee(program.getFee())
+                .date(program.getDate())
+                .closeDate(program.getEndDate())
+                .build();
+
+    }
+
     // 세미나 등록
     @Transactional
     @Override
@@ -76,6 +96,51 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
         return new ProgramRes(program.getIdx());
     }
+
+    // 발표자료 목록 조회
+    @Transactional(readOnly = true)
+    @Override
+    public List<GetPresentationDto> findPresentationList(Long seminarIdx) {
+        Program program = adminProgramRepository.findById(seminarIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(program.getStatus() == ProgramStatus.DELETE || program.getProgramType() != ProgramType.SEMINAR) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        List<GetPresentationDto> presentationDtos = new ArrayList<GetPresentationDto>();
+
+        for(Presentation presentation : program.getPresentations()) {
+            presentationDtos.add(GetPresentationDto.builder()
+                            .idx(presentation.getIdx())
+                            .title(presentation.getTitle())
+                            .nickname(presentation.getNickname())
+                            .content(presentation.getContent())
+                            .organization(presentation.getOrganization())
+                            .profileImg(presentation.getProfileImg())
+                            .presentationUrl(presentation.getPresentationUrl())
+                    .build());
+        }
+
+        return presentationDtos;
+    }
+
+    // 발표자료 조회
+    @Transactional(readOnly = true)
+    @Override
+    public GetPresentationDto findPresentation(Long presentationIdx) {
+        Presentation presentation = adminPresentationRepository.findById(presentationIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        return GetPresentationDto.builder()
+                .idx(presentation.getIdx())
+                .title(presentation.getTitle())
+                .nickname(presentation.getNickname())
+                .content(presentation.getContent())
+                .organization(presentation.getOrganization())
+                .profileImg(presentation.getProfileImg())
+                .presentationUrl(presentation.getPresentationUrl())
+                .build();
+    }
+
 
     // 발표자료 추가
     @Transactional
@@ -162,6 +227,27 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
     }
 
+    // 네트워킹 글 조회
+    @Transactional(readOnly = true)
+    @Override
+    public GetProgramDto findNetworking(Long networkingIdx) {
+        Program program = adminProgramRepository.findById(networkingIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(program.getStatus() == ProgramStatus.DELETE || program.getProgramType() != ProgramType.NETWORKING) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        return GetProgramDto.builder()
+                .idx(program.getIdx())
+                .title(program.getTitle())
+                .location(program.getLocation())
+                .fee(program.getFee())
+                .date(program.getDate())
+                .closeDate(program.getEndDate())
+                .build();
+
+    }
+
     // 네트워킹 등록
     @Transactional
     @Override
@@ -205,7 +291,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     }
 
 
-    // 글 수정
+    // 네트워킹 수정
     @Transactional
     @Override
     public ProgramRes modifyNetworking(PatchNetworkingDto patchNetworkingDto) {
