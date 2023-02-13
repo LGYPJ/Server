@@ -7,8 +7,12 @@ import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.PostUpdateApplicantRe
 import com.garamgaebi.GaramgaebiServer.admin.applicant.repository.AdminApplicantRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Apply;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyConfirmEvent;
+import com.garamgaebi.GaramgaebiServer.domain.notification.event.NonDepositCancelEvent;
+import com.garamgaebi.GaramgaebiServer.domain.notification.event.RefundEvent;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,9 @@ import static com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCod
 @RequiredArgsConstructor
 public class AdminApplicantService {
     private final AdminApplicantRepository repository;
+
+    // 이벤트 퍼블리셔
+    private final ApplicationEventPublisher publisher;
 
     /**
      * Admin 프로그램 신청자 조회
@@ -91,15 +98,21 @@ public class AdminApplicantService {
         //true(체크) -> false(체크안함) // 상태 APPLY 로 바꿈
         //false(체크안함) -> true(체크) // 상태 CANCEL 로 바꿈
 
+        List<Apply> applyConfirm = new ArrayList<Apply>();
+        List<Apply> nonDeposit = new ArrayList<Apply>();
+        List<Apply> refund = new ArrayList<Apply>();
+
         //신청자
         for (int i = 0; i < req.getApplyList().size(); i++) {
             if (req.getApplyList().get(i).getStatus().equals(Boolean.TRUE)) {
                 Apply apply = repository.findOneProgramApply(req.getApplyList().get(i).getMemberIdx(),req.getProgramIdx());
                 apply.setStatus(APPLY_CONFIRM);
+                applyConfirm.add(apply);
             }
             if (req.getApplyList().get(i).getStatus().equals(Boolean.FALSE)) {
                 Apply apply = repository.findOneProgramApply(req.getApplyList().get(i).getMemberIdx(),req.getProgramIdx());
                 apply.setStatus(APPLY_CANCEL);
+                nonDeposit.add(apply);
             }
         }
 
@@ -108,6 +121,7 @@ public class AdminApplicantService {
             if (req.getCancelList().get(i).getStatus().equals(Boolean.TRUE)) {
                 Apply cancel = repository.findOneProgramApply(req.getCancelList().get(i).getMemberIdx(),req.getProgramIdx());
                 cancel.setStatus(CANCEL_REFUND);
+                refund.add(cancel);
             }
             if (req.getCancelList().get(i).getStatus().equals(Boolean.FALSE)) {
                 Apply cancel = repository.findOneProgramApply(req.getCancelList().get(i).getMemberIdx(),req.getProgramIdx());
@@ -118,6 +132,11 @@ public class AdminApplicantService {
         //프로그램 상태 마감
         Program program = repository.findProgram(req.getProgramIdx());
         program.setStatus(CLOSED_CONFIRM);
+
+        // 알림 발송
+        publisher.publishEvent(new ApplyConfirmEvent(applyConfirm, program));
+        publisher.publishEvent(new NonDepositCancelEvent(nonDeposit, program));
+        publisher.publishEvent(new RefundEvent(refund, program));
 
         return true;
     }
