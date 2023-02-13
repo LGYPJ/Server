@@ -49,7 +49,7 @@ public class AdminProgramController {
         return new BaseResponse<>(adminProgramService.modifyNetworking(patchNetworkingDto));
     }
 
-    // 글 삭제
+    // 프로그램 삭제
     @DeleteMapping("/program/{program-idx}")
     @ResponseBody
     public BaseResponse<ProgramRes> deleteProgram(@PathVariable(name = "program-idx") Long programIdx,
