@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.global.scheduler.job;
+package com.garamgaebi.GaramgaebiServer.global.util.scheduler.job;
 
 import com.garamgaebi.GaramgaebiServer.domain.program.service.ProgramService;
 import org.quartz.JobExecutionContext;

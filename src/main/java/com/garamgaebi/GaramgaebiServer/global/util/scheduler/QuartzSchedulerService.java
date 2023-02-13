@@ -1,11 +1,11 @@
-package com.garamgaebi.GaramgaebiServer.global.scheduler;
+package com.garamgaebi.GaramgaebiServer.global.util.scheduler;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.*;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.ProgramService;
-import com.garamgaebi.GaramgaebiServer.global.scheduler.job.CloseProgramJob;
-import com.garamgaebi.GaramgaebiServer.global.scheduler.job.DeadlineProgramJob;
+import com.garamgaebi.GaramgaebiServer.global.util.scheduler.job.CloseProgramJob;
+import com.garamgaebi.GaramgaebiServer.global.util.scheduler.job.DeadlineProgramJob;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.quartz.*;

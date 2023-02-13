@@ -2,7 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.profile;
 
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.service.ProfileService;
-import com.garamgaebi.GaramgaebiServer.global.S3Uploader;
+import com.garamgaebi.GaramgaebiServer.global.util.S3Uploader;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
