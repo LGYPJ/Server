@@ -17,6 +17,7 @@ import java.util.List;
 
 
 import static com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus.*;
+import static com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus.CLOSED_CONFIRM;
 import static com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode.NOT_EXIST_SEMINAR;
 
 @Service
@@ -69,8 +70,7 @@ public class AdminApplicantService {
             c.setPhone(cancelList.get(i).getPhone());
             c.setBank(cancelList.get(i).getBank());
             c.setAccount(cancelList.get(i).getAccount());
-            if (cancelList.get(i).getStatus().toString().equals("CANCEL_REFUND") ||
-                    cancelList.get(i).getStatus().toString().equals("CANCEL_CONFIRM")) {
+            if (cancelList.get(i).getStatus().toString().equals("CANCEL_REFUND")) {
                 c.setStatus(true);
             } else {
                 c.setStatus(false);
@@ -99,7 +99,7 @@ public class AdminApplicantService {
             }
             if (req.getApplyList().get(i).getStatus().equals(Boolean.FALSE)) {
                 Apply apply = repository.findOneProgramApply(req.getApplyList().get(i).getMemberIdx(),req.getProgramIdx());
-                apply.setStatus(APPLY);
+                apply.setStatus(APPLY_CANCEL);
             }
         }
 
@@ -111,9 +111,13 @@ public class AdminApplicantService {
             }
             if (req.getCancelList().get(i).getStatus().equals(Boolean.FALSE)) {
                 Apply cancel = repository.findOneProgramApply(req.getCancelList().get(i).getMemberIdx(),req.getProgramIdx());
-                cancel.setStatus(CANCEL);
+                cancel.setStatus(CANCEL_CONFIRM); // 주의!
             }
         }
+
+        //프로그램 상태 마감
+        Program program = repository.findProgram(req.getProgramIdx());
+        program.setStatus(CLOSED_CONFIRM);
 
         return true;
     }
