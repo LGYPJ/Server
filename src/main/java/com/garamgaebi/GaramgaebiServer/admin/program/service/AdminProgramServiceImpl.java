@@ -5,6 +5,7 @@ import com.garamgaebi.GaramgaebiServer.admin.program.repository.AdminPresentatio
 import com.garamgaebi.GaramgaebiServer.admin.program.repository.AdminProgramRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Presentation;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramPayStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
@@ -20,6 +21,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,7 +35,28 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     private final GameService gameService;
 
     private final ApplicationEventPublisher publisher;
-    private final ProgramRepository programRepository;
+
+    // 세미나 목록 조회
+    @Transactional(readOnly = true)
+    @Override
+    public List<GetProgramRes> findSeminarList(ProgramPayStatus payment, ProgramStatus status, LocalDateTime start, LocalDateTime end) {
+        List<Program> programs = adminProgramRepository.findAdminSearchList(ProgramType.SEMINAR, payment, status, start, end);
+        List<GetProgramRes> getProgramRes = new ArrayList<GetProgramRes>();
+
+        for(Program program : programs) {
+            getProgramRes.add(GetProgramRes.builder()
+                            .programIdx(program.getIdx())
+                            .title(program.getTitle())
+                            .fee(program.getFee())
+                            .location(program.getLocation())
+                            .date(program.getDate())
+                            .closeDate(program.getEndDate())
+                            .status(program.getStatus())
+                    .build());
+        }
+
+        return getProgramRes;
+    }
 
     // 세미나 등록
     @Transactional
@@ -114,6 +139,28 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
     }
 
+    // 네트워킹 글 목록 조회
+    @Transactional(readOnly = true)
+    @Override
+    public List<GetProgramRes> findNetworkingList(ProgramPayStatus payment, ProgramStatus status, LocalDateTime start, LocalDateTime end) {
+        List<Program> programs = adminProgramRepository.findAdminSearchList(ProgramType.NETWORKING, payment, status, start, end);
+        List<GetProgramRes> getProgramRes = new ArrayList<GetProgramRes>();
+
+        for(Program program : programs) {
+            getProgramRes.add(GetProgramRes.builder()
+                    .programIdx(program.getIdx())
+                    .title(program.getTitle())
+                    .fee(program.getFee())
+                    .location(program.getLocation())
+                    .date(program.getDate())
+                    .closeDate(program.getEndDate())
+                    .status(program.getStatus())
+                    .build());
+        }
+
+        return getProgramRes;
+
+    }
 
     // 네트워킹 등록
     @Transactional
@@ -215,7 +262,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         Program program = programWrapper.get();
         program.setStatus(ProgramStatus.OPEN);
 
-        programRepository.save(program);
+        adminProgramRepository.save(program);
 
         // 스케줄러에 등록
         publisher.publishEvent(new PostProgramEvent(program));

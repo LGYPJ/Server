@@ -162,7 +162,6 @@ public class Program {
         }
     }
 
-
     // 참가자 리스트
     public List<Member> getParticipants() {
         List<Member> participants = new ArrayList<Member>();

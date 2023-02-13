@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.dto;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
