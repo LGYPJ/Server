@@ -1,8 +1,17 @@
 package com.garamgaebi.GaramgaebiServer.admin.program.service;
 
 import com.garamgaebi.GaramgaebiServer.admin.program.dto.*;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramPayStatus;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface AdminProgramService {
+
+    // 세미나 글 목록 조회
+    public List<GetProgramRes> findSeminarList(ProgramPayStatus payment, ProgramStatus status, LocalDateTime start, LocalDateTime end);
+
     // 세미나 등록
     ProgramRes addSeminar(SeminarDto seminarDto);
 
@@ -14,6 +23,9 @@ public interface AdminProgramService {
 
     // 발표자료 삭제
     PresentationRes deletePresentation(Long presentationIdx, DeletePresentationDto deletePresentationDto);
+
+    // 네트워킹 글 목록 조회
+    List<GetProgramRes> findNetworkingList(ProgramPayStatus payment, ProgramStatus status, LocalDateTime start, LocalDateTime end);
 
     // 네트워킹 등록
     ProgramRes addNetworking(NetworkingDto networkingDto);
@@ -29,4 +41,5 @@ public interface AdminProgramService {
 
     // 프로그램 오픈
     ProgramRes openProgram(Long programIdx);
+
 }

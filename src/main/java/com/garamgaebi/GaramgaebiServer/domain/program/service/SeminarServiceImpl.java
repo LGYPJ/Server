@@ -181,7 +181,11 @@ public class SeminarServiceImpl implements SeminarService {
 
         for(Member member : seminar.getParticipants()) {
             if(member == null) {
-                participantDtos.add(null);
+                participantDtos.add(new ParticipantDto(
+                        (long) -1,
+                        "알수없음",
+                        null
+                ));
             }
             else if(member != memberWrapper.get()) {
                 participantDtos.add(new ParticipantDto(
