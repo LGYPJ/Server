@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain;
 
-import com.garamgaebi.GaramgaebiServer.global.S3Uploader;
+import com.garamgaebi.GaramgaebiServer.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

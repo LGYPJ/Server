@@ -1,8 +1,7 @@
-package com.garamgaebi.GaramgaebiServer.global.scheduler.listener;
+package com.garamgaebi.GaramgaebiServer.global.util.scheduler.listener;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
-import com.garamgaebi.GaramgaebiServer.global.scheduler.QuartzSchedulerService;
-import com.garamgaebi.GaramgaebiServer.global.scheduler.event.DeleteProgramEvent;
+import com.garamgaebi.GaramgaebiServer.global.util.scheduler.QuartzSchedulerService;
+import com.garamgaebi.GaramgaebiServer.global.util.scheduler.event.DeleteProgramEvent;
 import lombok.RequiredArgsConstructor;
 import org.quartz.SchedulerException;
 import org.springframework.scheduling.annotation.Async;

@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.global;
+package com.garamgaebi.GaramgaebiServer.global.util;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.notification.sender;
 
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.*;
 import jakarta.annotation.PostConstruct;
@@ -34,6 +35,8 @@ public class NotificationSenderImpl implements NotificationSender {
                                     .fromStream(new ClassPathResource(FCM_PRIVATE_KEY_PATH).getInputStream())
                                     .createScoped(List.of(fireBaseScope)))
                     .build();
+            FirebaseApp.initializeApp(options);
+
         } catch(IOException e) {
             // 에러 로그 처리
             // spring 올릴 때 알림서버 미작동 -> 바로 어플리케이션 죽임

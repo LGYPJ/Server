@@ -12,9 +12,9 @@ import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEven
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
-import com.garamgaebi.GaramgaebiServer.global.scheduler.event.DeleteProgramEvent;
-import com.garamgaebi.GaramgaebiServer.global.scheduler.event.PatchProgramEvent;
-import com.garamgaebi.GaramgaebiServer.global.scheduler.event.PostProgramEvent;
+import com.garamgaebi.GaramgaebiServer.global.util.scheduler.event.DeleteProgramEvent;
+import com.garamgaebi.GaramgaebiServer.global.util.scheduler.event.PatchProgramEvent;
+import com.garamgaebi.GaramgaebiServer.global.util.scheduler.event.PostProgramEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
