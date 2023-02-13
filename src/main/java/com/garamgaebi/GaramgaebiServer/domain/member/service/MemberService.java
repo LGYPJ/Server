@@ -11,7 +11,6 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiExceptio
 import com.garamgaebi.GaramgaebiServer.global.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional(readOnly = true)
@@ -97,10 +95,6 @@ public class MemberService {
         redisUtil.setDataExpire("RT: " + authentication.getName(),
                 tokenInfo.getRefreshToken(),
                 tokenInfo.getRefreshTokenExpirationTime());
-//        redisTemplate.opsForValue()
-//                .set("RT: " + authentication.getName(),
-//                        tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(),
-//                        TimeUnit.MILLISECONDS);
 
         // MemberLoginReq.uniEmail로 MemberIdx 조회 및 반환
         Member member = memberRepository.findByUniEmail(memberLoginReq.getUniEmail())
@@ -130,8 +124,6 @@ public class MemberService {
         redisUtil.setDataExpire(memberLogoutReq.getAccessToken(),
                 "logout",
                 expiration);
-//        redisTemplate.opsForValue()
-//                .set(memberLogoutReq.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 
         MemberLogoutRes memberLogoutRes = new MemberLogoutRes();
         memberLogoutRes.setMemberInfo(authentication.getName());

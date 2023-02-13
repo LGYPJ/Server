@@ -46,4 +46,11 @@ public class GameController {
     public BaseResponse<MemberRoomRes> deleteMemberFromGameRoom(@RequestBody MemberRoomReq memberRoomReq) {
         return new BaseResponse<>(gameService.deleteMemberFromGameRoom(memberRoomReq));
     }
+
+    // 랜덤 이미지 조회
+    @GetMapping("/{programIdx}/images")
+    @ResponseBody
+    public BaseResponse<List<String>> getGameImages(@PathVariable Long programIdx) {
+        return new BaseResponse<>(gameService.getImageUrls(programIdx));
+    }
 }
