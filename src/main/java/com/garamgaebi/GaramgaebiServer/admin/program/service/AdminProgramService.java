@@ -30,7 +30,7 @@ public interface AdminProgramService {
     public PresentationRes addPresentation(Long seminarIdx, PostPresentationDto postPresentationDto, MultipartFile multipartFile);
 
     // 발표자료 수정
-    public PresentationRes modifyPresentation(PostPresentationDto postPresentationDto, MultipartFile multipartFile);
+    public PresentationRes modifyPresentation(PatchPresentationDto patchPresentationDto, MultipartFile multipartFile);
 
     // 발표자료 삭제
     public PresentationRes deletePresentation(Long presentationIdx, DeletePresentationDto deletePresentationDto);

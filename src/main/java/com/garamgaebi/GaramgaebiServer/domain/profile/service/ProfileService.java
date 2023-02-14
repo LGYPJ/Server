@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -322,21 +323,28 @@ public class ProfileService {
         if(member == null || member.getStatus() == MemberStatus.INACTIVE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
-        String profileUrl = null;
-        if(!multipartFile.isEmpty()) {
-            try {
-                // S3Uploader.upload(업로드 할 이미지 파일, S3 디렉토리명) : S3에 저장된 이미지의 주소(url) 반환
-                profileUrl = s3Uploader.upload(multipartFile, "profile");
-            } catch (Exception e) {
-                throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
-            }
-        }
 
         member.setNickname(req.getNickname());
         member.setProfileEmail(req.getProfileEmail());
         member.setContent(req.getContent());
         member.setBelong(req.getBelong());
-        member.setProfileUrl(profileUrl);
+
+        String profileUrl = null;
+        if(multipartFile != null) {
+            if(!multipartFile.isEmpty()) {
+                try {
+                    // S3Uploader.upload(업로드 할 이미지 파일, S3 디렉토리명) : S3에 저장된 이미지의 주소(url) 반환
+                    String fileName = "Member" + member.getMemberIdx() + "_Profile.png";
+                    profileUrl = s3Uploader.upload(multipartFile, fileName, "profile");
+                    member.setProfileUrl(profileUrl);
+                } catch (Exception e) {
+                    throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
+                }
+            }
+            else {
+                member.setProfileUrl(null);
+            }
+        }
 
         return member.getMemberIdx();
     }
