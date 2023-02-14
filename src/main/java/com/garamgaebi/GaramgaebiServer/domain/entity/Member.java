@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,7 +45,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(nullable = false)
     private String content;
 
-    @Column(name = "profile_url")
+    @Column(name = "profile_url", nullable = true)
     private String profileUrl;
 
     @Column(name = "belong")

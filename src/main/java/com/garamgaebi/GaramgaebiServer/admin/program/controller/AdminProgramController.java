@@ -129,10 +129,10 @@ public class AdminProgramController {
     // 발표자료 수정
     @PatchMapping("/seminar/presentation")
     @ResponseBody
-    public BaseResponse<PresentationRes> modifyPresentation(@RequestPart("info") PostPresentationDto postPresentationDto,
+    public BaseResponse<PresentationRes> modifyPresentation(@RequestPart("info") PatchPresentationDto patchPresentationDto,
                                                             @RequestPart(name = "image", required = false)MultipartFile multipartFile) {
 
-        return new BaseResponse<>(adminProgramService.modifyPresentation(postPresentationDto, multipartFile));
+        return new BaseResponse<>(adminProgramService.modifyPresentation(patchPresentationDto, multipartFile));
     }
 
     // 발표자료 삭제

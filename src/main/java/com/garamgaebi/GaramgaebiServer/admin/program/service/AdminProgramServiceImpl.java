@@ -22,6 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,23 +162,22 @@ public class AdminProgramServiceImpl implements AdminProgramService {
             throw new RestApiException(ErrorCode.NOT_EXIST_SEMINAR);
         }
 
-        String profileImg;
-
-        try {
-            profileImg = uploadImgToS3(multipartFile);
-        } catch (Exception e) {
-            throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
-        }
-
         Presentation presentation = adminPresentationRepository.save(Presentation.builder()
                         .title(postPresentationDto.getTitle())
                         .nickname(postPresentationDto.getNickname())
                         .organization(postPresentationDto.getOrganization())
                         .program(seminar)
                         .content(postPresentationDto.getContent())
-                        .presentationUrl(postPresentationDto.getPresentationUrl())
-                        .profileImg(profileImg)
                 .build());
+
+        if(multipartFile != null) {
+            try {
+                String fileName = "Presentation" + presentation.getIdx() + "_Image.png";
+                presentation.setProfileImg(uploadImgToS3(multipartFile, fileName));
+            } catch (Exception e) {
+                throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
+            }
+        }
 
         return new PresentationRes(presentation.getIdx());
     }
@@ -183,22 +185,24 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 발표자료 수정
     @Transactional
     @Override
-    public PresentationRes modifyPresentation(PostPresentationDto postPresentationDto, MultipartFile multipartFile) {
-        Presentation presentation = adminPresentationRepository.findById(postPresentationDto.getIdx()).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PREWRAPPER));
+    public PresentationRes modifyPresentation(PatchPresentationDto patchPresentationDto, MultipartFile multipartFile) {
+        Presentation presentation = adminPresentationRepository.findById(patchPresentationDto.getIdx()).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PREWRAPPER));
 
-        String profileImg = null;
-        try {
-            profileImg = uploadImgToS3(multipartFile);
-        } catch (Exception e) {
-            throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
+
+        presentation.setTitle(patchPresentationDto.getTitle());
+        presentation.setNickname(patchPresentationDto.getNickname());
+        presentation.setOrganization(patchPresentationDto.getOrganization());
+        presentation.setContent(patchPresentationDto.getContent());
+        presentation.setPresentationUrl(patchPresentationDto.getPresentationUrl());
+
+        if(multipartFile != null) {
+            try {
+                String fileName = "Presentation" + presentation.getIdx() + "_Image.png";
+                presentation.setPresentationUrl(uploadImgToS3(multipartFile, fileName));
+            } catch (Exception e) {
+                throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
+            }
         }
-
-        presentation.setTitle(postPresentationDto.getTitle());
-        presentation.setNickname(postPresentationDto.getNickname());
-        presentation.setOrganization(postPresentationDto.getOrganization());
-        presentation.setProfileImg(profileImg);
-        presentation.setContent(postPresentationDto.getContent());
-        presentation.setPresentationUrl(postPresentationDto.getPresentationUrl());
 
         return new PresentationRes(presentation.getIdx());
 
@@ -379,11 +383,11 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
 
     // util 메서드 : 이미지 업로드
-    private String uploadImgToS3(MultipartFile multipartFile) throws Exception {
-        if(multipartFile.isEmpty()) {
-            return s3Uploader.upload(multipartFile, "presentation");
-
+    private String uploadImgToS3(MultipartFile multipartFile, String fileName) throws Exception {
+        if (!multipartFile.isEmpty()) {
+            return s3Uploader.upload(multipartFile, fileName, "presentation");
         }
+
         return null;
     }
 }
