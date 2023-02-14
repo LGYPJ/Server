@@ -48,6 +48,8 @@ public enum ErrorCode {
 
     NOT_CORRECT_VERIFY(2021, "인증번호가 일치하지 않습니다."),
 
+    ALREADY_ENTER_GAME(2022, "이미 입장한 방입니다."),
+
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
     INTERNAL_SERVER_ERROR(500, "서버 오류입니다.");
