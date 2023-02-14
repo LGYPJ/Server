@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -119,17 +120,19 @@ public class AdminProgramController {
     @PostMapping("/seminar/{seminar-idx}/presentation")
     @ResponseBody
     public BaseResponse<PresentationRes> writePresentation(@PathVariable(name = "seminar-idx") Long seminarIdx,
-                                                           @RequestBody @Valid PostPresentationDto postPresentationDto) {
+                                                           @RequestPart("info") PostPresentationDto postPresentationDto,
+                                                           @RequestPart(name = "image", required = false)MultipartFile multipartFile) {
 
-        return new BaseResponse<>(adminProgramService.addPresentation(seminarIdx, postPresentationDto));
+        return new BaseResponse<>(adminProgramService.addPresentation(seminarIdx, postPresentationDto, multipartFile));
     }
 
     // 발표자료 수정
     @PatchMapping("/seminar/presentation")
     @ResponseBody
-    public BaseResponse<PresentationRes> modifyPresentation(@RequestBody @Valid PostPresentationDto postPresentationDto) {
+    public BaseResponse<PresentationRes> modifyPresentation(@RequestPart("info") PostPresentationDto postPresentationDto,
+                                                            @RequestPart(name = "image", required = false)MultipartFile multipartFile) {
 
-        return new BaseResponse<>(adminProgramService.modifyPresentation(postPresentationDto));
+        return new BaseResponse<>(adminProgramService.modifyPresentation(postPresentationDto, multipartFile));
     }
 
     // 발표자료 삭제

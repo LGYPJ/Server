@@ -4,6 +4,7 @@ import com.garamgaebi.GaramgaebiServer.admin.program.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramPayStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,10 +27,10 @@ public interface AdminProgramService {
     public GetPresentationDto findPresentation(Long presentationIdx);
 
     // 발표자료 추가
-    public PresentationRes addPresentation(Long seminarIdx, PostPresentationDto postPresentationDto);
+    public PresentationRes addPresentation(Long seminarIdx, PostPresentationDto postPresentationDto, MultipartFile multipartFile);
 
     // 발표자료 수정
-    public PresentationRes modifyPresentation(PostPresentationDto postPresentationDto);
+    public PresentationRes modifyPresentation(PostPresentationDto postPresentationDto, MultipartFile multipartFile);
 
     // 발표자료 삭제
     public PresentationRes deletePresentation(Long presentationIdx, DeletePresentationDto deletePresentationDto);

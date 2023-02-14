@@ -24,18 +24,5 @@ public class PostPresentationDto {
     private String content;
 
     private String presentationUrl;
-    private String profileImgUrl;
 
-    public Presentation toEntity() {
-        return new Presentation(
-                null,
-                program,
-                title,
-                nickname,
-                organization,
-                content,
-                presentationUrl,
-                profileImgUrl
-        );
-    }
 }

@@ -3,6 +3,8 @@ package com.garamgaebi.GaramgaebiServer.domain.entity;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
+@DynamicInsert
+@DynamicUpdate
 @Entity
 @Table(name = "Member")
 public class Member extends BaseTimeEntity implements UserDetails {

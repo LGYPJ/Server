@@ -23,12 +23,9 @@ public class ProfileController {
     //--------------------------------------------------------//
     @Autowired
     private final ProfileService profileService;
-    @Autowired
-    private final S3Uploader s3Uploader;
 
-    public ProfileController(ProfileService profileService, S3Uploader s3Uploader) {
+    public ProfileController(ProfileService profileService) {
         this.profileService = profileService;
-        this.s3Uploader = s3Uploader;
     }
     //--------------------------------------------------------//
 
@@ -211,18 +208,9 @@ public class ProfileController {
     @Operation(summary = "POST 프로필 수정 API", description = "유저프로필 수정")
     @ResponseBody
     @PostMapping("/edit")
-    public BaseResponse<ProfileRes> updateProfile(@RequestPart("info") PostUpdateProfileReq req, @RequestPart("image") MultipartFile multipartFile) {
+    public BaseResponse<ProfileRes> updateProfile(@RequestPart("info") PostUpdateProfileReq req, @RequestPart(name = "image", required = false) MultipartFile multipartFile) {
 
-        String profileUrl;
-        try {
-            // S3Uploader.upload(업로드 할 이미지 파일, S3 디렉토리명) : S3에 저장된 이미지의 주소(url) 반환
-            profileUrl = s3Uploader.upload(multipartFile, "profile");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
-        }
-
-        return new BaseResponse<>(new ProfileRes(profileService.updateProfile(req, profileUrl)));
+        return new BaseResponse<>(new ProfileRes(profileService.updateProfile(req, multipartFile)));
     }
 
     /**
