@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface GameRoomMemberRepository extends JpaRepository<GameroomMember, Long> {
     public Optional<List<GameroomMember>> findByRoomId(String roomId);
+    public Optional<GameroomMember> findByMemberIdx(Long memberIdx);
     public Optional<GameroomMember> deleteByMemberIdx(Long memberIdx);
 
     public Optional<GameroomMember> findByRoomIdAndMemberIdx(String roomId, Long memberIdx);
