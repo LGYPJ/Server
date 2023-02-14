@@ -8,19 +8,23 @@ import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.garamgaebi.GaramgaebiServer.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProfileService {
     private final ProfileRepository profileRepository;
+
+    private final S3Uploader s3Uploader;
 
     /** POST 고객센터(QnA)신청 API*/
     @Transactional
@@ -313,11 +317,21 @@ public class ProfileService {
 
     /** POST 유저 프로필 수정 API*/
     @Transactional
-    public Long updateProfile(PostUpdateProfileReq req, String profileUrl) {
+    public Long updateProfile(PostUpdateProfileReq req, MultipartFile multipartFile) {
         Member member = profileRepository.findMember(req.getMemberIdx());
-        if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
+        if(member == null || member.getStatus() == MemberStatus.INACTIVE) {
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
+        String profileUrl = null;
+        if(!multipartFile.isEmpty()) {
+            try {
+                // S3Uploader.upload(업로드 할 이미지 파일, S3 디렉토리명) : S3에 저장된 이미지의 주소(url) 반환
+                profileUrl = s3Uploader.upload(multipartFile, "profile");
+            } catch (Exception e) {
+                throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
+            }
+        }
+
         member.setNickname(req.getNickname());
         member.setProfileEmail(req.getProfileEmail());
         member.setContent(req.getContent());

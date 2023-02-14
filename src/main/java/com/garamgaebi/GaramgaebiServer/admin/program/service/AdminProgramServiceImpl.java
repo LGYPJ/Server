@@ -10,9 +10,9 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatu
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEvent;
-import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.garamgaebi.GaramgaebiServer.global.util.S3Uploader;
 import com.garamgaebi.GaramgaebiServer.global.util.scheduler.event.DeleteProgramEvent;
 import com.garamgaebi.GaramgaebiServer.global.util.scheduler.event.PatchProgramEvent;
 import com.garamgaebi.GaramgaebiServer.global.util.scheduler.event.PostProgramEvent;
@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     private final GameService gameService;
 
     private final ApplicationEventPublisher publisher;
+    private final S3Uploader s3Uploader;
 
     // 세미나 목록 조회
     @Transactional(readOnly = true)
@@ -58,6 +60,27 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         return getProgramRes;
     }
 
+    // 세미나 글 조회
+    @Transactional(readOnly = true)
+    @Override
+    public GetProgramDto findSeminar(Long seminarIdx) {
+        Program program = adminProgramRepository.findById(seminarIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(program.getStatus() == ProgramStatus.DELETE || program.getProgramType() != ProgramType.SEMINAR) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        return GetProgramDto.builder()
+                .idx(program.getIdx())
+                .title(program.getTitle())
+                .location(program.getLocation())
+                .fee(program.getFee())
+                .date(program.getDate())
+                .closeDate(program.getEndDate())
+                .build();
+
+    }
+
     // 세미나 등록
     @Transactional
     @Override
@@ -77,10 +100,55 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         return new ProgramRes(program.getIdx());
     }
 
+    // 발표자료 목록 조회
+    @Transactional(readOnly = true)
+    @Override
+    public List<GetPresentationDto> findPresentationList(Long seminarIdx) {
+        Program program = adminProgramRepository.findById(seminarIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(program.getStatus() == ProgramStatus.DELETE || program.getProgramType() != ProgramType.SEMINAR) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        List<GetPresentationDto> presentationDtos = new ArrayList<GetPresentationDto>();
+
+        for(Presentation presentation : program.getPresentations()) {
+            presentationDtos.add(GetPresentationDto.builder()
+                            .idx(presentation.getIdx())
+                            .title(presentation.getTitle())
+                            .nickname(presentation.getNickname())
+                            .content(presentation.getContent())
+                            .organization(presentation.getOrganization())
+                            .profileImg(presentation.getProfileImg())
+                            .presentationUrl(presentation.getPresentationUrl())
+                    .build());
+        }
+
+        return presentationDtos;
+    }
+
+    // 발표자료 조회
+    @Transactional(readOnly = true)
+    @Override
+    public GetPresentationDto findPresentation(Long presentationIdx) {
+        Presentation presentation = adminPresentationRepository.findById(presentationIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        return GetPresentationDto.builder()
+                .idx(presentation.getIdx())
+                .title(presentation.getTitle())
+                .nickname(presentation.getNickname())
+                .content(presentation.getContent())
+                .organization(presentation.getOrganization())
+                .profileImg(presentation.getProfileImg())
+                .presentationUrl(presentation.getPresentationUrl())
+                .build();
+    }
+
+
     // 발표자료 추가
     @Transactional
     @Override
-    public PresentationRes addPresentation(Long seminarIdx, PostPresentationDto postPresentationDto) {
+    public PresentationRes addPresentation(Long seminarIdx, PostPresentationDto postPresentationDto, MultipartFile multipartFile) {
         Optional<Program> seminarWrapper = adminProgramRepository.findById(seminarIdx);
 
         if(seminarWrapper == null) {
@@ -91,8 +159,23 @@ public class AdminProgramServiceImpl implements AdminProgramService {
             throw new RestApiException(ErrorCode.NOT_EXIST_SEMINAR);
         }
 
-        postPresentationDto.setProgram(seminar);
-        Presentation presentation = adminPresentationRepository.save(postPresentationDto.toEntity());
+        String profileImg;
+
+        try {
+            profileImg = uploadImgToS3(multipartFile);
+        } catch (Exception e) {
+            throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
+        }
+
+        Presentation presentation = adminPresentationRepository.save(Presentation.builder()
+                        .title(postPresentationDto.getTitle())
+                        .nickname(postPresentationDto.getNickname())
+                        .organization(postPresentationDto.getOrganization())
+                        .program(seminar)
+                        .content(postPresentationDto.getContent())
+                        .presentationUrl(postPresentationDto.getPresentationUrl())
+                        .profileImg(profileImg)
+                .build());
 
         return new PresentationRes(presentation.getIdx());
     }
@@ -100,19 +183,20 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 발표자료 수정
     @Transactional
     @Override
-    public PresentationRes modifyPresentation(PostPresentationDto postPresentationDto) {
-        Optional<Presentation> presentationWrapper = adminPresentationRepository.findById(postPresentationDto.getIdx());
+    public PresentationRes modifyPresentation(PostPresentationDto postPresentationDto, MultipartFile multipartFile) {
+        Presentation presentation = adminPresentationRepository.findById(postPresentationDto.getIdx()).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PREWRAPPER));
 
-        if(presentationWrapper.isEmpty()) {
-            throw new RestApiException(ErrorCode.NOT_EXIST_PREWRAPPER);
+        String profileImg = null;
+        try {
+            profileImg = uploadImgToS3(multipartFile);
+        } catch (Exception e) {
+            throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
         }
-
-        Presentation presentation = presentationWrapper.get();
 
         presentation.setTitle(postPresentationDto.getTitle());
         presentation.setNickname(postPresentationDto.getNickname());
         presentation.setOrganization(postPresentationDto.getOrganization());
-        presentation.setProfileImg(postPresentationDto.getProfileImgUrl());
+        presentation.setProfileImg(profileImg);
         presentation.setContent(postPresentationDto.getContent());
         presentation.setPresentationUrl(postPresentationDto.getPresentationUrl());
 
@@ -162,6 +246,27 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
     }
 
+    // 네트워킹 글 조회
+    @Transactional(readOnly = true)
+    @Override
+    public GetProgramDto findNetworking(Long networkingIdx) {
+        Program program = adminProgramRepository.findById(networkingIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(program.getStatus() == ProgramStatus.DELETE || program.getProgramType() != ProgramType.NETWORKING) {
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        return GetProgramDto.builder()
+                .idx(program.getIdx())
+                .title(program.getTitle())
+                .location(program.getLocation())
+                .fee(program.getFee())
+                .date(program.getDate())
+                .closeDate(program.getEndDate())
+                .build();
+
+    }
+
     // 네트워킹 등록
     @Transactional
     @Override
@@ -205,7 +310,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     }
 
 
-    // 글 수정
+    // 네트워킹 수정
     @Transactional
     @Override
     public ProgramRes modifyNetworking(PatchNetworkingDto patchNetworkingDto) {
@@ -270,5 +375,15 @@ public class AdminProgramServiceImpl implements AdminProgramService {
         publisher.publishEvent(new ProgramOpenEvent(program));
 
         return new ProgramRes(program.getIdx());
+    }
+
+
+    // util 메서드 : 이미지 업로드
+    private String uploadImgToS3(MultipartFile multipartFile) throws Exception {
+        if(multipartFile.isEmpty()) {
+            return s3Uploader.upload(multipartFile, "presentation");
+
+        }
+        return null;
     }
 }

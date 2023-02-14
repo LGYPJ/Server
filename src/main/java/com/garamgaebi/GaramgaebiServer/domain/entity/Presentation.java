@@ -3,13 +3,17 @@ package com.garamgaebi.GaramgaebiServer.domain.entity;
 import com.garamgaebi.GaramgaebiServer.admin.program.dto.PostPresentationDto;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "Presentation")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Getter @Setter
-@Builder(builderMethodName = "PresentationBuilder")
+@DynamicInsert
+@DynamicUpdate
+@Builder
 public class Presentation {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,18 +32,6 @@ public class Presentation {
     private String presentationUrl;
     @Column(name = "profile_img")
     private String profileImg;
-
-    public static PresentationBuilder builder(PostPresentationDto postPresentationDto) {
-        return PresentationBuilder()
-                .idx(postPresentationDto.getIdx())
-                .program(postPresentationDto.getProgram())
-                .title(postPresentationDto.getTitle())
-                .nickname(postPresentationDto.getNickname())
-                .organization(postPresentationDto.getOrganization())
-                .content(postPresentationDto.getContent())
-                .presentationUrl(postPresentationDto.getPresentationUrl())
-                .profileImg(postPresentationDto.getProfileImgUrl());
-    }
 
     // == 연관관계 메서드 == //
     public void setProgram(Program program) {
