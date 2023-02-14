@@ -27,7 +27,7 @@ public class GameController {
     }
 
     // gameRoomIdx로 members 조회
-    @GetMapping("/members")
+    @PostMapping("/members")
     @ResponseBody
     public BaseResponse<List<MembersGetRes>> getMembers(@RequestBody MembersGetReq membersGetReq) {
         return new BaseResponse<>(gameService.getMembersByGameRoomIdx(membersGetReq.getRoomId()));
