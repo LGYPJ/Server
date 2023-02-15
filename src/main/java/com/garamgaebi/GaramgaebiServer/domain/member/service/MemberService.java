@@ -50,13 +50,21 @@ public class MemberService {
     @Transactional
     public PostMemberRes postMember(PostMemberReq postMemberReq) {
         if (checkNicknameValidation(postMemberReq.getNickname())) { // 유효한 닉네임
+            // 이미 존재하는 소셜 이메일인지 확인
+            Optional<Member> memberBySocial = memberRepository.findBySocialEmail(postMemberReq.getSocialEmail());
+            if (memberBySocial.isEmpty() == false) {
+                throw new RestApiException(ErrorCode.ALREADY_EXIST_SOCIAL_EMAIL);
+            }
+
             // 이미 존재하는 학교 이메일인지 확인
-            Optional<Member> member = memberRepository.findByUniEmail(postMemberReq.getUniEmail());
-            if (member.isEmpty() == false) {
+            Optional<Member> memberByUni = memberRepository.findByUniEmail(postMemberReq.getUniEmail());
+            if (memberByUni.isEmpty() == false) {
                 throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
             }
 
-            PostMemberRes postMemberRes = new PostMemberRes(memberRepository.save(postMemberReq.toEntity()).getMemberIdx());
+            Long lastMember = memberRepository.findLastIdx();
+            Long memberIdx = lastMember + 1;
+            PostMemberRes postMemberRes = new PostMemberRes(memberRepository.save(postMemberReq.toEntity(memberIdx.toString())).getMemberIdx());
             MemberRolesDto memberRolesDto = new MemberRolesDto();
             memberRolesDto.setMemberIdx(postMemberRes.getMemberIdx());
             memberRolesDto.setRoles("USER");
@@ -80,9 +88,15 @@ public class MemberService {
 
     @Transactional
     public TokenInfo login(MemberLoginReq memberLoginReq) {
+        // MemberLoginReq.socialEmail로 MemberIdx 조회 및 반환
+        String socialEmail = memberLoginReq.getSocialEmail();
+        Member member = memberRepository.findBySocialEmail(socialEmail)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+
         // 1. ID/PW를 기반으로 Authentication 객체 생성
         // 이 때, authentication은 인증 여부를 확인하는 authenticated 값이 false
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberLoginReq.getUniEmail(), memberLoginReq.getPassword());
+        Long memberIdx = member.getMemberIdx();
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberLoginReq.getSocialEmail(), memberIdx.toString());
 
         // 2. 실제 검증 (사용자 비밀번호 체크)
         // authenticate 메서드가 실행될 때 CustomUserDetailsService에서 만든 loadUserByUsername 메서드가 실행
@@ -96,10 +110,9 @@ public class MemberService {
                 tokenInfo.getRefreshToken(),
                 tokenInfo.getRefreshTokenExpirationTime());
 
-        // MemberLoginReq.uniEmail로 MemberIdx 조회 및 반환
-        Member member = memberRepository.findByUniEmail(memberLoginReq.getUniEmail())
-                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
-        tokenInfo.setMemberIdx(member.getMemberIdx());
+//        Member member = memberRepository.findByUniEmail(memberLoginReq.getUniEmail())
+//                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+//        tokenInfo.setMemberIdx(member.getMemberIdx());
 
         return tokenInfo;
     }
