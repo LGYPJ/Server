@@ -51,13 +51,6 @@ public class GameController {
         return new BaseResponse<>(gameService.getImageUrls(programIdx));
     }
 
-    // 현재 진행중인 게임 인덱스 조회
-    @PostMapping("/current-idx")
-    @ResponseBody
-    public BaseResponse<Integer> getCurrentImgIdx(@RequestBody CurrentImgIdxReq currentImgIdxReq) {
-        return new BaseResponse<>(gameService.getCurrentImgIdx(currentImgIdxReq.getRoomId()));
-    }
-
     @PatchMapping("/current-idx")
     @ResponseBody
     public BaseResponse<String> patchCurrentImgIdx(@RequestBody CurrentImgIdxReq currentImgIdxReq) {
