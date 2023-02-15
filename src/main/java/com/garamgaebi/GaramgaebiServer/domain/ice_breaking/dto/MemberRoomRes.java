@@ -8,4 +8,5 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class MemberRoomRes {
     private String message;
+    private int currentImgIdx;
 }

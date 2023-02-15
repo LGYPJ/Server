@@ -89,7 +89,7 @@ public class GameService {
         memberRepository.findById(memberRoomReq.getMemberIdx())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
-        programGameroomRepository.findByRoomId(memberRoomReq.getRoomId())
+        ProgramGameroom room = programGameroomRepository.findByRoomId(memberRoomReq.getRoomId())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 
         Optional<GameroomMember> member = gameRoomMemberRepository.findByMemberIdx(memberRoomReq.getMemberIdx());
@@ -102,6 +102,7 @@ public class GameService {
 
         MemberRoomRes memberRoomRes = new MemberRoomRes();
         memberRoomRes.setMessage("게임방 입장에 성공하였습니다.");
+        memberRoomRes.setCurrentImgIdx(room.getCurrentImgIdx());
 
         return memberRoomRes;
     }
@@ -131,13 +132,6 @@ public class GameService {
         Collections.shuffle(images, new Random(seed));
 
         return images;
-    }
-
-    public int getCurrentImgIdx(String roomId) {
-        ProgramGameroom room = programGameroomRepository.findByRoomId(roomId)
-                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
-
-        return room.getCurrentImgIdx();
     }
 
     @Transactional
