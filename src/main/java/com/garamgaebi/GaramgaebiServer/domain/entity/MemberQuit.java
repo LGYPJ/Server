@@ -1,14 +1,14 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberQuitStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 @Entity
 @Table(name = "MemberQuit")
 public class MemberQuit {
@@ -16,13 +16,22 @@ public class MemberQuit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long member_quit_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx", nullable = false)
-    private Member member;
+    @Column(name = "member_idx", nullable = false)
+    private Long memberIdx;
 
     @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private MemberQuitStatus category;
+
+    @Builder
+    public MemberQuit(Long memberIdx,
+                      String content,
+                      MemberQuitStatus category) {
+        this.memberIdx = memberIdx;
+        this.content = content;
+        this.category = category;
+    }
 }

@@ -45,7 +45,7 @@ public class GameService {
         for (int i = 0; i < 8; i++) { // 방 8개씩 생성
             roomId = UUID.randomUUID().toString();
 
-            ProgramGameroom room = ProgramGameroom.builder().programIdx(programIdx).roomId(roomId).currentImgIdx(0L).build();
+            ProgramGameroom room = ProgramGameroom.builder().programIdx(programIdx).roomId(roomId).currentImgIdx(0).build();
 
             programGameroomRepository.save(room);
             rooms.add(room);
@@ -134,7 +134,7 @@ public class GameService {
         return images;
     }
 
-    public Long getCurrentImgIdx(String roomId) {
+    public int getCurrentImgIdx(String roomId) {
         ProgramGameroom room = programGameroomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 

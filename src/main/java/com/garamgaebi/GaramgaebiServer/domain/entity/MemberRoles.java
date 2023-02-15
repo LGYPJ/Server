@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,4 +22,8 @@ public class MemberRoles {
 
     @Column(nullable = false)
     private String roles;
+
+    public void inactivedMember() {
+        this.roles = "INACTIVE";
+    }
 }
