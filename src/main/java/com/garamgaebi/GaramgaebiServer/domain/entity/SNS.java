@@ -30,8 +30,10 @@ public class SNS {
 
     //== 연관관계 메서드 == //
     public void setMember(Member member){
+
         this.member = member;
-        if (!member.getSNSs().contains(this)) {
+
+        if (member != null && !member.getSNSs().contains(this)) {
             member.getSNSs().add(this);
         }
     }

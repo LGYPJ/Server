@@ -41,7 +41,7 @@ public class Career{
     // == 연관관계 메서드 == //
     public void setMember(Member member){
         this.member = member;
-        if (!member.getCareers().contains(this)) {
+        if (member != null && !member.getCareers().contains(this)) {
             member.getCareers().add(this);
         }
     }

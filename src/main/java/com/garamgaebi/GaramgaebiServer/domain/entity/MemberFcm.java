@@ -35,7 +35,7 @@ public class MemberFcm {
 
     // == 연관관계 메서드 == //
     public void setMember(Member member) {
-        if(!member.getMemberFcms().contains(this)) {
+        if(member != null && !member.getMemberFcms().contains(this)) {
             member.getMemberFcms().add(this);
         }
         this.member = member;

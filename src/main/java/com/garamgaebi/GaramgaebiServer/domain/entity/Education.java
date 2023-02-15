@@ -39,8 +39,10 @@ public class Education{
 
     //== 연관관계 메서드 == //
     public void setMember(Member member){
+
         this.member = member;
-        if (!member.getEducations().contains(this)) {
+
+        if (member != null && !member.getEducations().contains(this)) {
             member.getEducations().add(this);
         }
     }
