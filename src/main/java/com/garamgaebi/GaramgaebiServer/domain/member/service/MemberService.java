@@ -6,8 +6,6 @@ import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberQuitRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRolesRepository;
-import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
-import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.security.JwtTokenProvider;
 import com.garamgaebi.GaramgaebiServer.global.security.dto.TokenInfo;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
@@ -119,10 +117,6 @@ public class MemberService {
         redisUtil.setDataExpire("RT: " + authentication.getName(),
                 tokenInfo.getRefreshToken(),
                 tokenInfo.getRefreshTokenExpirationTime());
-
-//        Member member = memberRepository.findByUniEmail(memberLoginReq.getUniEmail())
-//                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
-//        tokenInfo.setMemberIdx(member.getMemberIdx());
 
         return tokenInfo;
     }
