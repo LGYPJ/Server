@@ -1,9 +1,13 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.entity.MemberRoles;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberQuitRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRolesRepository;
+import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
+import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.security.JwtTokenProvider;
 import com.garamgaebi.GaramgaebiServer.global.security.dto.TokenInfo;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
@@ -26,6 +30,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberRolesRepository memberRolesRepository;
+    private final MemberQuitRepository memberQuitRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -77,11 +82,16 @@ public class MemberService {
     }
 
     @Transactional
-    public InactivedMemberRes inactivedMember(Long memberIdx) {
-        Member member = memberRepository.findById(memberIdx)
+    public InactivedMemberRes inactivedMember(InactivedMemberReq inactivedMemberReq) {
+        Member member = memberRepository.findById(inactivedMemberReq.getMemberIdx())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
         member.inactivedMember();
+
+        MemberRoles memberRoles = memberRolesRepository.findByMemberIdx(inactivedMemberReq.getMemberIdx())
+                        .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+        memberRoles.inactivedMember();
+        memberQuitRepository.save(inactivedMemberReq.toEntity());
 
         return new InactivedMemberRes(true);
     }

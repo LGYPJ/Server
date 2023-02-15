@@ -23,7 +23,7 @@ public class ProgramGameroom {
     private String roomId;
 
     @Column(name = "current_img_idx", nullable = false)
-    private Long currentImgIdx;
+    private int currentImgIdx;
 
     public void increaseCurrentImgIdx() {
         this.currentImgIdx += 1;

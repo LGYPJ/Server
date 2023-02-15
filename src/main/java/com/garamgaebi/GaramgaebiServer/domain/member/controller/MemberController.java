@@ -22,9 +22,9 @@ public class MemberController {
         return new BaseResponse<>(memberService.postMember(postMemberReq));
     }
 
-    @PatchMapping("/{memberIdx}/member-inactived")
-    public BaseResponse<InactivedMemberRes> inactivedMember(@PathVariable(name = "memberIdx") Long memberIdx) {
-        return new BaseResponse<>(memberService.inactivedMember(memberIdx));
+    @PostMapping("/member-inactived")
+    public BaseResponse<InactivedMemberRes> inactivedMember(@RequestBody InactivedMemberReq inactivedMemberReq) {
+        return new BaseResponse<>(memberService.inactivedMember(inactivedMemberReq));
     }
 
     @PostMapping("/login")
