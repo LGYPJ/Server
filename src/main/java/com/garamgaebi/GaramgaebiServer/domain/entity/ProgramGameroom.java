@@ -21,4 +21,11 @@ public class ProgramGameroom {
 
     @Column(name = "room_id", nullable = false)
     private String roomId;
+
+    @Column(name = "current_img_idx", nullable = false)
+    private Long currentImgIdx;
+
+    public void increaseCurrentImgIdx() {
+        this.currentImgIdx += 1;
+    }
 }
