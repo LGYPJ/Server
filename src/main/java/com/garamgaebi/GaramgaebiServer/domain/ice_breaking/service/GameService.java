@@ -1,7 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.GameroomMember;
-import com.garamgaebi.GaramgaebiServer.domain.entity.IceBreakingImages;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramGameroom;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomReq;
@@ -13,10 +12,10 @@ import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.ProgramGam
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -141,6 +140,7 @@ public class GameService {
         return room.getCurrentImgIdx();
     }
 
+    @Transactional
     public String patchCurrentImgIdx(String roomId) {
         ProgramGameroom room = programGameroomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
