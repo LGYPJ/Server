@@ -13,6 +13,7 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.google.api.services.storage.Storage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class NetworkingServiceImpl implements NetworkingService {
 
@@ -65,8 +67,6 @@ public class NetworkingServiceImpl implements NetworkingService {
     @Transactional(readOnly = true)
     @Override
     public List<ProgramDto> findClosedNetworkingList() {
-        // validation 처리
-
         List<Program> closePrograms = programRepository.findClosedProgramList(LocalDateTime.now(), ProgramType.NETWORKING);
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
@@ -113,7 +113,7 @@ public class NetworkingServiceImpl implements NetworkingService {
         Optional<Member> member = memberRepository.findById(memberIdx);
 
         if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
-            // 없는 멤버 예외 처리
+            log.info("존재하지 않는 멤버 요청");
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
@@ -122,7 +122,7 @@ public class NetworkingServiceImpl implements NetworkingService {
         if(networkingWrapper.isEmpty()
                 || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING
                 || networkingWrapper.get().getStatus() == ProgramStatus.DELETE) {
-            // 없는 네트워킹 예외 처리
+            log.info("존재하지 않는 네트워킹 요청");
             throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
@@ -138,8 +138,10 @@ public class NetworkingServiceImpl implements NetworkingService {
                 networking.getStatus(),
                 networking.checkMemberCanApply(memberIdx));
 
-        if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR)
+        if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR) {
+            log.info("접근 불가능한 네트워킹 요청");
             throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
+        }
 
         return programInfoDto;
     }
