@@ -26,6 +26,6 @@ public class ProgramGameroom {
     private Long currentImgIdx;
 
     public void increaseCurrentImgIdx() {
-        this.currentImgIdx += 1;
+        this.currentImgIdx += 1L;
     }
 }
