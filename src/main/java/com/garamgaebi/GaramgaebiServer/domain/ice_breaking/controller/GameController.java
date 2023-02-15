@@ -2,10 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.controller;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramGameroom;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomReq;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomRes;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetReq;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetRes;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +49,18 @@ public class GameController {
     @ResponseBody
     public BaseResponse<List<String>> getGameImages(@PathVariable Long programIdx) {
         return new BaseResponse<>(gameService.getImageUrls(programIdx));
+    }
+
+    // 현재 진행중인 게임 인덱스 조회
+    @PostMapping("/current-idx")
+    @ResponseBody
+    public BaseResponse<Long> getCurrentImgIdx(@RequestBody CurrentImgIdxReq currentImgIdxReq) {
+        return new BaseResponse<>(gameService.getCurrentImgIdx(currentImgIdxReq.getRoomId()));
+    }
+
+    @PatchMapping("/current-idx")
+    @ResponseBody
+    public BaseResponse<String> patchCurrentImgIdx(@RequestBody CurrentImgIdxReq currentImgIdxReq) {
+        return new BaseResponse<>(gameService.patchCurrentImgIdx(currentImgIdxReq.getRoomId()));
     }
 }

@@ -45,7 +45,7 @@ public class GameService {
         for (int i = 0; i < 8; i++) { // 방 8개씩 생성
             roomId = UUID.randomUUID().toString();
 
-            ProgramGameroom room = ProgramGameroom.builder().programIdx(programIdx).roomId(roomId).build();
+            ProgramGameroom room = ProgramGameroom.builder().programIdx(programIdx).roomId(roomId).currentImgIdx(0L).build();
 
             programGameroomRepository.save(room);
             rooms.add(room);
@@ -132,5 +132,21 @@ public class GameService {
         Collections.shuffle(images, new Random(seed));
 
         return images;
+    }
+
+    public Long getCurrentImgIdx(String roomId) {
+        ProgramGameroom room = programGameroomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
+
+        return room.getCurrentImgIdx();
+    }
+
+    public String patchCurrentImgIdx(String roomId) {
+        ProgramGameroom room = programGameroomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
+
+        room.increaseCurrentImgIdx();
+
+        return "current image index 증가가 완료되었습니다.";
     }
 }
