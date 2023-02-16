@@ -106,6 +106,10 @@ public class MemberService {
         Member member = memberRepository.findBySocialEmail(socialEmail)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
+        if (member.getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.INACTIVE_MEMBER);
+        }
+
         // 1. ID/PW를 기반으로 Authentication 객체 생성
         // 이 때, authentication은 인증 여부를 확인하는 authenticated 값이 false
         Long memberIdx = member.getMemberIdx();
