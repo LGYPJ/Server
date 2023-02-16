@@ -6,6 +6,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.*;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class NotificationSenderImpl implements NotificationSender {
 
     @Value("${fcm.key.path}")
@@ -38,8 +40,8 @@ public class NotificationSenderImpl implements NotificationSender {
             FirebaseApp.initializeApp(options);
 
         } catch(IOException e) {
-            // 에러 로그 처리
             // spring 올릴 때 알림서버 미작동 -> 바로 어플리케이션 죽임
+            log.error("FIREBASE CONNECTION ERROR");
             throw new RuntimeException();
         }
     }
@@ -71,34 +73,14 @@ public class NotificationSenderImpl implements NotificationSender {
                         failedTokens.add(tokenList.get(i));
                     }
                 }
-                // 알림 발송 실패한 토큰들 로그 찍기
+                if(!failedTokens.isEmpty()) {
+                    log.error("FAIL SEND NOTIFICATION ERROR : TOKEN = {}", failedTokens);
+                }
             }
 
         } catch (FirebaseMessagingException e) {
-            // 전체 알림 발송 실패 로그 찍기
+            log.error("FAIL SEND ALL NOTIFICATION ERROR : NOTIFICATION = {}", notificationDto);
         }
     }
 
-    // 하나의 멤버에게 알림 전송
-    @Override
-    public void sendByToken(String token, NotificationDto notificationDto) {
-        Message messages = Message.builder()
-                .putData("notificationType", notificationDto.getNotificationType().toString())
-                .putData("content", notificationDto.getContent())
-                .putData("resourceIdx", notificationDto.getResourceIdx().toString())
-                .putData("resourceType", notificationDto.getResourceType().toString())
-                .setToken(token)
-                .build();
-
-        String response;
-        try {
-            // firebase 서버로 알림 발송
-            // 성공 : 전송된 메세지 ID 문자열로 응답
-            // 실패 : FirebaseMessagingException 발생
-            response = FirebaseMessaging.getInstance().send(messages);
-
-        } catch (FirebaseMessagingException e) {
-            // 알림 발송 실패 로그 찍기
-        }
-    }
 }
