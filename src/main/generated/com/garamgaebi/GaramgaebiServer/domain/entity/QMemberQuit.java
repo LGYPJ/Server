@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -18,37 +17,26 @@ public class QMemberQuit extends EntityPathBase<MemberQuit> {
 
     private static final long serialVersionUID = -593244396L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QMemberQuit memberQuit = new QMemberQuit("memberQuit");
 
-    public final StringPath category = createString("category");
+    public final EnumPath<com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberQuitStatus> category = createEnum("category", com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberQuitStatus.class);
 
     public final StringPath content = createString("content");
 
-    public final QMember member;
-
     public final NumberPath<Long> member_quit_id = createNumber("member_quit_id", Long.class);
 
+    public final NumberPath<Long> memberIdx = createNumber("memberIdx", Long.class);
+
     public QMemberQuit(String variable) {
-        this(MemberQuit.class, forVariable(variable), INITS);
+        super(MemberQuit.class, forVariable(variable));
     }
 
     public QMemberQuit(Path<? extends MemberQuit> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QMemberQuit(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QMemberQuit(PathMetadata metadata, PathInits inits) {
-        this(MemberQuit.class, metadata, inits);
-    }
-
-    public QMemberQuit(Class<? extends MemberQuit> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
+        super(MemberQuit.class, metadata);
     }
 
 }

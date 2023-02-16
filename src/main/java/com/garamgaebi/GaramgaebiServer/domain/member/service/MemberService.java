@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.MemberRoles;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberQuitRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
@@ -83,11 +84,15 @@ public class MemberService {
     public InactivedMemberRes inactivedMember(InactivedMemberReq inactivedMemberReq) {
         Member member = memberRepository.findById(inactivedMemberReq.getMemberIdx())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+        MemberRoles memberRoles = memberRolesRepository.findByMemberIdx(inactivedMemberReq.getMemberIdx())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+
+        if(member.getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
+        }
 
         member.inactivedMember();
 
-        MemberRoles memberRoles = memberRolesRepository.findByMemberIdx(inactivedMemberReq.getMemberIdx())
-                        .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
         memberRoles.inactivedMember();
         memberQuitRepository.save(inactivedMemberReq.toEntity());
 

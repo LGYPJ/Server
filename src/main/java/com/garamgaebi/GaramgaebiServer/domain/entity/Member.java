@@ -62,16 +62,16 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Education> educations = new ArrayList<Education>();
 
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Career> careers = new ArrayList<Career>();
 
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<SNS> SNSs = new ArrayList<SNS>();
 
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<QnA> QnAs = new ArrayList<QnA>();
 
     // 알림 관련 엔티티 연결
@@ -79,7 +79,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private List<MemberNotification> memberNotifications = new ArrayList<MemberNotification>();
 
     // fcm 토큰 엔티티 연결
-    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberFcm> memberFcms = new ArrayList<MemberFcm>();
 
     @Builder
@@ -102,7 +102,21 @@ public class Member extends BaseTimeEntity implements UserDetails {
     }
 
     public void inactivedMember() {
+        this.nickname = "-";
+        this.profileEmail = "-";
+        this.socialEmail = "-";
+        this.uniEmail = "-";
+        this.content = "-";
+        this.profileUrl = null;
+        this.belong = null;
         this.status = MemberStatus.INACTIVE;
+        this.careers.removeAll(this.careers);
+        this.educations.removeAll(this.educations);
+        this.SNSs.removeAll(this.SNSs);
+        this.memberFcms.removeAll(this.memberFcms);
+        for(QnA qnA : this.QnAs) {
+            qnA.setEmail("-");
+        }
     }
 
     // == 연관관계 메서드 -- //

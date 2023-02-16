@@ -30,6 +30,11 @@ dependencies {
 	implementation platform('software.amazon.awssdk:bom:2.19.33')
 	implementation 'software.amazon.awssdk:s3'
 	implementation group: 'org.quartz-scheduler', name: 'quartz',  version: '2.2.1' // quartz
+	compileOnly('org.springframework.boot:spring-boot-starter-aop') // aop
+	implementation 'org.json:json:20220924' // json
+	implementation 'org.codehaus.janino:janino:3.1.9' // logback
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.2' // log encoder
+	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16' // log4jdbc
 
 	/* Spring Security */
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -57,7 +62,7 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
-	/* Swagger */
+
     testImplementation 'junit:junit:4.13.1'
     compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
