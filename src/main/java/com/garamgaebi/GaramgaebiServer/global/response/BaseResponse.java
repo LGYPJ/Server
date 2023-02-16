@@ -33,7 +33,7 @@ public class BaseResponse<T> {
     @Schema(description = "응답 메세지")
     private final String message;
     @Schema(description = "응답 결과")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    //@JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 
     public BaseResponse(ErrorCode errorCode) {
