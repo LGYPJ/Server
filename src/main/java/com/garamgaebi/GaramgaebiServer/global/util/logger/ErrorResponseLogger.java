@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.global.util.logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -27,7 +28,7 @@ public class ErrorResponseLogger {
         } catch (Throwable throwable) {
             throw throwable;
         }finally {
-            log.info("response : {}", mapper.writeValueAsString(result));
+            log.info("response : {}", mapper.registerModule(new JavaTimeModule()).writeValueAsString(result));
         }
         return result;
     }
