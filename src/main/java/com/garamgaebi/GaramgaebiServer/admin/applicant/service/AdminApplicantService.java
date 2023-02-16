@@ -106,13 +106,17 @@ public class AdminApplicantService {
         for (int i = 0; i < req.getApplyList().size(); i++) {
             if (req.getApplyList().get(i).getStatus().equals(Boolean.TRUE)) {
                 Apply apply = repository.findOneProgramApply(req.getApplyList().get(i).getMemberIdx(),req.getProgramIdx());
+                if(apply.getStatus() != APPLY_CONFIRM) {
+                    applyConfirm.add(apply);
+                }
                 apply.setStatus(APPLY_CONFIRM);
-                applyConfirm.add(apply);
             }
             if (req.getApplyList().get(i).getStatus().equals(Boolean.FALSE)) {
                 Apply apply = repository.findOneProgramApply(req.getApplyList().get(i).getMemberIdx(),req.getProgramIdx());
+                if(apply.getStatus() != APPLY_CANCEL) {
+                    nonDeposit.add(apply);
+                }
                 apply.setStatus(APPLY_CANCEL);
-                nonDeposit.add(apply);
             }
         }
 
@@ -120,8 +124,10 @@ public class AdminApplicantService {
         for (int i = 0; i < req.getCancelList().size(); i++) {
             if (req.getCancelList().get(i).getStatus().equals(Boolean.TRUE)) {
                 Apply cancel = repository.findOneProgramApply(req.getCancelList().get(i).getMemberIdx(),req.getProgramIdx());
+                if(cancel.getStatus() != CANCEL_REFUND) {
+                    refund.add(cancel);
+                }
                 cancel.setStatus(CANCEL_REFUND);
-                refund.add(cancel);
             }
             if (req.getCancelList().get(i).getStatus().equals(Boolean.FALSE)) {
                 Apply cancel = repository.findOneProgramApply(req.getCancelList().get(i).getMemberIdx(),req.getProgramIdx());
@@ -134,9 +140,15 @@ public class AdminApplicantService {
         program.setStatus(CLOSED_CONFIRM);
 
         // 알림 발송
-        publisher.publishEvent(new ApplyConfirmEvent(applyConfirm, program));
-        publisher.publishEvent(new NonDepositCancelEvent(nonDeposit, program));
-        publisher.publishEvent(new RefundEvent(refund, program));
+        if(!applyConfirm.isEmpty()) {
+            publisher.publishEvent(new ApplyConfirmEvent(applyConfirm, program));
+        }
+        if(!nonDeposit.isEmpty()) {
+            publisher.publishEvent(new NonDepositCancelEvent(nonDeposit, program));
+        }
+        if(!refund.isEmpty()) {
+            publisher.publishEvent(new RefundEvent(refund, program));
+        }
 
         return true;
     }
