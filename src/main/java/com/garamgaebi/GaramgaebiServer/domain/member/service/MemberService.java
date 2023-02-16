@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.MemberRoles;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberQuitRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
@@ -100,6 +101,10 @@ public class MemberService {
         String socialEmail = memberLoginReq.getSocialEmail();
         Member member = memberRepository.findBySocialEmail(socialEmail)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+
+        if (member.getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.INACTIVE_MEMBER);
+        }
 
         // 1. ID/PW를 기반으로 Authentication 객체 생성
         // 이 때, authentication은 인증 여부를 확인하는 authenticated 값이 false
