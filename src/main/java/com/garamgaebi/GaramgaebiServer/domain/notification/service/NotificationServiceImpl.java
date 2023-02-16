@@ -11,6 +11,7 @@ import com.garamgaebi.GaramgaebiServer.domain.notification.repository.Notificati
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class NotificationServiceImpl implements NotificationService {
 
@@ -35,6 +37,7 @@ public class NotificationServiceImpl implements NotificationService {
         Optional<Member> member = memberRepository.findById(memberIdx);
 
         if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
@@ -47,6 +50,7 @@ public class NotificationServiceImpl implements NotificationService {
             Optional<MemberNotification> lastMemberNotification = memberNotificationRepository.findById(lastNotificationIdx);
 
             if(lastMemberNotification.isEmpty()) {
+                log.info("NOTIFICATION NOT EXIST : {}", lastNotificationIdx);
                 throw new RestApiException(ErrorCode.INTERNAL_SERVER_ERROR);
             }
 
@@ -78,6 +82,7 @@ public class NotificationServiceImpl implements NotificationService {
         Optional<Member> member = memberRepository.findById(memberIdx);
 
         if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 

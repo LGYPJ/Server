@@ -113,7 +113,7 @@ public class NetworkingServiceImpl implements NetworkingService {
         Optional<Member> member = memberRepository.findById(memberIdx);
 
         if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
-            log.info("존재하지 않는 멤버 요청");
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
@@ -122,7 +122,7 @@ public class NetworkingServiceImpl implements NetworkingService {
         if(networkingWrapper.isEmpty()
                 || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING
                 || networkingWrapper.get().getStatus() == ProgramStatus.DELETE) {
-            log.info("존재하지 않는 네트워킹 요청");
+            log.info("NETWORKING NOT EXIST : {}", networkingIdx);
             throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
@@ -139,7 +139,7 @@ public class NetworkingServiceImpl implements NetworkingService {
                 networking.checkMemberCanApply(memberIdx));
 
         if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR) {
-            log.info("접근 불가능한 네트워킹 요청");
+            log.info("NETWORKING ACCESS DENIED : {}", networkingIdx);
             throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
         }
 
@@ -154,7 +154,7 @@ public class NetworkingServiceImpl implements NetworkingService {
         Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
 
         if(memberWrapper.isEmpty() || memberWrapper.get().getStatus() == MemberStatus.INACTIVE) {
-            // 없는 멤버 예외 처리
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
@@ -163,11 +163,12 @@ public class NetworkingServiceImpl implements NetworkingService {
         if(networkingWrapper.isEmpty()
                 || networkingWrapper.get().getProgramType() != ProgramType.NETWORKING
                 || networkingWrapper.get().getStatus() == ProgramStatus.DELETE) {
-            // 없는 네트워킹 예외 처리
+            log.info("NETWORKING NOT EXIST : {}", networkingIdx);
             throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
         if(networkingWrapper.get().getStatus() == ProgramStatus.READY_TO_OPEN) {
+            log.info("NETWORKING ACCESS DENIED : {}", networkingIdx);
             throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
         }
 
