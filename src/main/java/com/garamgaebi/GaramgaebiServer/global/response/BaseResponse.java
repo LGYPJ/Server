@@ -46,7 +46,6 @@ public class BaseResponse<T> {
         this.isSuccess = true;
         this.message = "요청에 성공하였습니다.";
         this.code = 200;
-        if(result == null) this.result = (T)new HashMap<String, String>();
-        else this.result = result;
+        this.result = result;
     }
 }
