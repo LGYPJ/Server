@@ -66,8 +66,14 @@ public class MemberService {
                 throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
             }
 
-            Long lastMember = memberRepository.findLastIdx();
-            Long memberIdx = lastMember + 1;
+            Long lastMember = memberRepository.findTopByOrderByMemberIdxDesc();
+            Long memberIdx;
+            if(lastMember == null) {
+                memberIdx = 1L;
+            }
+            else {
+                memberIdx = lastMember + 1;
+            }
             PostMemberRes postMemberRes = new PostMemberRes(memberRepository.save(postMemberReq.toEntity(memberIdx.toString())).getMemberIdx());
             MemberRolesDto memberRolesDto = new MemberRolesDto();
             memberRolesDto.setMemberIdx(postMemberRes.getMemberIdx());
