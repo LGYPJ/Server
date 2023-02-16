@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.global.util.logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -38,7 +39,7 @@ public class RequestLogger {
             try {
                 params.put("controller", controllerName);
                 params.put("method", methodName);
-                params.put("params", mapper.writeValueAsString(getParams(joinPoint)));
+                params.put("params", mapper.registerModule(new JavaTimeModule()).writeValueAsString(getParams(joinPoint)));
                 params.put("http-method", request.getMethod());
                 params.put("request-uri", request.getRequestURI());
             } catch (Exception e) {
