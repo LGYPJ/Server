@@ -142,7 +142,7 @@ public class JwtTokenProvider {
 
     public Long getMemberIdx() {
         String accessToken = getJwt();
-        if(accessToken.isgBlank()) {
+        if(accessToken.isBlank()) {
             throw new RestApiException(ErrorCode.EMPTY_JWT_TOKEN);
         }
 
