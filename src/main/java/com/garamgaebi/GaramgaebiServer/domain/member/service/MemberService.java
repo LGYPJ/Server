@@ -68,7 +68,6 @@ public class MemberService {
 
             Member member = memberRepository.save(postMemberReq.toEntity());
             Long memberIdx = member.getMemberIdx();
-//            member.setPassword("test");
 
             MemberRolesDto memberRolesDto = new MemberRolesDto();
             memberRolesDto.setMemberIdx(memberIdx);
