@@ -5,6 +5,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
 
 @Component
 public class StompHandler implements ChannelInterceptor {
@@ -14,6 +15,9 @@ public class StompHandler implements ChannelInterceptor {
         System.out.println("DEBUG, message: " + message);
         System.out.println("DEBUG, accessor: " + accessor);
         String sessionId = accessor.getSessionId();
+
+        RequestContextHolder.getRequestAttributes();
+
         switch (accessor.getCommand()) {
             case CONNECT:
                 System.out.println("DEBUG, connected: " + sessionId);
