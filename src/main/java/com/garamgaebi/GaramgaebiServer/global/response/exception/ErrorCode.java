@@ -21,7 +21,6 @@ public enum ErrorCode {
     ALREADY_EXIST_UNI_EMAIL(2005, "이미 존재하는 학교 이메일입니다."),
 
     INVALID_JWT_TOKEN(2006, "유효하지 않은 JWT 토큰입니다."),
-    EXPIRED_JWT_TOKEN(2007, "만료된 JWT 토큰입니다."),
     EMPTY_JWT_TOKEN(2008, "JWT 토큰이 존재하지 않습니다."),
     NOT_AUTHORIZED_ACCESS(2010, "접근이 거부 되었습니다."),
 
@@ -52,6 +51,7 @@ public enum ErrorCode {
 
     ALREADY_EXIST_SOCIAL_EMAIL(2023, "이미 존재하는 소셜 이메일입니다."),
 
+    EXPIRED_JWT_TOKEN(401, "만료된 JWT 토큰입니다."),
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
     INTERNAL_SERVER_ERROR(500, "서버 오류입니다.");

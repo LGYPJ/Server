@@ -11,6 +11,7 @@ import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEven
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.sender.NotificationSender;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Component
 //@Async("programThreadPoolExecutor")
+@Slf4j
 @RequiredArgsConstructor
 public class ProgramEventListenerImpl implements ProgramEventListener {
 
@@ -51,6 +53,7 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
         }
         else {
             // 잘못된 프로그램 타입으로 알림 전송 실패 log
+            log.error("FAIL SEND NOTIFICATION : UNKNOWN PROGRAM TYPE {}", program.getIdx());
             return;
         }
 
