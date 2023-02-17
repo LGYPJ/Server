@@ -14,7 +14,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUniEmail(String uniEmail);
 
     List<Member> findByStatus(MemberStatus memberStatus);
-
-    @Query("select memberIdx from Member order by memberIdx desc limit 1")
-    Long findLastIdx();
+    Member findTopByOrderByMemberIdxDesc();
 }

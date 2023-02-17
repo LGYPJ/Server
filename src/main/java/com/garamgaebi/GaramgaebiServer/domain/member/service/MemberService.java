@@ -68,7 +68,6 @@ public class MemberService {
 
             Member member = memberRepository.save(postMemberReq.toEntity());
             Long memberIdx = member.getMemberIdx();
-//            member.setPassword("test");
 
             MemberRolesDto memberRolesDto = new MemberRolesDto();
             memberRolesDto.setMemberIdx(memberIdx);
@@ -124,6 +123,7 @@ public class MemberService {
 
         // 3. 인증 정보를 기반으로 JWT Token 생성
         TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+        tokenInfo.setMemberIdx(memberIdx);
 
         // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
         redisUtil.setDataExpire("RT: " + authentication.getName(),

@@ -12,6 +12,7 @@ import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramReposito
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class SeminarServiceImpl implements SeminarService {
 
@@ -110,7 +112,7 @@ public class SeminarServiceImpl implements SeminarService {
         Optional<Member> member = memberRepository.findById(memberIdx);
 
         if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
-            // 없는 멤버 예외 처리
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
@@ -119,7 +121,7 @@ public class SeminarServiceImpl implements SeminarService {
         if(seminarWrapper.isEmpty()
                 || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR
                 || seminarWrapper.get().getStatus() == ProgramStatus.DELETE) {
-            // 없는 네트워킹 예외 처리
+            log.info("SEMINAR NOT EXIST : {}", seminarIdx);
             throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
@@ -135,8 +137,10 @@ public class SeminarServiceImpl implements SeminarService {
                 seminar.getStatus(),
                 seminar.checkMemberCanApply(memberIdx));
 
-        if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR)
+        if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR) {
+            log.info("SEMINAR ACCESS DENIED : {}", seminarIdx);
             throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
+        }
 
         return programInfoDto;
     }
@@ -149,7 +153,7 @@ public class SeminarServiceImpl implements SeminarService {
         Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
 
         if(memberWrapper.isEmpty() || memberWrapper.get().getStatus() == MemberStatus.INACTIVE) {
-            // 없는 멤버 예외 처리
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
@@ -158,11 +162,12 @@ public class SeminarServiceImpl implements SeminarService {
         if(seminarWrapper.isEmpty()
                 || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR
                 || seminarWrapper.get().getStatus() == ProgramStatus.DELETE) {
-            // 없는 네트워킹 예외 처리
+            log.info("SEMINAR NOT EXIST : {}", seminarIdx);
             throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
         if(seminarWrapper.get().getStatus() == ProgramStatus.READY_TO_OPEN) {
+            log.info("SEMINAR ACCESS DENIED : {}", seminarIdx);
             throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
         }
 
@@ -209,6 +214,7 @@ public class SeminarServiceImpl implements SeminarService {
         Optional<Program> seminarWrapper = programRepository.findById(seminarIdx);
         // validation
         if(seminarWrapper.isEmpty() || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR) {
+            log.info("SEMINAR NOT EXIST : {}", seminarIdx);
             throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 

@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class S3Uploader {
 
@@ -26,7 +27,7 @@ public class S3Uploader {
 
     public String upload(MultipartFile multipartFile, String fileName, String dirName) throws IOException {
 
-        File uploadFile = convert(multipartFile, fileName).orElseThrow(() ->new IllegalArgumentException("파일 전환 실패"));
+        File uploadFile = convert(multipartFile, fileName).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
 
         return upload(uploadFile, dirName);
 
@@ -42,7 +43,6 @@ public class S3Uploader {
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
-        System.out.println(bucket);
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
@@ -50,10 +50,9 @@ public class S3Uploader {
     // 로컬에 저장된 이미지 지우기
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
-            // 성공 로그 찍기
             return;
         }
-        // 실패 로그 찍기
+        log.error("S3 IMAGE UPLOADER FAIL TO DELETE LOCAL TEMPORAL FILE : {}", targetFile.getName());
     }
 
     private Optional<File> convert(MultipartFile multipartFile, String fileName) throws IOException {

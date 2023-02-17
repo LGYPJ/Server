@@ -6,5 +6,4 @@ import java.util.List;
 
 public interface NotificationSender {
     public void sendByTokenList(List<String> tokenList, NotificationDto notificationDto);
-    public void sendByToken(String tokenList, NotificationDto notificationDto);
 }
