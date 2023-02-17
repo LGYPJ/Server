@@ -66,19 +66,15 @@ public class MemberService {
                 throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
             }
 
-            Member lastMember = memberRepository.findTopByOrderByMemberIdxDesc();
-            Long memberIdx;
-            if(lastMember == null) {
-                memberIdx = 1L;
-            }
-            else {
-                memberIdx = lastMember.getMemberIdx() + 1;
-            }
-            PostMemberRes postMemberRes = new PostMemberRes(memberRepository.save(postMemberReq.toEntity(memberIdx.toString())).getMemberIdx());
+            Member member = memberRepository.save(postMemberReq.toEntity());
+            Long memberIdx = member.getMemberIdx();
+
             MemberRolesDto memberRolesDto = new MemberRolesDto();
-            memberRolesDto.setMemberIdx(postMemberRes.getMemberIdx());
+            memberRolesDto.setMemberIdx(memberIdx);
             memberRolesDto.setRoles("USER");
             memberRolesRepository.save(memberRolesDto.toEntity());
+
+            PostMemberRes postMemberRes = new PostMemberRes(memberIdx);
             return postMemberRes;
         } else { // 유효하지 않은 닉네임
             throw new RestApiException(ErrorCode.INVALID_NICKNAME);
