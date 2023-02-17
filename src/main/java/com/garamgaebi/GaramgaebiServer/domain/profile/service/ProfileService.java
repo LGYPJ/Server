@@ -10,6 +10,7 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProfileService {
     private final ProfileRepository profileRepository;
 
@@ -33,6 +35,7 @@ public class ProfileService {
 
         Member member = profileRepository.findMember(req.getMemberIdx());
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", req.getMemberIdx());
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
         QnA qna = new QnA();
@@ -50,6 +53,7 @@ public class ProfileService {
 
         Member member = profileRepository.findMember(req.getMemberIdx());
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", req.getMemberIdx());
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
         SNS sns = new SNS();
@@ -65,6 +69,7 @@ public class ProfileService {
     public Boolean updateSNS(UpdateSNSReq req) {
         SNS sns = profileRepository.findSNS(req.getSnsIdx());
         if (sns == null) {
+            log.info("SNS NOT EXIST : {}", req.getSnsIdx());
             throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
         }
         sns.setType(req.getType());
@@ -77,6 +82,7 @@ public class ProfileService {
     public Boolean deleteSNS(long snsIdx) {
         SNS sns = profileRepository.findSNS(snsIdx);
         if (sns == null) {
+            log.info("SNS NOT EXIST : {}", snsIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
         }
         profileRepository.deleteSNS(sns);
@@ -89,6 +95,7 @@ public class ProfileService {
 
         Member member = profileRepository.findMember(req.getMemberIdx());
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", req.getMemberIdx());
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
         Education education = new Education();
@@ -114,6 +121,7 @@ public class ProfileService {
     public Boolean updateEducation(UpdateEducationReq req) {
         Education education = profileRepository.findEducation(req.getEducationIdx());
         if (education == null) {
+            log.info("Education NOT EXIST : {}", req.getEducationIdx());
             throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
         }
         education.setInstitution(req.getInstitution());
@@ -123,6 +131,7 @@ public class ProfileService {
             education.setIsLearning(IsLearning.TRUE);
             education.setEndDate(null);
         } else {
+            education.setIsLearning(IsLearning.FALSE);
             education.setEndDate(req.getEndDate());
         }
 
@@ -134,6 +143,7 @@ public class ProfileService {
     public Boolean deleteEducation(long educationIdx) {
         Education education = profileRepository.findEducation(educationIdx);
         if (education == null) {
+            log.info("Education NOT EXIST : {}", educationIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
         }
         profileRepository.deleteEducation(education);
@@ -147,6 +157,7 @@ public class ProfileService {
 
         Member member = profileRepository.findMember(req.getMemberIdx());
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", req.getMemberIdx());
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
         Career career = new Career();
@@ -172,6 +183,7 @@ public class ProfileService {
     public Boolean updateCareer(UpdateCareerReq req) {
         Career career = profileRepository.findCareer(req.getCareerIdx());
         if (career == null) {
+            log.info("Career NOT EXIST : {}", req.getCareerIdx());
             throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
         }
         career.setCompany(req.getCompany());
@@ -181,6 +193,7 @@ public class ProfileService {
             career.setIsWorking(IsWorking.TRUE);
             career.setEndDate(null);
         } else {
+            career.setIsWorking(IsWorking.FALSE);
             career.setEndDate(req.getEndDate());
         }
 
@@ -192,6 +205,7 @@ public class ProfileService {
     public Boolean deleteCareer(long careerIdx) {
         Career career = profileRepository.findCareer(careerIdx);
         if (career == null) {
+            log.info("Career NOT EXIST : {}", careerIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_PROFILE_INFO);
         }
         profileRepository.deleteCareer(career);
@@ -202,9 +216,9 @@ public class ProfileService {
     /** GET 유저프로필조회 API*/
     @Transactional
     public GetProfileRes getProfile(long memberIdx) {
-
         Member member = profileRepository.findMember(memberIdx);
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
@@ -242,6 +256,7 @@ public class ProfileService {
     public List<GetSNSList> getSNSList(long memberIdx) {
         Member member = profileRepository.findMember(memberIdx);
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
         List<GetSNSList> allSNS = profileRepository.findAllSNS(memberIdx);
@@ -253,6 +268,7 @@ public class ProfileService {
     public List<GetCareerList> getCareerList(long memberIdx) {
         Member member = profileRepository.findMember(memberIdx);
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
         List<GetCareerList> allCareer = profileRepository.findAllCareer(memberIdx);
@@ -264,6 +280,7 @@ public class ProfileService {
     public List<GetEducationList> getEducationList(long memberIdx) {
         Member member = profileRepository.findMember(memberIdx);
         if(member==null || member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
         List<GetEducationList> allEducation = profileRepository.findAllEducation(memberIdx);
@@ -273,7 +290,6 @@ public class ProfileService {
     /** GET 유저프로필 11명 API*/
     @Transactional
     public List<GetProfilesRes> getProfiles() {
-
         List<GetProfilesRes> resList = new ArrayList<>();
         //유저프로필 랜덤 11명 난수 설정
         Long count = profileRepository.countMember();
@@ -321,6 +337,7 @@ public class ProfileService {
     public Long updateProfile(PostUpdateProfileReq req, MultipartFile multipartFile) {
         Member member = profileRepository.findMember(req.getMemberIdx());
         if(member == null || member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", req.getMemberIdx());
             throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
         }
 
