@@ -54,9 +54,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
-    @Column(nullable = false)
-    private String password;
-
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
@@ -161,7 +158,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return memberIdx.toString();
     }
 
     @Override
