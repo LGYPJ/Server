@@ -1,22 +1,20 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.controller;
 
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.GetParticipantsRes;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramInfoDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.NetworkingService;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Tag(name = "NetworkingController", description = "네트워킹 컨트롤러(담당자:로니)")
 @RestController

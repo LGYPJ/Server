@@ -111,7 +111,7 @@ public class Program {
     // == 비즈니스 로직 == //
 
     // 유저 신청 가능 여부 조회
-    public ProgramUserButtonStatus checkMemberCanApply(Long memberIdx) {
+    public ProgramUserButtonStatus checkMemberCanApply(Member member) {
         // 프로그램 일자 지났으면 무조건 마감 버튼
         if (LocalDateTime.now().isAfter(this.getDate())) {
             return ProgramUserButtonStatus.CLOSED;
@@ -120,7 +120,7 @@ public class Program {
         else if (getStatus() == ProgramStatus.CLOSED_CONFIRM) {
             for (Apply apply : this.applies) {
                 // 해당 멤버가 신청했으며, 신청 확정된 경우
-                if (apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY_CONFIRM) {
+                if (apply.getMember() == member && apply.getStatus() == ApplyStatus.APPLY_CONFIRM) {
                     // 신청 완료 버튼 활성화
                     return ProgramUserButtonStatus.APPLY_COMPLETE;
                 }
@@ -132,7 +132,7 @@ public class Program {
         else if (getStatus() == ProgramStatus.CLOSED) {
             for (Apply apply : this.applies) {
                 // 해당 멤버가 신청한 경우
-                if (apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY) {
+                if (apply.getMember() == member && apply.getStatus() == ApplyStatus.APPLY) {
                     // 신청확인 중 버튼 활성화
                     return ProgramUserButtonStatus.BEFORE_APPLY_CONFIRM;
                 }
@@ -144,7 +144,7 @@ public class Program {
         else if (getStatus() == ProgramStatus.OPEN) {
             for (Apply apply : this.applies) {
                 // 해당 멤버가 신청한 경우
-                if (apply.getMember().getMemberIdx().equals(memberIdx) && apply.getStatus() == ApplyStatus.APPLY) {
+                if (apply.getMember() == member && apply.getStatus() == ApplyStatus.APPLY) {
                     // 무료이면 신청완료
                     if(getIsPay() == ProgramPayStatus.FREE) {
                         return ProgramUserButtonStatus.APPLY_COMPLETE;

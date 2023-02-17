@@ -1,9 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.GetParticipantsRes;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.PresentationDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramInfoDto;
 
 import java.util.List;
 

@@ -6,8 +6,7 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatu
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramUserButtonStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ParticipantDto;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
@@ -66,7 +65,6 @@ public class SeminarServiceImpl implements SeminarService {
     @Transactional(readOnly = true)
     @Override
     public List<ProgramDto> findClosedSeminarsList() {
-        // validation 처리
 
         List<Program> closePrograms = programRepository.findClosedProgramList(LocalDateTime.now(), ProgramType.SEMINAR);
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
@@ -109,33 +107,20 @@ public class SeminarServiceImpl implements SeminarService {
     @Override
     public ProgramInfoDto findSeminarDetails(Long seminarIdx, Long memberIdx) {
 
-        Optional<Member> member = memberRepository.findById(memberIdx);
+        Member member = validMember(memberIdx);
 
-        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
-            log.info("MEMBER NOT EXIST : {}", memberIdx);
-            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
-        }
+        Program seminar = validSeminar(seminarIdx);
 
-        Optional<Program> seminarWrapper = programRepository.findById(seminarIdx);
-
-        if(seminarWrapper.isEmpty()
-                || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR
-                || seminarWrapper.get().getStatus() == ProgramStatus.DELETE) {
-            log.info("SEMINAR NOT EXIST : {}", seminarIdx);
-            throw new RestApiException(ErrorCode.NOT_FOUND);
-        }
-
-        Program seminar = seminarWrapper.get();
-
-        ProgramInfoDto programInfoDto = new ProgramInfoDto(
-                seminar.getIdx(),
-                seminar.getTitle(),
-                seminar.getDate(),
-                seminar.getLocation(),
-                seminar.getFee(),
-                seminar.getEndDate(),
-                seminar.getStatus(),
-                seminar.checkMemberCanApply(memberIdx));
+        ProgramInfoDto programInfoDto = ProgramInfoDto.builder()
+                .programIdx(seminar.getIdx())
+                .title(seminar.getTitle())
+                .date(seminar.getDate())
+                .location(seminar.getLocation())
+                .fee(seminar.getFee())
+                .endDate(seminar.getEndDate())
+                .programStatus(seminar.getStatus())
+                .userButtonStatus(seminar.checkMemberCanApply(member))
+                .build();
 
         if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR) {
             log.info("SEMINAR ACCESS DENIED : {}", seminarIdx);
@@ -150,37 +135,14 @@ public class SeminarServiceImpl implements SeminarService {
     @Override
     public GetParticipantsRes findSeminarParticipantsList(Long seminarIdx, Long memberIdx) {
 
-        Optional<Member> memberWrapper = memberRepository.findById(memberIdx);
+        Member targetMember = validMember(memberIdx);
 
-        if(memberWrapper.isEmpty() || memberWrapper.get().getStatus() == MemberStatus.INACTIVE) {
-            log.info("MEMBER NOT EXIST : {}", memberIdx);
-            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
-        }
-
-        Optional<Program> seminarWrapper = programRepository.findById(seminarIdx);
-
-        if(seminarWrapper.isEmpty()
-                || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR
-                || seminarWrapper.get().getStatus() == ProgramStatus.DELETE) {
-            log.info("SEMINAR NOT EXIST : {}", seminarIdx);
-            throw new RestApiException(ErrorCode.NOT_FOUND);
-        }
-
-        if(seminarWrapper.get().getStatus() == ProgramStatus.READY_TO_OPEN) {
-            log.info("SEMINAR ACCESS DENIED : {}", seminarIdx);
-            throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
-        }
-
-        Program seminar = seminarWrapper.get();
+        Program seminar = validSeminar(seminarIdx);
         List<ParticipantDto> participantDtos = new ArrayList<ParticipantDto>();
         Boolean isApply = false;
 
-        if(seminar.getParticipants().contains(memberWrapper.get())) {
-            participantDtos.add(new ParticipantDto(
-                    memberWrapper.get().getMemberIdx(),
-                    memberWrapper.get().getNickname(),
-                    memberWrapper.get().getProfileUrl()
-            ));
+        if(seminar.getParticipants().contains(targetMember)) {
+            participantDtos.add(participantDtoBuilder(targetMember));
             isApply = true;
         }
 
@@ -192,12 +154,8 @@ public class SeminarServiceImpl implements SeminarService {
                         null
                 ));
             }
-            else if(member != memberWrapper.get()) {
-                participantDtos.add(new ParticipantDto(
-                        member.getMemberIdx(),
-                        member.getNickname(),
-                        member.getProfileUrl()
-                ));
+            else if(member != targetMember) {
+                participantDtos.add(participantDtoBuilder(member));
             }
         }
         return GetParticipantsRes.builder()
@@ -211,26 +169,20 @@ public class SeminarServiceImpl implements SeminarService {
     @Override
     public List<PresentationDto> findSeminarPresentationList(Long seminarIdx) {
 
-        Optional<Program> seminarWrapper = programRepository.findById(seminarIdx);
-        // validation
-        if(seminarWrapper.isEmpty() || seminarWrapper.get().getProgramType() != ProgramType.SEMINAR) {
-            log.info("SEMINAR NOT EXIST : {}", seminarIdx);
-            throw new RestApiException(ErrorCode.NOT_FOUND);
-        }
+        Program seminar = validSeminar(seminarIdx);
 
-        Program seminar = seminarWrapper.get();
         List<PresentationDto> presentationDtos = new ArrayList<PresentationDto>();
 
         for(Presentation presentation : seminar.getPresentations()) {
-            presentationDtos.add(new PresentationDto(
-                    presentation.getIdx(),
-                    presentation.getTitle(),
-                    presentation.getNickname(),
-                    presentation.getProfileImg(),
-                    presentation.getOrganization(),
-                    presentation.getContent(),
-                    presentation.getPresentationUrl()
-                    ));
+            presentationDtos.add(PresentationDto.builder()
+                            .presentationIdx(presentation.getIdx())
+                            .title(presentation.getTitle())
+                            .nickname(presentation.getNickname())
+                            .profileImgUrl(presentation.getProfileImg())
+                            .organization(presentation.getOrganization())
+                            .content(presentation.getContent())
+                            .presentationUrl(presentation.getPresentationUrl())
+                            .build());
         }
 
         return presentationDtos;
@@ -240,16 +192,54 @@ public class SeminarServiceImpl implements SeminarService {
     // programDto 빌더
     private ProgramDto programDtoBuilder(Program program) {
 
-        return new ProgramDto(
-                program.getIdx(),
-                program.getTitle(),
-                program.getDate(),
-                program.getLocation(),
-                program.getProgramType(),
-                program.getIsPay(),
-                program.getThisMonthStatus(),
-                program.isOpen()
-        );
+        return ProgramDto.builder()
+                .programIdx(program.getIdx())
+                .title(program.getTitle())
+                .date(program.getDate())
+                .location(program.getLocation())
+                .type(program.getProgramType())
+                .payment(program.getIsPay())
+                .status(program.getThisMonthStatus())
+                .isOpen(program.isOpen())
+                .build();
+    }
+
+    // participantsDto 빌더
+    private ParticipantDto participantDtoBuilder(Member member) {
+        return ParticipantDto.builder()
+                .memberIdx(member.getMemberIdx())
+                .nickname(member.getNickname())
+                .profileImg(member.getProfileUrl())
+                .build();
+    }
+
+    // member validation
+    private Member validMember(Long memberIdx) {
+        Member member = memberRepository.findById(memberIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        return member;
+    }
+
+    // seminar validation
+    private Program validSeminar(Long seminarIdx) {
+        Program seminar = programRepository.findById(seminarIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(seminar.getProgramType() != ProgramType.SEMINAR || seminar.getStatus() == ProgramStatus.DELETE) {
+            log.info("SEMINAR NOT EXIST : {}", seminarIdx);
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        if(seminar.getStatus() == ProgramStatus.READY_TO_OPEN) {
+            log.info("SEMINAR ACCESS DENIED : {}", seminarIdx);
+            throw new RestApiException(ErrorCode.FAIL_ACCESS_PROGRAM);
+        }
+
+        return seminar;
     }
 
     // 다음 달 1일 00:00:00 계산
