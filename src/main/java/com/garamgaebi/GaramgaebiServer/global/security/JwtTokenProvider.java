@@ -1,9 +1,12 @@
 package com.garamgaebi.GaramgaebiServer.global.security;
 
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.security.dto.TokenInfo;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +16,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.security.Key;
 import java.util.Arrays;
@@ -34,7 +40,7 @@ public class JwtTokenProvider {
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
 
     // 유저 정보를 가지고 AccessToken, RefreshToken 생성
-    public TokenInfo generateToken(Authentication authentication) {
+    public TokenInfo generateToken(Authentication authentication, Long memberIdx) {
         // 권한 가져오기
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -44,9 +50,11 @@ public class JwtTokenProvider {
 
         // Access Token 생성
         Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
+                .claim("memberIdx", memberIdx)
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -121,5 +129,30 @@ public class JwtTokenProvider {
         // 현재 시간
         Long now = new Date().getTime();
         return (expiration.getTime() - now);
+    }
+
+    private String getJwt(){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+
+    public Long getMemberIdx() {
+        String accessToken = getJwt();
+        System.out.println(accessToken);
+        if(accessToken.isBlank()) {
+            throw new RestApiException(ErrorCode.EMPTY_JWT_TOKEN);
+        }
+
+        Claims claims = parseClaims(accessToken);
+
+        if (claims.get("auth") == null) {
+            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+        }
+
+        return claims.get("memberIdx", Long.class);
     }
 }

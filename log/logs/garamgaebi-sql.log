@@ -1,0 +1,806 @@
+[35m2023-02-18 01:58:22.221[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : SELECT @@character_set_database
+ 
+[35m2023-02-18 01:58:26.539[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+[35m2023-02-18 01:58:26.584[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+[35m2023-02-18 02:01:00.970[0;39m [34m[http-nio-8080-exec-2][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+[35m2023-02-18 02:01:00.982[0;39m [34m[http-nio-8080-exec-2][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|member_idx |belong |content |created_at |nickname |profile_email |profile_url |social_email |status |uni_email |updated_at |
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+ 
+[35m2023-02-18 02:01:00.985[0;39m [34m[http-nio-8080-exec-2][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.uni_email='tjrcjs0705@gachon.ac.kr'
+ 
+[35m2023-02-18 02:01:00.988[0;39m [34m[http-nio-8080-exec-2][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|member_idx |belong |content |created_at |nickname |profile_email |profile_url |social_email |status |uni_email |updated_at |
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+ 
+[35m2023-02-18 02:01:01.083[0;39m [34m[http-nio-8080-exec-2][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : insert into Member (created_at, nickname, profile_email, social_email, status, uni_email, updated_at) values ('02/18/2023 02:01:01.032', '로로니니', 'tjrcjs0705@naver.com', 'tjrcjs0705@naver.com', 'ACTIVE', 'tjrcjs0705@gachon.ac.kr', '02/18/2023 02:01:01.032')
+ 
+[35m2023-02-18 02:01:01.107[0;39m [34m[http-nio-8080-exec-2][0;39m [31mERROR[0;39m [36m[sqlonly:144][0;39m : 1. PreparedStatement.executeUpdate() insert into Member (created_at, nickname, profile_email, social_email, status, uni_email, updated_at) values ('02/18/2023 02:01:01.032', '로로니니', 'tjrcjs0705@naver.com', 'tjrcjs0705@naver.com', 'ACTIVE', 'tjrcjs0705@gachon.ac.kr', '02/18/2023 02:01:01.032')
+ 
+java.sql.SQLException: Field 'content' doesn't have a default value
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:129)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994)
+	at net.sf.log4jdbc.sql.jdbcapi.PreparedStatementSpy.executeUpdate(PreparedStatementSpy.java:1080)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.dialect.identity.GetGeneratedKeysDelegate.executeAndExtract(GetGeneratedKeysDelegate.java:57)
+	at org.hibernate.id.insert.AbstractReturningDelegate.performInsert(AbstractReturningDelegate.java:42)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:3327)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:3958)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:80)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:653)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:283)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:264)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:340)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:286)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:192)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:122)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:184)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:129)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:53)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:107)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:737)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:721)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:360)
+	at jdk.proxy2/jdk.proxy2.$Proxy155.persist(Unknown Source)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:307)
+	at jdk.proxy2/jdk.proxy2.$Proxy155.persist(Unknown Source)
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:610)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:288)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:136)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:120)
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:516)
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:628)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:168)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:143)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:77)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:163)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:218)
+	at jdk.proxy2/jdk.proxy2.$Proxy171.save(Unknown Source)
+	at com.garamgaebi.GaramgaebiServer.domain.member.service.MemberService.postMember(MemberService.java:69)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:703)
+	at com.garamgaebi.GaramgaebiServer.domain.member.service.MemberService$$SpringCGLIB$$0.postMember(<generated>)
+	at com.garamgaebi.GaramgaebiServer.domain.member.controller.MemberController.postMember(MemberController.java:22)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+	at com.garamgaebi.GaramgaebiServer.global.util.logger.RequestLogger.doLogging(RequestLogger.java:51)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:633)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:623)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:173)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:703)
+	at com.garamgaebi.GaramgaebiServer.domain.member.controller.MemberController$$SpringCGLIB$$0.postMember(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1080)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:973)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1010)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:913)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:884)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:814)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:223)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.garamgaebi.GaramgaebiServer.global.security.JwtAuthenticationFilter.doFilter(JwtAuthenticationFilter.java:53)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:351)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:119)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:400)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:859)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1734)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+[35m2023-02-18 02:03:47.318[0;39m [34m[http-nio-8080-exec-5][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+[35m2023-02-18 02:03:47.321[0;39m [34m[http-nio-8080-exec-5][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|member_idx |belong |content |created_at |nickname |profile_email |profile_url |social_email |status |uni_email |updated_at |
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+ 
+[35m2023-02-18 02:03:47.323[0;39m [34m[http-nio-8080-exec-5][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.uni_email='tjrcjs0705@gachon.ac.kr'
+ 
+[35m2023-02-18 02:03:47.330[0;39m [34m[http-nio-8080-exec-5][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|member_idx |belong |content |created_at |nickname |profile_email |profile_url |social_email |status |uni_email |updated_at |
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+ 
+[35m2023-02-18 02:03:47.333[0;39m [34m[http-nio-8080-exec-5][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : insert into Member (created_at, nickname, profile_email, social_email, status, uni_email, updated_at) values ('02/18/2023 02:03:47.332', '로로니니', 'tjrcjs0705@naver.com', 'tjrcjs0705@naver.com', 'ACTIVE', 'tjrcjs0705@gachon.ac.kr', '02/18/2023 02:03:47.332')
+ 
+[35m2023-02-18 02:03:47.334[0;39m [34m[http-nio-8080-exec-5][0;39m [31mERROR[0;39m [36m[sqlonly:144][0;39m : 1. PreparedStatement.executeUpdate() insert into Member (created_at, nickname, profile_email, social_email, status, uni_email, updated_at) values ('02/18/2023 02:03:47.332', '로로니니', 'tjrcjs0705@naver.com', 'tjrcjs0705@naver.com', 'ACTIVE', 'tjrcjs0705@gachon.ac.kr', '02/18/2023 02:03:47.332')
+ 
+java.sql.SQLException: Field 'password' doesn't have a default value
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:129)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1061)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdateInternal(ClientPreparedStatement.java:1009)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeLargeUpdate(ClientPreparedStatement.java:1320)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeUpdate(ClientPreparedStatement.java:994)
+	at net.sf.log4jdbc.sql.jdbcapi.PreparedStatementSpy.executeUpdate(PreparedStatementSpy.java:1080)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:197)
+	at org.hibernate.dialect.identity.GetGeneratedKeysDelegate.executeAndExtract(GetGeneratedKeysDelegate.java:57)
+	at org.hibernate.id.insert.AbstractReturningDelegate.performInsert(AbstractReturningDelegate.java:42)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:3327)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:3958)
+	at org.hibernate.action.internal.EntityIdentityInsertAction.execute(EntityIdentityInsertAction.java:80)
+	at org.hibernate.engine.spi.ActionQueue.execute(ActionQueue.java:653)
+	at org.hibernate.engine.spi.ActionQueue.addResolvedEntityInsertAction(ActionQueue.java:283)
+	at org.hibernate.engine.spi.ActionQueue.addInsertAction(ActionQueue.java:264)
+	at org.hibernate.engine.spi.ActionQueue.addAction(ActionQueue.java:322)
+	at org.hibernate.event.internal.AbstractSaveEventListener.addInsertAction(AbstractSaveEventListener.java:340)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSaveOrReplicate(AbstractSaveEventListener.java:286)
+	at org.hibernate.event.internal.AbstractSaveEventListener.performSave(AbstractSaveEventListener.java:192)
+	at org.hibernate.event.internal.AbstractSaveEventListener.saveWithGeneratedId(AbstractSaveEventListener.java:122)
+	at org.hibernate.event.internal.DefaultPersistEventListener.entityIsTransient(DefaultPersistEventListener.java:184)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:129)
+	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:53)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:107)
+	at org.hibernate.internal.SessionImpl.firePersist(SessionImpl.java:737)
+	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:721)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.orm.jpa.ExtendedEntityManagerCreator$ExtendedEntityManagerInvocationHandler.invoke(ExtendedEntityManagerCreator.java:360)
+	at jdk.proxy2/jdk.proxy2.$Proxy155.persist(Unknown Source)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:307)
+	at jdk.proxy2/jdk.proxy2.$Proxy155.persist(Unknown Source)
+	at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:610)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:288)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:136)
+	at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:120)
+	at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:516)
+	at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:285)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:628)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:168)
+	at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:143)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:77)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:137)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:163)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:218)
+	at jdk.proxy2/jdk.proxy2.$Proxy171.save(Unknown Source)
+	at com.garamgaebi.GaramgaebiServer.domain.member.service.MemberService.postMember(MemberService.java:69)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:703)
+	at com.garamgaebi.GaramgaebiServer.domain.member.service.MemberService$$SpringCGLIB$$0.postMember(<generated>)
+	at com.garamgaebi.GaramgaebiServer.domain.member.controller.MemberController.postMember(MemberController.java:22)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.aspectj.MethodInvocationProceedingJoinPoint.proceed(MethodInvocationProceedingJoinPoint.java:89)
+	at com.garamgaebi.GaramgaebiServer.global.util.logger.RequestLogger.doLogging(RequestLogger.java:51)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethodWithGivenArgs(AbstractAspectJAdvice.java:633)
+	at org.springframework.aop.aspectj.AbstractAspectJAdvice.invokeAdviceMethod(AbstractAspectJAdvice.java:623)
+	at org.springframework.aop.aspectj.AspectJAroundAdvice.invoke(AspectJAroundAdvice.java:71)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:173)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:703)
+	at com.garamgaebi.GaramgaebiServer.domain.member.controller.MemberController$$SpringCGLIB$$0.postMember(<generated>)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:117)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1080)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:973)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1010)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:913)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:731)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:884)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:814)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:223)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at com.garamgaebi.GaramgaebiServer.global.security.JwtAuthenticationFilter.doFilter(JwtAuthenticationFilter.java:53)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:351)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:267)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:185)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:158)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:177)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:97)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:542)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:119)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:78)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:357)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:400)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:859)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1734)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+[35m2023-02-18 02:04:22.439[0;39m [34m[http-nio-8080-exec-6][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+[35m2023-02-18 02:04:22.443[0;39m [34m[http-nio-8080-exec-6][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|member_idx |belong |content |created_at |nickname |profile_email |profile_url |social_email |status |uni_email |updated_at |
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+ 
+[35m2023-02-18 02:04:22.447[0;39m [34m[http-nio-8080-exec-6][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.uni_email='tjrcjs0705@gachon.ac.kr'
+ 
+[35m2023-02-18 02:04:22.449[0;39m [34m[http-nio-8080-exec-6][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|member_idx |belong |content |created_at |nickname |profile_email |profile_url |social_email |status |uni_email |updated_at |
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+ 
+[35m2023-02-18 02:04:22.451[0;39m [34m[http-nio-8080-exec-6][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : insert into Member (created_at, nickname, profile_email, social_email, status, uni_email, updated_at) values ('02/18/2023 02:04:22.450', '로로니니', 'tjrcjs0705@naver.com', 'tjrcjs0705@naver.com', 'ACTIVE', 'tjrcjs0705@gachon.ac.kr', '02/18/2023 02:04:22.450')
+ 
+[35m2023-02-18 02:04:22.465[0;39m [34m[http-nio-8080-exec-6][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|--------------|
+|generated_key |
+|--------------|
+|3             |
+|--------------|
+ 
+[35m2023-02-18 02:04:22.479[0;39m [34m[http-nio-8080-exec-6][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : insert into Member_roles (member_member_idx, roles) values (3, 'USER')
+ 
+[35m2023-02-18 02:04:22.485[0;39m [34m[http-nio-8080-exec-6][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|--------------|
+|generated_key |
+|--------------|
+|2             |
+|--------------|
+ 
+[35m2023-02-18 02:06:03.556[0;39m [34m[http-nio-8080-exec-9][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@gachon.ac.kr'
+ 
+[35m2023-02-18 02:06:03.560[0;39m [34m[http-nio-8080-exec-9][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|member_idx |belong |content |created_at |nickname |profile_email |profile_url |social_email |status |uni_email |updated_at |
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+|-----------|-------|--------|-----------|---------|--------------|------------|-------------|-------|----------|-----------|
+ 
+[35m2023-02-18 02:06:26.280[0;39m [34m[http-nio-8080-exec-10][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+[35m2023-02-18 02:06:26.294[0;39m [34m[http-nio-8080-exec-10][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+ 
+[35m2023-02-18 02:06:26.315[0;39m [34m[http-nio-8080-exec-10][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select r1_0.Member_member_idx,r1_0.roles from Member_roles r1_0 where r1_0.Member_member_idx=3
+ 
+[35m2023-02-18 02:06:26.320[0;39m [34m[http-nio-8080-exec-10][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------------|------|
+|member_member_idx |roles |
+|------------------|------|
+|3                 |USER  |
+|------------------|------|
+ 
+[35m2023-02-18 02:06:26.425[0;39m [34m[http-nio-8080-exec-10][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+[35m2023-02-18 02:06:26.430[0;39m [34m[http-nio-8080-exec-10][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+ 
+2023-02-18 02:14:10.144 [main] INFO  [sqlonly:228] : SELECT @@character_set_database
+ 
+2023-02-18 02:14:14.723 [main] INFO  [sqlonly:228] : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+2023-02-18 02:14:14.766 [main] INFO  [resultsettable:610] : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+2023-02-18 02:15:32.283 [main] INFO  [sqlonly:228] : SELECT @@character_set_database
+ 
+2023-02-18 02:15:37.205 [main] INFO  [sqlonly:228] : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+2023-02-18 02:15:37.236 [main] INFO  [resultsettable:610] : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+2023-02-18 02:16:19.904 [main] INFO  [sqlonly:228] : SELECT @@character_set_database
+ 
+2023-02-18 02:16:24.120 [main] INFO  [sqlonly:228] : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+2023-02-18 02:16:24.141 [main] INFO  [resultsettable:610] : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+2023-02-18 02:17:17.755 [main] INFO  [sqlonly:228] : SELECT @@character_set_database
+ 
+2023-02-18 02:17:21.842 [main] INFO  [sqlonly:228] : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+2023-02-18 02:17:21.876 [main] INFO  [resultsettable:610] : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+2023-02-18 02:17:34.774 [main] INFO  [sqlonly:228] : SELECT @@character_set_database
+ 
+2023-02-18 02:17:39.251 [main] INFO  [sqlonly:228] : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+2023-02-18 02:17:39.284 [main] INFO  [resultsettable:610] : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+2023-02-18 02:20:03.406 [main] INFO  [sqlonly:228] : SELECT @@character_set_database
+ 
+2023-02-18 02:20:08.111 [main] INFO  [sqlonly:228] : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+2023-02-18 02:20:08.146 [main] INFO  [resultsettable:610] : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+2023-02-18 02:32:23.553 [main] INFO  [sqlonly:228] : SELECT @@character_set_database
+ 
+2023-02-18 02:32:28.012 [main] INFO  [sqlonly:228] : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+2023-02-18 02:32:28.044 [main] INFO  [resultsettable:610] : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+[35m2023-02-18 02:33:00.239[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : SELECT @@character_set_database
+ 
+[35m2023-02-18 02:33:03.578[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+[35m2023-02-18 02:33:03.598[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+2023-02-18 02:36:07.693 [main] INFO  [sqlonly:228] : SELECT @@character_set_database
+ 
+2023-02-18 02:36:12.090 [main] INFO  [sqlonly:228] : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+2023-02-18 02:36:12.123 [main] INFO  [resultsettable:610] : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+2023-02-18 02:36:15.655 [main] INFO  [sqlonly:228] : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+2023-02-18 02:36:15.693 [main] INFO  [resultsettable:610] : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+ 
+2023-02-18 02:36:15.701 [main] INFO  [sqlonly:228] : select r1_0.Member_member_idx,r1_0.roles from Member_roles r1_0 where r1_0.Member_member_idx=3
+ 
+2023-02-18 02:36:15.712 [main] INFO  [resultsettable:610] : 
+|------------------|------|
+|member_member_idx |roles |
+|------------------|------|
+|3                 |USER  |
+|------------------|------|
+ 
+2023-02-18 02:36:15.812 [main] INFO  [sqlonly:228] : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+2023-02-18 02:36:15.815 [main] INFO  [resultsettable:610] : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+ 
+2023-02-18 02:53:15.833 [main] INFO  [sqlonly:228] : SELECT @@character_set_database
+ 
+2023-02-18 02:53:20.784 [main] INFO  [sqlonly:228] : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+2023-02-18 02:53:20.816 [main] INFO  [resultsettable:610] : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+2023-02-18 02:53:24.562 [main] INFO  [sqlonly:228] : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+2023-02-18 02:53:24.573 [main] INFO  [resultsettable:610] : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+ 
+2023-02-18 02:53:24.581 [main] INFO  [sqlonly:228] : select r1_0.Member_member_idx,r1_0.roles from Member_roles r1_0 where r1_0.Member_member_idx=3
+ 
+2023-02-18 02:53:24.586 [main] INFO  [resultsettable:610] : 
+|------------------|------|
+|member_member_idx |roles |
+|------------------|------|
+|3                 |USER  |
+|------------------|------|
+ 
+2023-02-18 02:53:24.683 [main] INFO  [sqlonly:228] : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+2023-02-18 02:53:24.686 [main] INFO  [resultsettable:610] : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+ 
+[35m2023-02-18 02:58:09.302[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : SELECT @@character_set_database
+ 
+[35m2023-02-18 02:58:12.761[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+[35m2023-02-18 02:58:12.785[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+[35m2023-02-18 02:58:33.862[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+[35m2023-02-18 02:58:33.869[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+ 
+[35m2023-02-18 02:58:33.877[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select r1_0.Member_member_idx,r1_0.roles from Member_roles r1_0 where r1_0.Member_member_idx=3
+ 
+[35m2023-02-18 02:58:33.881[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------------|------|
+|member_member_idx |roles |
+|------------------|------|
+|3                 |USER  |
+|------------------|------|
+ 
+[35m2023-02-18 02:58:33.983[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 where m1_0.social_email='tjrcjs0705@naver.com'
+ 
+[35m2023-02-18 02:58:33.986[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|---------------------|-------|------------------------|----------------------|
+ 
+[35m2023-02-18 03:02:09.285[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : SELECT @@character_set_database
+ 
+[35m2023-02-18 03:02:12.741[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+[35m2023-02-18 03:02:12.764[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+[35m2023-02-18 03:06:01.381[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : SELECT @@character_set_database
+ 
+[35m2023-02-18 03:06:05.111[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+[35m2023-02-18 03:06:05.135[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+[35m2023-02-18 03:06:13.239[0;39m [34m[http-nio-8080-exec-3][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,r1_0.Member_member_idx,r1_0.roles,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 left join Member_roles r1_0 on m1_0.member_idx=r1_0.Member_member_idx where m1_0.member_idx=3
+ 
+[35m2023-02-18 03:06:13.254[0;39m [34m[http-nio-8080-exec-3][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|------------------|------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |member_member_idx |roles |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|------------------|------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |3                 |USER  |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|------------------|------|---------------------|-------|------------------------|----------------------|
+ 
+[35m2023-02-18 03:06:13.257[0;39m [34m[http-nio-8080-exec-3][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.program_idx=3
+ 
+[35m2023-02-18 03:06:13.260[0;39m [34m[http-nio-8080-exec-3][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------|----------------------|----|---------|-------------|---------------|--------|
+|program_idx |date                  |fee |location |program_type |status         |title   |
+|------------|----------------------|----|---------|-------------|---------------|--------|
+|3           |2023-02-14 19:56:00.0 |0   |가천관      |SEMINAR      |CLOSED_CONFIRM |무료 세미나1 |
+|------------|----------------------|----|---------|-------------|---------------|--------|
+ 
+[35m2023-02-18 03:07:05.138[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : SELECT @@character_set_database
+ 
+[35m2023-02-18 03:07:08.542[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.status='OPEN'
+ 
+[35m2023-02-18 03:07:08.575[0;39m [34m[main][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------|----------------------|------|---------|-------------|-------|--------|
+|program_idx |date                  |fee   |location |program_type |status |title   |
+|------------|----------------------|------|---------|-------------|-------|--------|
+|1           |2023-03-25 09:00:00.0 |10000 |가천관      |SEMINAR      |OPEN   |유료 세미나1 |
+|------------|----------------------|------|---------|-------------|-------|--------|
+ 
+[35m2023-02-18 03:07:20.890[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select m1_0.member_idx,m1_0.belong,m1_0.content,m1_0.created_at,m1_0.nickname,m1_0.profile_email,m1_0.profile_url,r1_0.Member_member_idx,r1_0.roles,m1_0.social_email,m1_0.status,m1_0.uni_email,m1_0.updated_at from Member m1_0 left join Member_roles r1_0 on m1_0.member_idx=r1_0.Member_member_idx where m1_0.member_idx=3
+ 
+[35m2023-02-18 03:07:20.899[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|-----------|-------|--------|----------------------|---------|---------------------|------------|------------------|------|---------------------|-------|------------------------|----------------------|
+|member_idx |belong |content |created_at            |nickname |profile_email        |profile_url |member_member_idx |roles |social_email         |status |uni_email               |updated_at            |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|------------------|------|---------------------|-------|------------------------|----------------------|
+|3          |null   |null    |2023-02-18 02:04:22.0 |로로니니     |tjrcjs0705@naver.com |null        |3                 |USER  |tjrcjs0705@naver.com |ACTIVE |tjrcjs0705@gachon.ac.kr |2023-02-18 02:04:22.0 |
+|-----------|-------|--------|----------------------|---------|---------------------|------------|------------------|------|---------------------|-------|------------------------|----------------------|
+ 
+[35m2023-02-18 03:07:20.901[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select p1_0.program_idx,p1_0.date,p1_0.fee,p1_0.location,p1_0.program_type,p1_0.status,p1_0.title from Program p1_0 where p1_0.program_idx=15
+ 
+[35m2023-02-18 03:07:20.904[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------|----------------------|----|---------|-------------|---------------|-------------|
+|program_idx |date                  |fee |location |program_type |status         |title        |
+|------------|----------------------|----|---------|-------------|---------------|-------------|
+|15          |2023-02-18 17:20:00.0 |0   |가천관      |NETWORKING   |CLOSED_CONFIRM |등록 네트워킹(수정)3 |
+|------------|----------------------|----|---------|-------------|---------------|-------------|
+ 
+[35m2023-02-18 03:07:20.922[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[sqlonly:228][0;39m : select a1_0.program_idx,a1_0.apply_idx,a1_0.account,a1_0.bank,a1_0.created_at,a1_0.member_idx,a1_0.name,a1_0.nickname,a1_0.phone,a1_0.status,a1_0.updated_at from Apply a1_0 where a1_0.program_idx=15
+ 
+[35m2023-02-18 03:07:20.986[0;39m [34m[http-nio-8080-exec-1][0;39m [32mINFO [0;39m [36m[resultsettable:610][0;39m : 
+|------------|----------|--------|-----|----------------------|-----------|-----|---------|--------------|--------------|----------------------|
+|program_idx |apply_idx |account |bank |created_at            |member_idx |name |nickname |phone         |status        |updated_at            |
+|------------|----------|--------|-----|----------------------|-----------|-----|---------|--------------|--------------|----------------------|
+|15          |5         |null    |null |2023-02-11 16:57:14.0 |1          |name |nickname |010-0000-0000 |APPLY_CONFIRM |2023-02-11 16:57:14.0 |
+|------------|----------|--------|-----|----------------------|-----------|-----|---------|--------------|--------------|----------------------|
+ 

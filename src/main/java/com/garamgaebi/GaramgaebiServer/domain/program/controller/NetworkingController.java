@@ -5,6 +5,7 @@ import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramInfoDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.NetworkingService;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
+import com.garamgaebi.GaramgaebiServer.global.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,6 +24,7 @@ import java.util.List;
 public class NetworkingController {
 
     private final NetworkingService networkingService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // 이번 달 네트워킹
 
@@ -75,6 +77,9 @@ public class NetworkingController {
     })
     @GetMapping("/{networking-idx}/info")
     public BaseResponse<ProgramInfoDto> getNetworkingDetailInfo(@PathVariable(name = "networking-idx") Long networkingIdx, @RequestParam("member-idx") Long memberIdx) {
+        if(jwtTokenProvider.getMemberIdx() != memberIdx) {
+            // 접근 권한 없는 리소스 에러
+        }
 
         return new BaseResponse<>(networkingService.findNetworkingDetails(networkingIdx, memberIdx));
     }
@@ -89,6 +94,9 @@ public class NetworkingController {
     })
     @GetMapping("/{networking-idx}/participants")
     public BaseResponse<GetParticipantsRes> getNetworkingParticipantList(@PathVariable(name = "networking-idx") Long networkingIdx, @RequestParam("member-idx") Long memberIdx) {
+        if(jwtTokenProvider.getMemberIdx() != memberIdx) {
+            // 접근 권한 없는 리소스 에러
+        }
 
         return new BaseResponse<>(networkingService.findNetworkingParticipantsList(networkingIdx, memberIdx));
     }
