@@ -119,6 +119,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
         }
     }
 
+
     // == 연관관계 메서드 -- //
     public void addEducation(Education education) {
         this.educations.add(education);
