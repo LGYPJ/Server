@@ -33,7 +33,7 @@ public class BaseResponse<T> {
     @Schema(description = "응답 메세지")
     private final String message;
     @Schema(description = "응답 결과")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    //@JsonInclude(JsonInclude.Include.NON_NULL)
     private T result;
 
     public BaseResponse(ErrorCode errorCode) {
@@ -46,7 +46,6 @@ public class BaseResponse<T> {
         this.isSuccess = true;
         this.message = "요청에 성공하였습니다.";
         this.code = 200;
-        if(result == null) this.result = (T)new HashMap<String, String>();
-        else this.result = result;
+        this.result = result;
     }
 }

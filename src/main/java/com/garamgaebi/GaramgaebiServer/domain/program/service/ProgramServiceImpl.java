@@ -11,6 +11,7 @@ import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramReposito
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ProgramServiceImpl implements ProgramService {
 
@@ -33,6 +35,7 @@ public class ProgramServiceImpl implements ProgramService {
         Optional<Member> member = memberRepository.findById(memberIdx);
 
         if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
@@ -54,6 +57,7 @@ public class ProgramServiceImpl implements ProgramService {
         Optional<Member> member = memberRepository.findById(memberIdx);
 
         if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
             throw new RestApiException(ErrorCode.NOT_FOUND);
         }
 
@@ -68,12 +72,13 @@ public class ProgramServiceImpl implements ProgramService {
     }
 
     @Transactional
+    @Override
     public void closeProgram(Long programIdx) {
 
         Optional<Program> programWrapper = programRepository.findById(programIdx);
 
         if(programWrapper.isEmpty()) {
-            // 프로그램 없음 로그 찍기
+            log.info("PROGRAM NOT EXIST : {}", programIdx);
             return;
         }
 
