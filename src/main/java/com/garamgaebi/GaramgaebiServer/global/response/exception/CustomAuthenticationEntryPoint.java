@@ -34,7 +34,13 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             ErrorCode errorCode
     ){
         ObjectMapper objectMapper = new ObjectMapper();
-        response.setStatus(HttpStatus.OK.value());
+        // http header status code 바꾸려면 아래 수정
+        if(errorCode == ErrorCode.EXPIRED_JWT_TOKEN) {
+            response.setStatus(errorCode.getCode());
+        }
+        else {
+            response.setStatus(HttpStatus.OK.value());
+        }
         response.setCharacterEncoding("UTF-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         BaseResponse errorResponse = new BaseResponse(errorCode);

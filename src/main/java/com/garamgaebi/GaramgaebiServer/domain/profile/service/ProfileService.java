@@ -355,6 +355,7 @@ public class ProfileService {
                     profileUrl = s3Uploader.upload(multipartFile, fileName, "profile");
                     member.setProfileUrl(profileUrl);
                 } catch (Exception e) {
+                    // 이미지 업로드 실패 에러 로그
                     throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
                 }
             }
