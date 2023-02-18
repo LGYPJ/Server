@@ -226,11 +226,14 @@ public class ProfileService {
         res.setMemberIdx(memberIdx);
         res.setNickName(member.getNickname());
         res.setProfileEmail(member.getProfileEmail());
+        /*
         if (member.getBelong() == null) {
             findCareerOrEducation(memberIdx, res, member);
         } else {
             res.setBelong(member.getBelong());
         }
+         */
+        res.setBelong(member.getBelong());
         res.setContent(member.getContent());
         res.setProfileUrl(member.getProfileUrl());
         return res;
