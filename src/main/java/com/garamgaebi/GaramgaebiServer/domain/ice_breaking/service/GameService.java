@@ -139,6 +139,10 @@ public class GameService {
         ProgramGameroom room = programGameroomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 
+        if (room.getCurrentImgIdx() == 29) {
+            room.initCurrentImgIdx();
+        }
+
         room.increaseCurrentImgIdx();
 
         return "current image index 증가가 완료되었습니다.";
