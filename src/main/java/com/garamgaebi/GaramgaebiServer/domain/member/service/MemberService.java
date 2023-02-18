@@ -122,7 +122,7 @@ public class MemberService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // 3. 인증 정보를 기반으로 JWT Token 생성
-        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication, memberIdx);
         tokenInfo.setMemberIdx(memberIdx);
 
         // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)

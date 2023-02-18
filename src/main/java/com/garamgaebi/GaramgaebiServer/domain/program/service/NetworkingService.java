@@ -1,6 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.GetParticipantsRes;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramInfoDto;
 
 import java.util.List;
 

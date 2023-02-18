@@ -1,13 +1,15 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.controller;
 
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.*;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.GetParticipantsRes;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.PresentationDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramInfoDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.service.SeminarService;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,16 +1,14 @@
-package com.garamgaebi.GaramgaebiServer.domain.program.dto;
+package com.garamgaebi.GaramgaebiServer.domain.program.dto.response;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Schema(description = "프로그램 신청자 정보 응답 DTO")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter @Setter
+@Builder
 public class ParticipantDto {
     @Schema(description = "멤버 idx")
     private Long memberIdx;
