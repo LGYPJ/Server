@@ -7,11 +7,14 @@ import com.garamgaebi.GaramgaebiServer.admin.applicant.dto.PostUpdateApplicantRe
 import com.garamgaebi.GaramgaebiServer.admin.applicant.repository.AdminApplicantRepository;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Apply;
 import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyConfirmEvent;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.NonDepositCancelEvent;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.RefundEvent;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,7 @@ import static com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCod
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class AdminApplicantService {
     private final AdminApplicantRepository repository;
 
@@ -40,6 +44,7 @@ public class AdminApplicantService {
     public GetFindAllApplicantRes findAllApplicant(long programIdx) {
         Program program = repository.findProgram(programIdx);
         if (program == null) {
+            log.info("Program NOT EXIST : {}", programIdx);
             throw new RestApiException(NOT_EXIST_SEMINAR);
         }
         GetFindAllApplicantRes res = new GetFindAllApplicantRes();
@@ -97,6 +102,11 @@ public class AdminApplicantService {
     public Boolean updateApplicant(PostUpdateApplicantReq req) {
         //true(체크) -> false(체크안함) // 상태 APPLY 로 바꿈
         //false(체크안함) -> true(체크) // 상태 CANCEL 로 바꿈
+        Program programCheck = repository.findProgram(req.getProgramIdx());
+        if (programCheck == null) {
+            log.info("Program NOT EXIST : {}", req.getProgramIdx());
+            throw new RestApiException(NOT_EXIST_SEMINAR);
+        }
 
         List<Apply> applyConfirm = new ArrayList<Apply>();
         List<Apply> nonDeposit = new ArrayList<Apply>();
