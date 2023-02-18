@@ -143,9 +143,9 @@ public class GameService {
         if (room.getCurrentImgIdx() >= 29) {
             room.initCurrentImgIdx();
             System.out.println("초기화 후 " + room.getCurrentImgIdx());
+        } else {
+            room.increaseCurrentImgIdx();
         }
-
-        room.increaseCurrentImgIdx();
 
         return "current image index 증가가 완료되었습니다.";
     }
