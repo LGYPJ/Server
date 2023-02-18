@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.notification.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.entity.MemberNotification;
+import com.garamgaebi.GaramgaebiServer.domain.entity.Notification;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationDto;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,34 +27,25 @@ import java.util.Optional;
 public class NotificationServiceImpl implements NotificationService {
 
     private final MemberRepository memberRepository;
-    private final NotificationRepository notificationRepository;
     private final MemberNotificationRepository memberNotificationRepository;
+
+    private final NotificationRepository notificationRepository;
 
     @Override
     @Transactional
     public GetNotificationResDto getMemberNotificationList(Long memberIdx, Long lastNotificationIdx) {
 
-        Optional<Member> member = memberRepository.findById(memberIdx);
-
-        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
-            log.info("MEMBER NOT EXIST : {}", memberIdx);
-            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
-        }
+        Member member = validMember(memberIdx);
 
         Slice<MemberNotification> memberNotifications = new SliceImpl<MemberNotification>(new ArrayList<>());
 
         if(lastNotificationIdx == null) {
-            memberNotifications = memberNotificationRepository.findByMemberOrderByIdxDesc(member.get(), PageRequest.of(0, 10));
+            memberNotifications = memberNotificationRepository.findByMemberOrderByIdxDesc(member, PageRequest.of(0, 10));
         }
         else {
-            Optional<MemberNotification> lastMemberNotification = memberNotificationRepository.findById(lastNotificationIdx);
+            MemberNotification lastMemberNotification = memberNotificationRepository.findById(lastNotificationIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
 
-            if(lastMemberNotification.isEmpty()) {
-                log.info("NOTIFICATION NOT EXIST : {}", lastNotificationIdx);
-                throw new RestApiException(ErrorCode.INTERNAL_SERVER_ERROR);
-            }
-
-            memberNotifications = memberNotificationRepository.findByIdxLessThanAndMemberOrderByIdxDesc(lastNotificationIdx, member.get(), PageRequest.of(0, 10));
+            memberNotifications = memberNotificationRepository.findByIdxLessThanAndMemberOrderByIdxDesc(lastNotificationIdx, member, PageRequest.of(0, 10));
         }
 
         List<GetNotificationDto> getNotificationDtos = new ArrayList<GetNotificationDto>();
@@ -67,25 +58,62 @@ public class NotificationServiceImpl implements NotificationService {
                             .notificationType(memberNotification.getNotification().getNotificationType())
                             .resourceIdx(memberNotification.getNotification().getResourceIdx())
                             .resourceType(memberNotification.getNotification().getResourceType())
-                            .isRead(memberNotification.getIsRead()).build());
+                            .isRead(memberNotification.getIsRead())
+                    .build());
 
             memberNotification.read();
             memberNotificationRepository.save(memberNotification);
         }
 
-        return new GetNotificationResDto(getNotificationDtos, memberNotifications.hasNext());
+        return GetNotificationResDto.builder()
+                .result(getNotificationDtos)
+                .hasNext(memberNotifications.hasNext())
+                .build();
+
     }
+
 
     @Override
     @Transactional
     public Boolean isMemberNotificationExist(Long memberIdx) {
-        Optional<Member> member = memberRepository.findById(memberIdx);
+        Member member = validMember(memberIdx);
 
-        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
-            log.info("MEMBER NOT EXIST : {}", memberIdx);
-            throw new RestApiException(ErrorCode.NOT_EXIST_MEMBER);
+        return memberNotificationRepository.existsByMemberAndIsReadFalse(member);
+    }
+
+    @Override
+    @Transactional
+    public void addNotification(Notification notification, List<Member> members) {
+        // MemberNotification 추가
+        for(Member member : members) {
+            MemberNotification memberNotification = new MemberNotification();
+            memberNotification.setMember(member);
+            memberNotification.setNotification(notification);
         }
 
-        return memberNotificationRepository.existsByMemberAndIsReadFalse(member.get());
+        // 리스트 저장
+        notificationRepository.save(notification);
+    }
+
+    @Override
+    @Transactional
+    public void addNotification(Notification notification, Member member) {
+        MemberNotification memberNotification = new MemberNotification();
+        memberNotification.setMember(member);
+        memberNotification.setNotification(notification);
+
+        // 리스트 저장
+        notificationRepository.save(notification);
+    }
+
+    private Member validMember(Long memberIdx) {
+        Member member = memberRepository.findById(memberIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        return member;
     }
 }

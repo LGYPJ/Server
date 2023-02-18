@@ -1,5 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.sender;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.entity.MemberFcm;
+import com.garamgaebi.GaramgaebiServer.domain.entity.Notification;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -46,9 +49,60 @@ public class NotificationSenderImpl implements NotificationSender {
         }
     }
 
-    // 알림 보내기
+    // 여러 멤버 알림 발송
     @Override
-    public void sendByTokenList(List<String> tokenList, NotificationDto notificationDto) {
+    public void sendNotification(Notification notification, List<Member> members) {
+        // 알림 메세지 DTO 빌드
+        NotificationDto notificationDto = new NotificationDto(
+                notification.getNotificationType(),
+                notification.getContent(),
+                notification.getResourceIdx(),
+                notification.getResourceType()
+        );
+
+        // 해당 유저의 fcm Token list로 알림 전달
+        List<String> fcmTokenList = new ArrayList<>();
+
+        // fcm 토큰 리스트 추가
+        for(Member member : members) {
+            for (MemberFcm memberFcm : member.getMemberFcms()) {
+                fcmTokenList.add(memberFcm.getFcmToken());
+            }
+        }
+
+        // 알림 발송
+        if(fcmTokenList.size() != 0) {
+            sendByTokenList(fcmTokenList, notificationDto);
+        }
+    }
+
+    // 한 멤버 알림 발송
+    @Override
+    public void sendNotification(Notification notification, Member member) {
+        // 알림 메세지 DTO 빌드
+        NotificationDto notificationDto = new NotificationDto(
+                notification.getNotificationType(),
+                notification.getContent(),
+                notification.getResourceIdx(),
+                notification.getResourceType()
+        );
+
+        // 해당 유저의 fcm Token list로 알림 전달
+        List<String> fcmTokenList = new ArrayList<>();
+
+        // fcm 토큰 리스트 추가
+        for (MemberFcm memberFcm : member.getMemberFcms()) {
+            fcmTokenList.add(memberFcm.getFcmToken());
+        }
+
+        // 알림 발송
+        if(fcmTokenList.size() != 0) {
+            sendByTokenList(fcmTokenList, notificationDto);
+        }
+    }
+
+    // 알림 보내기
+    private void sendByTokenList(List<String> tokenList, NotificationDto notificationDto) {
 
         List<Message> messages = tokenList.stream().map(token -> Message.builder()
                 .putData("notificationType", notificationDto.getNotificationType().toString())

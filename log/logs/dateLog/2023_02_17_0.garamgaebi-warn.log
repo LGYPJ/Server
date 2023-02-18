@@ -1,3 +1,0 @@
-[35m2023-02-17 22:51:20.444[0;39m [34m[main][0;39m [33mWARN [0;39m [36m[DriverDataSource:70][0;39m : Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation. 
-[35m2023-02-17 22:51:20.922[0;39m [34m[main][0;39m [33mWARN [0;39m [36m[deprecation:626][0;39m : HHH90000021: Encountered deprecated setting [javax.persistence.sharedCache.mode], use [jakarta.persistence.sharedCache.mode] instead 
-[35m2023-02-17 22:51:22.688[0;39m [34m[main][0;39m [33mWARN [0;39m [36m[JpaBaseConfiguration$JpaWebConfiguration:227][0;39m : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning 

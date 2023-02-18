@@ -6,7 +6,7 @@ import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramPayStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
-import com.garamgaebi.GaramgaebiServer.domain.program.dto.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
@@ -32,14 +32,9 @@ public class ProgramServiceImpl implements ProgramService {
     @Transactional(readOnly = true)
     public List<ProgramDto> findMemberReadyProgramList(Long memberIdx) {
 
-        Optional<Member> member = memberRepository.findById(memberIdx);
+        Member member = validMember(memberIdx);
 
-        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
-            log.info("MEMBER NOT EXIST : {}", memberIdx);
-            throw new RestApiException(ErrorCode.NOT_FOUND);
-        }
-
-        List<Program> programs = programRepository.findMemberReadyPrograms(member.get());
+        List<Program> programs = programRepository.findMemberReadyPrograms(member);
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         for(Program program : programs) {
@@ -54,14 +49,9 @@ public class ProgramServiceImpl implements ProgramService {
     @Transactional(readOnly = true)
     public List<ProgramDto> findMemberClosedProgramList(Long memberIdx) {
 
-        Optional<Member> member = memberRepository.findById(memberIdx);
+        Member member = validMember(memberIdx);
 
-        if(member.isEmpty() || member.get().getStatus() == MemberStatus.INACTIVE) {
-            log.info("MEMBER NOT EXIST : {}", memberIdx);
-            throw new RestApiException(ErrorCode.NOT_FOUND);
-        }
-
-        List<Program> programs = programRepository.findMemberClosedPrograms(member.get());
+        List<Program> programs = programRepository.findMemberClosedPrograms(member);
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
         for(Program program : programs) {
@@ -105,15 +95,27 @@ public class ProgramServiceImpl implements ProgramService {
     // programDto 빌더
     private ProgramDto programDtoBuilder(Program program) {
 
-        return new ProgramDto(
-                program.getIdx(),
-                program.getTitle(),
-                program.getDate(),
-                program.getLocation(),
-                program.getProgramType(),
-                program.getIsPay(),
-                program.getThisMonthStatus(),
-                program.isOpen()
-        );
+            return ProgramDto.builder()
+                .programIdx(program.getIdx())
+                .title(program.getTitle())
+                .date(program.getDate())
+                .location(program.getLocation())
+                .type(program.getProgramType())
+                .payment(program.getIsPay())
+                .status(program.getThisMonthStatus())
+                .isOpen(program.isOpen())
+                .build();
+    }
+
+    // member validation
+    private Member validMember(Long memberIdx) {
+        Member member = memberRepository.findById(memberIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if(member.getStatus() == MemberStatus.INACTIVE) {
+            log.info("MEMBER NOT EXIST : {}", memberIdx);
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
+
+        return member;
     }
 }
