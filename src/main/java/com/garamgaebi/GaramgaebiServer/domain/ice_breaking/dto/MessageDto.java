@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MessageDto {
     public enum MessageType {
-        ENTER, EXIT, TALK
+        ENTER, TALK, EXIT
     }
 
     private MessageType type; // message type

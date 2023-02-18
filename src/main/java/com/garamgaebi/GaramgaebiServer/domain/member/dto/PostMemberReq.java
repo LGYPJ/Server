@@ -26,7 +26,7 @@ public class PostMemberReq {
         this.status = status;
     }
 
-    public Member toEntity(String memberIdx) {
+    public Member toEntity() {
         return Member.builder()
                 .nickname(nickname)
                 .profileEmail(profileEmail)
@@ -36,7 +36,6 @@ public class PostMemberReq {
                 .profileUrl(null)
                 .belong(null)
                 .status(status)
-                .password(memberIdx)
                 .build();
     }
 }

@@ -92,7 +92,7 @@ public class GameService {
         ProgramGameroom room = programGameroomRepository.findByRoomId(memberRoomReq.getRoomId())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 
-        Optional<GameroomMember> member = gameRoomMemberRepository.findByMemberIdx(memberRoomReq.getMemberIdx());
+        Optional<GameroomMember> member = gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomReq.getRoomId(), memberRoomReq.getMemberIdx());
         if (!member.isEmpty()) {
             throw new RestApiException(ErrorCode.ALREADY_ENTER_GAME);
         }

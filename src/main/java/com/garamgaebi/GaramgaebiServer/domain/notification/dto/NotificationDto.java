@@ -3,16 +3,13 @@ package com.garamgaebi.GaramgaebiServer.domain.notification.dto;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.notification.NotificationType;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Schema(description = "알림 요청 DTO")
+@Schema(description = "푸쉬 알림 전송 DTO")
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
+@Builder
 public class NotificationDto {
     @Schema(description = "알림 종류")
     private NotificationType notificationType;

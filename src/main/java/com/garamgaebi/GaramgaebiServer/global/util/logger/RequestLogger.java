@@ -22,7 +22,7 @@ import java.util.Map;
 @Slf4j
 public class RequestLogger {
 
-    @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
+    @Pointcut("@within(org.springframework.web.bind.annotation.RequestMapping)")
     public void onRequest() {}
 
     @Around("com.garamgaebi.GaramgaebiServer.global.util.logger.RequestLogger.onRequest()")

@@ -8,6 +8,7 @@ import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.*;
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.sender.NotificationSender;
+import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +27,11 @@ import java.util.Optional;
 public class ApplyEventListenerImpl implements ApplyEventListener {
 
     private final NotificationSender notificationSender;
-    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
-    private final MemberRepository memberRepository;
-    private final ApplyRepository applyRepository;
 
     @Override
     @Async
-    @Transactional
     @EventListener
     public void handleApplyEvent(ApplyEvent applyEvent) {
 
@@ -50,40 +48,16 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
                 .resourceType(apply.getProgram().getProgramType())
                 .build();
 
+        // 알림 DB에 저장
+        notificationService.addNotification(notification, member);
 
-        // MemberNotification 추가
-        MemberNotification memberNotification = new MemberNotification();
-        memberNotification.setMember(member);
-        memberNotification.setNotification(notification);
-
-        // 리스트 저장
-        notificationRepository.save(notification);
-
-        NotificationDto notificationDto = new NotificationDto(
-                notification.getNotificationType(),
-                notification.getContent(),
-                notification.getResourceIdx(),
-                notification.getResourceType()
-        );
-
-        // 해당 유저의 fcm Token list로 알림 전달
-        List<String> fcmTokenList = new ArrayList<>();
-
-        // fcm 토큰 리스트 추가
-        for(MemberFcm memberFcm : member.getMemberFcms()) {
-            fcmTokenList.add(memberFcm.getFcmToken());
-        }
-
-        // 알림 발송
-        if(fcmTokenList.size() != 0) {
-            notificationSender.sendByTokenList(fcmTokenList, notificationDto);
-        }
+        // 알림 전송
+        notificationSender.sendNotification(notification, member);
 
     }
 
     @Override
     @Async
-    @Transactional
     @EventListener
     public void handleApplyCancelEvent(ApplyCancelEvent applyCancelEvent) {
 
@@ -100,38 +74,15 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
                 .resourceType(apply.getProgram().getProgramType())
                 .build();
 
-        // MemberNotification 추가
-        MemberNotification memberNotification = new MemberNotification();
-        memberNotification.setMember(member);
-        memberNotification.setNotification(notification);
+        // 알림 DB에 저장
+        notificationService.addNotification(notification, member);
 
-        // 리스트 저장
-        notificationRepository.save(notification);
-
-        NotificationDto notificationDto = new NotificationDto(
-                notification.getNotificationType(),
-                notification.getContent(),
-                notification.getResourceIdx(),
-                notification.getResourceType()
-        );
-
-        // 해당 유저의 fcm Token list로 알림 전달
-        List<String> fcmTokenList = new ArrayList<>();
-
-        // fcm 토큰 리스트 추가
-        for(MemberFcm memberFcm : member.getMemberFcms()) {
-            fcmTokenList.add(memberFcm.getFcmToken());
-        }
-
-        // 알림 발송
-        if(fcmTokenList.size() != 0) {
-            notificationSender.sendByTokenList(fcmTokenList, notificationDto);
-        }
+        // 알림 전송
+        notificationSender.sendNotification(notification, member);
     }
 
     @Override
     @Async
-    @Transactional
     @EventListener
     public void handleRefundEvent(RefundEvent refundEvent) {
         List<Apply> applies = refundEvent.getApplies();
@@ -153,42 +104,15 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
                 .resourceType(program.getProgramType())
                 .build();
 
-        // MemberNotification 추가
-        for(Member member : members) {
-            MemberNotification memberNotification = new MemberNotification();
-            memberNotification.setMember(member);
-            memberNotification.setNotification(notification);
-        }
+        // 알림 DB에 저장
+        notificationService.addNotification(notification, members);
 
-        // 리스트 저장
-        notificationRepository.save(notification);
-
-        NotificationDto notificationDto = new NotificationDto(
-                notification.getNotificationType(),
-                notification.getContent(),
-                notification.getResourceIdx(),
-                notification.getResourceType()
-        );
-
-        // 해당 유저의 fcm Token list로 알림 전달
-        List<String> fcmTokenList = new ArrayList<>();
-
-        // fcm 토큰 리스트 추가
-        for(Member member : members) {
-            for (MemberFcm memberFcm : member.getMemberFcms()) {
-                fcmTokenList.add(memberFcm.getFcmToken());
-            }
-        }
-
-        // 알림 발송
-        if(fcmTokenList.size() != 0) {
-            notificationSender.sendByTokenList(fcmTokenList, notificationDto);
-        }
+        // 알림 전송
+        notificationSender.sendNotification(notification, members);
     }
 
     @Override
     @Async
-    @Transactional
     @EventListener
     public void handleApplyConfirmEvent(ApplyConfirmEvent applyConfirmEvent) {
         List<Apply> applies = applyConfirmEvent.getApplies();
@@ -210,42 +134,15 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
                 .resourceType(program.getProgramType())
                 .build();
 
-        // MemberNotification 추가
-        for(Member member : members) {
-            MemberNotification memberNotification = new MemberNotification();
-            memberNotification.setMember(member);
-            memberNotification.setNotification(notification);
-        }
+        // 알림 DB에 저장
+        notificationService.addNotification(notification, members);
 
-        // 리스트 저장
-        notificationRepository.save(notification);
-
-        NotificationDto notificationDto = new NotificationDto(
-                notification.getNotificationType(),
-                notification.getContent(),
-                notification.getResourceIdx(),
-                notification.getResourceType()
-        );
-
-        // 해당 유저의 fcm Token list로 알림 전달
-        List<String> fcmTokenList = new ArrayList<>();
-
-        // fcm 토큰 리스트 추가
-        for(Member member : members) {
-            for (MemberFcm memberFcm : member.getMemberFcms()) {
-                fcmTokenList.add(memberFcm.getFcmToken());
-            }
-        }
-
-        // 알림 발송
-        if(fcmTokenList.size() != 0) {
-            notificationSender.sendByTokenList(fcmTokenList, notificationDto);
-        }
+        // 알림 전송
+        notificationSender.sendNotification(notification, members);
     }
 
     @Override
     @Async
-    @Transactional
     @EventListener
     public void handleNonDepositCancelEvent(NonDepositCancelEvent nonDepositCancelEvent) {
         List<Apply> applies = nonDepositCancelEvent.getApplies();
@@ -267,37 +164,12 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
                 .resourceType(program.getProgramType())
                 .build();
 
-        // MemberNotification 추가
-        for(Member member : members) {
-            MemberNotification memberNotification = new MemberNotification();
-            memberNotification.setMember(member);
-            memberNotification.setNotification(notification);
-        }
+        // 알림 DB에 저장
+        notificationService.addNotification(notification, members);
 
-        // 리스트 저장
-        notificationRepository.save(notification);
-
-        NotificationDto notificationDto = new NotificationDto(
-                notification.getNotificationType(),
-                notification.getContent(),
-                notification.getResourceIdx(),
-                notification.getResourceType()
-        );
-
-        // 해당 유저의 fcm Token list로 알림 전달
-        List<String> fcmTokenList = new ArrayList<>();
-
-        // fcm 토큰 리스트 추가
-        for(Member member : members) {
-            for (MemberFcm memberFcm : member.getMemberFcms()) {
-                fcmTokenList.add(memberFcm.getFcmToken());
-            }
-        }
-
-        // 알림 발송
-        if(fcmTokenList.size() != 0) {
-            notificationSender.sendByTokenList(fcmTokenList, notificationDto);
-        }
+        // 알림 전송
+        notificationSender.sendNotification(notification, members);
     }
+
 
 }
