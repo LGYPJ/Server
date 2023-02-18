@@ -131,7 +131,7 @@ public class JwtTokenProvider {
         return (expiration.getTime() - now);
     }
 
-    private String getJwt(){
+    private String getJwt() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {

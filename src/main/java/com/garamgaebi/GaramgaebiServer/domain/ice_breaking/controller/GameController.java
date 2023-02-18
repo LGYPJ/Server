@@ -51,6 +51,7 @@ public class GameController {
         return new BaseResponse<>(gameService.getImageUrls(programIdx));
     }
 
+    // 게임방 현재 이미지 인덱스 증가
     @PatchMapping("/current-idx")
     @ResponseBody
     public BaseResponse<String> patchCurrentImgIdx(@RequestBody CurrentImgIdxReq currentImgIdxReq) {
