@@ -1,0 +1,2 @@
+[35m2023-02-18 14:49:38.183[0;39m [34m[http-nio-8080-exec-3][0;39m [31mERROR[0;39m [36m[GlobalExceptionHandler:24][0;39m : ERROR : NOT_EXIST_MEMBER 
+[35m2023-02-18 14:49:53.386[0;39m [34m[http-nio-8080-exec-4][0;39m [31mERROR[0;39m [36m[GlobalExceptionHandler:24][0;39m : ERROR : ALREADY_ENTER_GAME 
