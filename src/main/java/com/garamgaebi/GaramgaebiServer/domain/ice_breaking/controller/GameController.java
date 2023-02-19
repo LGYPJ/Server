@@ -1,7 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.controller;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramGameroom;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.ProgramGameroom;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;

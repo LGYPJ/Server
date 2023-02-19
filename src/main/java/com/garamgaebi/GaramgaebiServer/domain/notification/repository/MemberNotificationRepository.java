@@ -1,15 +1,11 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.repository;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberNotification;
-import org.springframework.data.domain.Page;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.MemberNotification;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 public interface MemberNotificationRepository extends JpaRepository<MemberNotification, Long> {
 

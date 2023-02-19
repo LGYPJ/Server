@@ -1,7 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.notification.NotificationType;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.vo.NotificationType;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

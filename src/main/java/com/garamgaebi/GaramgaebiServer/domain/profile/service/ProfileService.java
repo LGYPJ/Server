@@ -1,24 +1,26 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsLearning;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsWorking;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.vo.IsLearning;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.vo.IsWorking;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.Career;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.Education;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.QnA;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.SNS;
 import com.garamgaebi.GaramgaebiServer.domain.profile.repository.ProfileRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
-import com.garamgaebi.GaramgaebiServer.global.util.S3Uploader;
+import com.garamgaebi.GaramgaebiServer.global.util.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service

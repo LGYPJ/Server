@@ -1,12 +1,13 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramUserButtonStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramUserButtonStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.*;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
@@ -20,7 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

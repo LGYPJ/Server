@@ -1,13 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Notification;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationDto;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.Notification;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationResDto;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

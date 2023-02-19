@@ -1,25 +1,20 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.listener;
 
-import com.garamgaebi.GaramgaebiServer.domain.apply.ApplyRepository;
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.notification.NotificationType;
-import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
+import com.garamgaebi.GaramgaebiServer.domain.apply.entitiy.Apply;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.vo.NotificationType;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.Notification;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.*;
-import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
-import com.garamgaebi.GaramgaebiServer.domain.notification.sender.NotificationSender;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
+import com.garamgaebi.GaramgaebiServer.global.util.firebase.NotificationSender;
 import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 //@Async("applyThreadPoolExecutor")

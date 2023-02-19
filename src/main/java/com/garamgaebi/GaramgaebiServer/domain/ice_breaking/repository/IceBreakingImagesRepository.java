@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.IceBreakingImages;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.IceBreakingImages;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

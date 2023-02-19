@@ -1,8 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberRoles;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.MemberRoles;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberQuitRepository;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;

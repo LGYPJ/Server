@@ -1,12 +1,14 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramPayStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.apply.entitiy.Apply;
+import com.garamgaebi.GaramgaebiServer.domain.apply.entitiy.vo.ApplyStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramPayStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
@@ -15,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

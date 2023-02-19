@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.GameroomMember;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.GameroomMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

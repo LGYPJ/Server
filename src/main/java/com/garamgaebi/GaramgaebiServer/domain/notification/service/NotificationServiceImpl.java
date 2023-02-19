@@ -1,9 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberNotification;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Notification;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.MemberNotification;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.Notification;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationResDto;
