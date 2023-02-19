@@ -1,7 +1,5 @@
 package com.garamgaebi.GaramgaebiServer.domain.apply.dto;
 
-
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.MemberFcm;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.MemberRoles;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
@@ -130,6 +131,12 @@ public class MemberService {
                 tokenInfo.getRefreshToken(),
                 tokenInfo.getRefreshTokenExpirationTime());
 
+        member.addMemberFcms(MemberFcm.builder()
+                        .member(member)
+                        .fcmToken(memberLoginReq.getFcmToken())
+                .build());
+        memberRepository.save(member);
+
         return tokenInfo;
     }
 
@@ -156,6 +163,11 @@ public class MemberService {
 
         MemberLogoutRes memberLogoutRes = new MemberLogoutRes();
         memberLogoutRes.setMemberInfo(authentication.getName());
+
+        Member member = memberRepository.findBySocialEmail(authentication.getName()).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+
+        member.deleteMemberFcm(memberLogoutReq.getFcmToken());
+
 
         return memberLogoutRes;
     }
