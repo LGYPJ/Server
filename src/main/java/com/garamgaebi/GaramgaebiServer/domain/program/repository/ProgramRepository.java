@@ -1,9 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.repository;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

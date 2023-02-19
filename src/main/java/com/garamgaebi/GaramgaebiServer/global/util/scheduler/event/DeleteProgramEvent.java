@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.global.util.scheduler.event;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import lombok.Getter;
 
 @Getter

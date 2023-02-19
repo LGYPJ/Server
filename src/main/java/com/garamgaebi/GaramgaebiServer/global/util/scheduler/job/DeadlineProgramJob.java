@@ -1,12 +1,11 @@
 package com.garamgaebi.GaramgaebiServer.global.util.scheduler.job;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.DeadlineEvent;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.util.Optional;

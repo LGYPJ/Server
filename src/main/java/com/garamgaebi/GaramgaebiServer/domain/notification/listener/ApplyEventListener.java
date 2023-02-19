@@ -1,14 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.listener;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Apply;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.event.TransactionalEventListener;
-
-import java.util.List;
 
 public interface ApplyEventListener {
 

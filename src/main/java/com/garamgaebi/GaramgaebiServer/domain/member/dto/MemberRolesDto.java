@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberRoles;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.MemberRoles;
 import lombok.*;
 
 @Getter

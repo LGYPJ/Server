@@ -1,8 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.GameroomMember;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.ProgramGameroom;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.GameroomMember;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.ProgramGameroom;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomReq;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetRes;

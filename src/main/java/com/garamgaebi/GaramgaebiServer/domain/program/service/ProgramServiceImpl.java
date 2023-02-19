@@ -1,12 +1,14 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramPayStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.apply.entitiy.Apply;
+import com.garamgaebi.GaramgaebiServer.domain.apply.entitiy.vo.ApplyStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramPayStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
@@ -15,13 +17,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProgramServiceImpl implements ProgramService {
 
     private final ProgramRepository programRepository;
@@ -29,36 +32,24 @@ public class ProgramServiceImpl implements ProgramService {
 
     // 예정된 내 모임 리스트 조회
     @Override
-    @Transactional(readOnly = true)
     public List<ProgramDto> findMemberReadyProgramList(Long memberIdx) {
 
         Member member = validMember(memberIdx);
 
         List<Program> programs = programRepository.findMemberReadyPrograms(member);
-        List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        for(Program program : programs) {
-            programDtos.add(programDtoBuilder(program));
-        }
-
-        return programDtos;
+        return programs.stream().map(program -> program.toProgramDto()).collect(Collectors.toList());
     }
 
     // 지난 내 모임 리스트 조회
     @Override
-    @Transactional(readOnly = true)
     public List<ProgramDto> findMemberClosedProgramList(Long memberIdx) {
 
         Member member = validMember(memberIdx);
 
         List<Program> programs = programRepository.findMemberClosedPrograms(member);
-        List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        for(Program program : programs) {
-            programDtos.add(programDtoBuilder(program));
-        }
-
-        return programDtos;
+        return programs.stream().map(program -> program.toProgramDto()).collect(Collectors.toList());
     }
 
     @Transactional
@@ -89,22 +80,6 @@ public class ProgramServiceImpl implements ProgramService {
             program.setStatus(ProgramStatus.CLOSED);
         }
         programRepository.save(program);
-    }
-
-
-    // programDto 빌더
-    private ProgramDto programDtoBuilder(Program program) {
-
-            return ProgramDto.builder()
-                .programIdx(program.getIdx())
-                .title(program.getTitle())
-                .date(program.getDate())
-                .location(program.getLocation())
-                .type(program.getProgramType())
-                .payment(program.getIsPay())
-                .status(program.getThisMonthStatus())
-                .isOpen(program.isOpen())
-                .build();
     }
 
     // member validation

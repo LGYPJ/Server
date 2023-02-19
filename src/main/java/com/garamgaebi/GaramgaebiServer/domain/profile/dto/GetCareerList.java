@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.IsWorking;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.vo.IsWorking;
 import lombok.*;
 
 @Getter

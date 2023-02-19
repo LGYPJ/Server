@@ -1,7 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.dto.response;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramUserButtonStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramUserButtonStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 

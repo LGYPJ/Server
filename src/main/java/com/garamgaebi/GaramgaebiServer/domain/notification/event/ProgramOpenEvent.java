@@ -1,6 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.event;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Program;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

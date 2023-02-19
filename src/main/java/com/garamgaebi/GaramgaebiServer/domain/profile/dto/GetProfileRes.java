@@ -1,9 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.SNS;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter

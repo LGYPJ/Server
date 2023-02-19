@@ -1,7 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberQuit;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberQuitStatus;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.MemberQuit;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.vo.MemberQuitStatus;
 import lombok.*;
 
 @Getter
