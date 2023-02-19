@@ -7,6 +7,7 @@ import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetSNSList;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -14,11 +15,13 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
+@Slf4j
 public class ProfileRepository {
 
     private final EntityManager em;
 
     public Member findMember(Long id) {
+        log.info("ProfileRepository findMember = {}" , id);
         return em.find(Member.class, id);
     }
 
