@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class MemberLoginReq {
     private String socialEmail;
+    private String fcmToken;
 }

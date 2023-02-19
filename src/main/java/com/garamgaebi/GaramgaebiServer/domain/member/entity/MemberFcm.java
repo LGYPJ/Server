@@ -1,22 +1,20 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
-@Entity
+
 @Table(name = "MemberFcm")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
-@Getter @Setter
+@Getter
+@Entity
 public class MemberFcm {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_fcm_idx")
@@ -41,4 +39,9 @@ public class MemberFcm {
         this.member = member;
     }
 
+    @Builder
+    public MemberFcm(Member member, String fcmToken) {
+        this.member = member;
+        this.fcmToken = fcmToken;
+    }
 }

@@ -8,4 +8,5 @@ import lombok.Setter;
 public class MemberLogoutReq {
     private String accessToken;
     private String refreshToken;
+    private String fcmToken;
 }
