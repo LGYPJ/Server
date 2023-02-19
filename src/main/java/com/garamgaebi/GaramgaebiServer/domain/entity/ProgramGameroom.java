@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
+import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,5 +28,9 @@ public class ProgramGameroom {
 
     public void increaseCurrentImgIdx() {
         this.currentImgIdx += 1;
+    }
+
+    public void initCurrentImgIdx() {
+        this.currentImgIdx = 0;
     }
 }
