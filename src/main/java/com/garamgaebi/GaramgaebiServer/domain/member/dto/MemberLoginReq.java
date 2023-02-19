@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberLoginReq {
     private String socialEmail;
+    private String fcmToken;
 }

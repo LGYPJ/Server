@@ -7,4 +7,5 @@ import lombok.*;
 public class MemberLogoutReq {
     private String accessToken;
     private String refreshToken;
+    private String fcmToken;
 }

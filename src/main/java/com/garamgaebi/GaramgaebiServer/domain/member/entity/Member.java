@@ -157,6 +157,15 @@ public class Member extends BaseTimeEntity implements UserDetails {
         }
     }
 
+    public void deleteMemberFcm(String fcmToken) {
+        for(MemberFcm memberFcm : this.memberFcms) {
+            if(memberFcm.getFcmToken().equals(fcmToken)) {
+                memberFcm.setMember(null);
+                this.memberFcms.remove(memberFcm);
+            }
+        }
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
