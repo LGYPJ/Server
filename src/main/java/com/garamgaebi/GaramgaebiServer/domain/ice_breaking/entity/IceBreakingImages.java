@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Builder
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "IceBreakingImages")
 public class IceBreakingImages {
@@ -17,4 +15,9 @@ public class IceBreakingImages {
 
     @Column(nullable = false)
     private String url;
+
+    @Builder
+    public IceBreakingImages(String url) {
+        this.url = url;
+    }
 }

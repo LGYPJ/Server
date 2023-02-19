@@ -1,8 +1,12 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.dto;
 
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberLoginReq {
     private String socialEmail;
     private String fcmToken;

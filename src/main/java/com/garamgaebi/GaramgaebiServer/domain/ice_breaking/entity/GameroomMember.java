@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
-@Builder
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "GameroomMember")
 public class GameroomMember {
@@ -21,4 +18,10 @@ public class GameroomMember {
 
     @Column(name = "member_idx")
     private Long memberIdx;
+
+    @Builder
+    public GameroomMember(String roomId, Long memberIdx) {
+        this.roomId = roomId;
+        this.memberIdx = memberIdx;
+    }
 }
