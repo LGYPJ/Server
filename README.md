@@ -24,17 +24,28 @@ __API__: https://garamgaebi.shop
 <br/>
 
 ## Env
-__Spring Boot, Java 17__
+__Spring Boot 3.0.1, Gradle 7.6, Java 17__
 <br/>
 <br/>
 <br/>
 
-## Dependency
-- __Database__
-  - JPA
+## Stack
+- __Server__
+  - AWS EC2
+  
+  
+- __RDBMS__
   - Mysql
-  - AWS - RDS
   - Redis
+  
+
+- __Storage__
+  - AWS RDS
+  - AWS S3
+  
+  
+- ORM
+  - Spring data JAP: Hibernate
   
 
 - __Authorization__
@@ -57,12 +68,10 @@ __Spring Boot, Java 17__
 
 - __Scheduler__
   - Quartz
-  - AOP
   
 
 - __Log__
   - Logback
-  - Logback-encoder
   - Log4jdbc
   
 
@@ -71,5 +80,5 @@ __Spring Boot, Java 17__
   - STOMP
   
 
-- __View__
+- __API docs__
   - Swagger
