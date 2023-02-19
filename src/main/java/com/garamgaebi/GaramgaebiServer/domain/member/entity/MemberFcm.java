@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "MemberFcm")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 @DynamicUpdate
-@Getter @Setter
+@Getter
 public class MemberFcm {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_fcm_idx")
