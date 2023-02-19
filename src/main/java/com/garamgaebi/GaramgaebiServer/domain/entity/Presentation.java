@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.entity;
 
 import com.garamgaebi.GaramgaebiServer.admin.program.dto.PostPresentationDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.PresentationDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -45,6 +46,19 @@ public class Presentation {
         if(!program.getPresentations().contains(this)) {
             program.getPresentations().add(this);
         }
+    }
+
+    // DTO 변환 메서드
+    public PresentationDto toPresentationDto() {
+        return PresentationDto.builder()
+                .presentationIdx(this.getIdx())
+                .title(this.getTitle())
+                .nickname(this.getNickname())
+                .profileImgUrl(this.getProfileImg())
+                .organization(this.getOrganization())
+                .content(this.getContent())
+                .presentationUrl(this.getPresentationUrl())
+                .build();
     }
 
 }

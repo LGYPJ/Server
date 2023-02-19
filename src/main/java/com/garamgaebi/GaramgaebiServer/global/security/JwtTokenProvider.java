@@ -140,6 +140,7 @@ public class JwtTokenProvider {
         return null;
     }
 
+    // jwt에서 멤버 idx 추출
     public Long getMemberIdx() {
         String accessToken = getJwt();
         if(accessToken.isBlank()) {
@@ -153,5 +154,10 @@ public class JwtTokenProvider {
         }
 
         return claims.get("memberIdx", Long.class);
+    }
+
+    // 멤버 idx 일치 여부 확인
+    public Boolean checkMemberIdx(Long memberIdx) {
+        return memberIdx == getMemberIdx();
     }
 }

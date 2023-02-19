@@ -3,6 +3,8 @@ package com.garamgaebi.GaramgaebiServer.domain.entity;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.apply.ApplyStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.*;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramInfoDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -66,6 +68,33 @@ public class Program {
         if (presentation.getProgram() != this) {
             presentation.setProgram(this);
         }
+    }
+
+    // DTO 변환 메서드
+    public ProgramDto toProgramDto() {
+        return ProgramDto.builder()
+                .programIdx(this.getIdx())
+                .title(this.getTitle())
+                .date(this.getDate())
+                .location(this.getLocation())
+                .type(this.getProgramType())
+                .isOpen(this.isOpen())
+                .payment(this.getIsPay())
+                .status(this.getThisMonthStatus())
+                .build();
+    }
+
+    public ProgramInfoDto toProgramInfoDto(Member member) {
+        return ProgramInfoDto.builder()
+                .programIdx(this.getIdx())
+                .title(this.getTitle())
+                .date(this.getDate())
+                .location(this.getLocation())
+                .fee(this.getFee())
+                .endDate(this.getEndDate())
+                .userButtonStatus(this.checkMemberCanApply(member))
+                .programStatus(this.getStatus())
+                .build();
     }
 
     // == 조회 메서드 == //

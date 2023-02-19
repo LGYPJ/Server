@@ -25,6 +25,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SeminarServiceImpl implements SeminarService {
 
     private final ProgramRepository programRepository;
@@ -32,7 +33,6 @@ public class SeminarServiceImpl implements SeminarService {
 
 
     // 이번 달 세미나 조회
-    @Transactional(readOnly = true)
     @Override
     public ProgramDto findThisMonthSeminar() {
 
@@ -42,12 +42,11 @@ public class SeminarServiceImpl implements SeminarService {
             return null;
         }
 
-        return programDtoBuilder(thisMonthProgram.get(0));
+        return thisMonthProgram.get(0).toProgramDto();
     }
 
 
     // 가장 빠른 예정된 세미나 조회
-    @Transactional(readOnly = true)
     @Override
     public ProgramDto findReadySeminar() {
 
@@ -57,33 +56,27 @@ public class SeminarServiceImpl implements SeminarService {
             return null;
         }
 
-        return programDtoBuilder(readyProgram.get(0));
+        return readyProgram.get(0).toProgramDto();
     }
 
 
     // 마감된 세미나 리스트 조회
-    @Transactional(readOnly = true)
     @Override
     public List<ProgramDto> findClosedSeminarsList() {
 
         List<Program> closePrograms = programRepository.findClosedProgramList(LocalDateTime.now(), ProgramType.SEMINAR);
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        for(Program program : closePrograms) {
-            programDtos.add(programDtoBuilder(program));
-        }
+        closePrograms.stream().forEach(program -> programDtos.add(program.toProgramDto()));
 
         return programDtos;
     }
 
     // 홈 화면 세미나 리스트 조회
-    @Transactional(readOnly = true)
     @Override
     public List<ProgramDto> findMainSeminarList() {
 
         ProgramDto thisMonthSeminar = findThisMonthSeminar();
-        List<Program> readySeminar = programRepository.findReadyProgramList(getLastDayOfMonth(), ProgramType.SEMINAR);
-        List<ProgramDto> closeProgramDtos = findClosedSeminarsList();
 
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
@@ -91,19 +84,13 @@ public class SeminarServiceImpl implements SeminarService {
             programDtos.add(thisMonthSeminar);
         }
 
-        for(Program program : readySeminar) {
-            programDtos.add(programDtoBuilder(program));
-        }
-
-        for(ProgramDto programDto : closeProgramDtos) {
-            programDtos.add(programDto);
-        }
+        programRepository.findReadyProgramList(getLastDayOfMonth(), ProgramType.SEMINAR).stream().forEach(program -> programDtos.add(program.toProgramDto()));
+        findClosedSeminarsList().forEach(program -> programDtos.add(program));
 
         return programDtos;
     }
 
     // 세미나 상세정보 상단 부분 조회
-    @Transactional(readOnly = true)
     @Override
     public ProgramInfoDto findSeminarDetails(Long seminarIdx, Long memberIdx) {
 
@@ -111,16 +98,7 @@ public class SeminarServiceImpl implements SeminarService {
 
         Program seminar = validSeminar(seminarIdx);
 
-        ProgramInfoDto programInfoDto = ProgramInfoDto.builder()
-                .programIdx(seminar.getIdx())
-                .title(seminar.getTitle())
-                .date(seminar.getDate())
-                .location(seminar.getLocation())
-                .fee(seminar.getFee())
-                .endDate(seminar.getEndDate())
-                .programStatus(seminar.getStatus())
-                .userButtonStatus(seminar.checkMemberCanApply(member))
-                .build();
+        ProgramInfoDto programInfoDto = seminar.toProgramInfoDto(member);
 
         if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR) {
             log.info("SEMINAR ACCESS DENIED : {}", seminarIdx);
@@ -131,7 +109,6 @@ public class SeminarServiceImpl implements SeminarService {
     }
 
     // 세미나 신청자 리스트 조회
-    @Transactional(readOnly = true)
     @Override
     public GetParticipantsRes findSeminarParticipantsList(Long seminarIdx, Long memberIdx) {
 
@@ -165,7 +142,6 @@ public class SeminarServiceImpl implements SeminarService {
     }
 
     // 세미나 상세정보 발표자료 조회
-    @Transactional(readOnly = true)
     @Override
     public List<PresentationDto> findSeminarPresentationList(Long seminarIdx) {
 
@@ -173,35 +149,10 @@ public class SeminarServiceImpl implements SeminarService {
 
         List<PresentationDto> presentationDtos = new ArrayList<PresentationDto>();
 
-        for(Presentation presentation : seminar.getPresentations()) {
-            presentationDtos.add(PresentationDto.builder()
-                            .presentationIdx(presentation.getIdx())
-                            .title(presentation.getTitle())
-                            .nickname(presentation.getNickname())
-                            .profileImgUrl(presentation.getProfileImg())
-                            .organization(presentation.getOrganization())
-                            .content(presentation.getContent())
-                            .presentationUrl(presentation.getPresentationUrl())
-                            .build());
-        }
+        seminar.getPresentations().stream().forEach(presentation -> presentationDtos.add(presentation.toPresentationDto()));
 
         return presentationDtos;
 
-    }
-
-    // programDto 빌더
-    private ProgramDto programDtoBuilder(Program program) {
-
-        return ProgramDto.builder()
-                .programIdx(program.getIdx())
-                .title(program.getTitle())
-                .date(program.getDate())
-                .location(program.getLocation())
-                .type(program.getProgramType())
-                .payment(program.getIsPay())
-                .status(program.getThisMonthStatus())
-                .isOpen(program.isOpen())
-                .build();
     }
 
     // participantsDto 빌더

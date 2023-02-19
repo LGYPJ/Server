@@ -22,6 +22,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProgramServiceImpl implements ProgramService {
 
     private final ProgramRepository programRepository;
@@ -29,7 +30,6 @@ public class ProgramServiceImpl implements ProgramService {
 
     // 예정된 내 모임 리스트 조회
     @Override
-    @Transactional(readOnly = true)
     public List<ProgramDto> findMemberReadyProgramList(Long memberIdx) {
 
         Member member = validMember(memberIdx);
@@ -37,16 +37,13 @@ public class ProgramServiceImpl implements ProgramService {
         List<Program> programs = programRepository.findMemberReadyPrograms(member);
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        for(Program program : programs) {
-            programDtos.add(programDtoBuilder(program));
-        }
+        programs.stream().forEach(program -> programDtos.add(program.toProgramDto()));
 
         return programDtos;
     }
 
     // 지난 내 모임 리스트 조회
     @Override
-    @Transactional(readOnly = true)
     public List<ProgramDto> findMemberClosedProgramList(Long memberIdx) {
 
         Member member = validMember(memberIdx);
@@ -54,9 +51,7 @@ public class ProgramServiceImpl implements ProgramService {
         List<Program> programs = programRepository.findMemberClosedPrograms(member);
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        for(Program program : programs) {
-            programDtos.add(programDtoBuilder(program));
-        }
+        programs.stream().forEach(program -> programDtos.add(program.toProgramDto()));
 
         return programDtos;
     }
