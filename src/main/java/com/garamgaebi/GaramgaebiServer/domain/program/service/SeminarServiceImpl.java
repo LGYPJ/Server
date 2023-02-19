@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -65,11 +66,8 @@ public class SeminarServiceImpl implements SeminarService {
     public List<ProgramDto> findClosedSeminarsList() {
 
         List<Program> closePrograms = programRepository.findClosedProgramList(LocalDateTime.now(), ProgramType.SEMINAR);
-        List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        closePrograms.stream().forEach(program -> programDtos.add(program.toProgramDto()));
-
-        return programDtos;
+        return closePrograms.stream().map(program -> program.toProgramDto()).collect(Collectors.toList());
     }
 
     // 홈 화면 세미나 리스트 조회
@@ -147,12 +145,7 @@ public class SeminarServiceImpl implements SeminarService {
 
         Program seminar = validSeminar(seminarIdx);
 
-        List<PresentationDto> presentationDtos = new ArrayList<PresentationDto>();
-
-        seminar.getPresentations().stream().forEach(presentation -> presentationDtos.add(presentation.toPresentationDto()));
-
-        return presentationDtos;
-
+        return seminar.getPresentations().stream().map(presentation -> presentation.toPresentationDto()).collect(Collectors.toList());
     }
 
     // participantsDto 빌더

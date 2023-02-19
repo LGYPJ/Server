@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -35,11 +36,8 @@ public class ProgramServiceImpl implements ProgramService {
         Member member = validMember(memberIdx);
 
         List<Program> programs = programRepository.findMemberReadyPrograms(member);
-        List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        programs.stream().forEach(program -> programDtos.add(program.toProgramDto()));
-
-        return programDtos;
+        return programs.stream().map(program -> program.toProgramDto()).collect(Collectors.toList());
     }
 
     // 지난 내 모임 리스트 조회
@@ -49,11 +47,8 @@ public class ProgramServiceImpl implements ProgramService {
         Member member = validMember(memberIdx);
 
         List<Program> programs = programRepository.findMemberClosedPrograms(member);
-        List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        programs.stream().forEach(program -> programDtos.add(program.toProgramDto()));
-
-        return programDtos;
+        return programs.stream().map(program -> program.toProgramDto()).collect(Collectors.toList());
     }
 
     @Transactional
@@ -84,22 +79,6 @@ public class ProgramServiceImpl implements ProgramService {
             program.setStatus(ProgramStatus.CLOSED);
         }
         programRepository.save(program);
-    }
-
-
-    // programDto 빌더
-    private ProgramDto programDtoBuilder(Program program) {
-
-            return ProgramDto.builder()
-                .programIdx(program.getIdx())
-                .title(program.getTitle())
-                .date(program.getDate())
-                .location(program.getLocation())
-                .type(program.getProgramType())
-                .payment(program.getIsPay())
-                .status(program.getThisMonthStatus())
-                .isOpen(program.isOpen())
-                .build();
     }
 
     // member validation

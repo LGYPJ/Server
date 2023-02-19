@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -67,10 +68,8 @@ public class NetworkingServiceImpl implements NetworkingService {
     public List<ProgramDto> findClosedNetworkingList() {
         List<Program> closePrograms = programRepository.findClosedProgramList(LocalDateTime.now(), ProgramType.NETWORKING);
 
-        List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
-        closePrograms.stream().forEach(program -> programDtos.add(program.toProgramDto()));
+        return closePrograms.stream().map(program -> program.toProgramDto()).collect(Collectors.toList());
 
-        return programDtos;
     }
 
     // 홈 화면 네트워킹 리스트 조회
