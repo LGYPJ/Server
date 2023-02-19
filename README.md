@@ -17,8 +17,8 @@ __Swagger__: https://garamgaebi.shop/swagger-ui/index.html
 __API__: https://garamgaebi.shop  
   
 
-## 기술 스택
-__Back-end__: Spring Boot, Java 17  
+## Env
+__Spring Boot, Java 17__
 
 
 ## Dependency
