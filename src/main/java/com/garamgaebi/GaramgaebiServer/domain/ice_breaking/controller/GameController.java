@@ -4,6 +4,7 @@ import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.ProgramGameroo
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameServiceImpl;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
+import com.garamgaebi.GaramgaebiServer.global.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequestMapping("/game")
 public class GameController {
     private final GameServiceImpl gameService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     // programIdx로 게임방 조회
     @Operation(summary = "게임방 리스트 조회", description = "programIdx로 해당하는 네트워킹의 게임방을 조회", responses = {
@@ -89,6 +91,9 @@ public class GameController {
     @PatchMapping("/current-idx")
     @ResponseBody
     public BaseResponse<String> patchCurrentImgIdx(@RequestBody CurrentImgIdxReq currentImgIdxReq) {
-        return new BaseResponse<>(gameService.patchCurrentImgIdx(currentImgIdxReq.getRoomId()));
+        return new BaseResponse<>(gameService.patchCurrentImgIdx(
+                currentImgIdxReq.getRoomId(),
+                jwtTokenProvider.getMemberIdx()
+        ));
     }
 }
