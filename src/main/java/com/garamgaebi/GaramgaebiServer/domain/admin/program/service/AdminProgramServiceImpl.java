@@ -87,15 +87,13 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     public ProgramRes addSeminar(SeminarDto seminarDto) {
 
 
-        Program program = new Program();
-        program.setTitle(seminarDto.getTitle());
-        program.setDate(seminarDto.getDate());
-        program.setFee(seminarDto.getFee());
-        program.setLocation(seminarDto.getLocation());
-        program.setStatus(ProgramStatus.READY_TO_OPEN);
-        program.setProgramType(ProgramType.SEMINAR);
-        program = adminProgramRepository.save(program);
-
+        Program program = adminProgramRepository.save(Program.builder()
+                .title(seminarDto.getTitle())
+                .date(seminarDto.getDate())
+                .fee(seminarDto.getFee())
+                .location(seminarDto.getLocation())
+                .programType(ProgramType.SEMINAR)
+                .build());
 
         return new ProgramRes(program.getIdx());
     }
@@ -273,14 +271,13 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     @Override
     public ProgramRes addNetworking(NetworkingDto networkingDto) {
 
-        Program program = new Program();
-        program.setTitle(networkingDto.getTitle());
-        program.setDate(networkingDto.getDate());
-        program.setFee(networkingDto.getFee());
-        program.setLocation(networkingDto.getLocation());
-        program.setStatus(ProgramStatus.READY_TO_OPEN);
-        program.setProgramType(ProgramType.NETWORKING);
-        program = adminProgramRepository.save(program);
+        Program program = adminProgramRepository.save(Program.builder()
+                .title(networkingDto.getTitle())
+                .date(networkingDto.getDate())
+                .fee(networkingDto.getFee())
+                .location(networkingDto.getLocation())
+                .programType(ProgramType.NETWORKING)
+                .build());
 
         gameService.createRooms(program.getIdx());
 

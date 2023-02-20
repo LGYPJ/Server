@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "Program")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Getter @Setter
+@Getter
 public class Program {
 
     // 모임 신청 마감일 정책 : 모임 날짜 1주 전
@@ -32,16 +32,23 @@ public class Program {
     @Column(name = "program_idx")
     private Long idx;
 
+    @Setter
     private String title;
 
+    @Setter
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime date;
 
+    @Setter
     private String location;
+    @Setter
     private Integer fee;
+
+    @Setter
     @Enumerated(EnumType.STRING)
     private ProgramStatus status;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "program_type")
     private ProgramType programType;
@@ -52,6 +59,15 @@ public class Program {
     @OneToMany(mappedBy = "program", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Presentation> presentations = new ArrayList<Presentation>();
 
+    @Builder
+    public Program(String title, LocalDateTime date, String location, Integer fee, ProgramType programType) {
+        this.title = title;
+        this.date = date;
+        this.location = location;
+        this.fee = fee;
+        this.programType = programType;
+        this.status = ProgramStatus.READY_TO_OPEN;
+    }
 
     // == 연관관계 메서드 -- //
     public void addApply(Apply apply) {
