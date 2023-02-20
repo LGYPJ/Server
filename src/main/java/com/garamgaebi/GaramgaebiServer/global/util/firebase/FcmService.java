@@ -26,11 +26,6 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class FcmService {
-    private final ObjectMapper objectMapper;
-
-    @Value("${fcm.key.api.url}")
-    private String API_URL;
-
     @Value("${fcm.key.path}")
     private String FCM_PRIVATE_KEY_PATH;
 
