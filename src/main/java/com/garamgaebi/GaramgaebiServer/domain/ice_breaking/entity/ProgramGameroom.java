@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
-@Builder
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "ProgramGameroom")
 public class ProgramGameroom {
@@ -24,6 +21,13 @@ public class ProgramGameroom {
 
     @Column(name = "current_img_idx", nullable = false)
     private int currentImgIdx;
+
+    @Builder
+    public ProgramGameroom(Long programIdx, String roomId, int currentImgIdx) {
+        this.programIdx = programIdx;
+        this.roomId = roomId;
+        this.currentImgIdx = currentImgIdx;
+    }
 
     public void increaseCurrentImgIdx() {
         this.currentImgIdx += 1;
