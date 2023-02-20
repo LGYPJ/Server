@@ -25,7 +25,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-mail' // 이메일 인증
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // validation
-	implementation 'com.google.firebase:firebase-admin:9.1.1' // firebase
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE' // S3
 	implementation platform('software.amazon.awssdk:bom:2.19.33')
 	implementation 'software.amazon.awssdk:s3'
@@ -35,6 +34,10 @@ dependencies {
 	implementation 'org.codehaus.janino:janino:3.1.9' // logback
 	implementation 'net.logstash.logback:logstash-logback-encoder:7.2' // log encoder
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16' // log4jdbc
+
+	/* firebase */
+	implementation 'com.google.firebase:firebase-admin:9.1.1'
+	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 
 	/* Spring Security */
 	implementation 'org.springframework.boot:spring-boot-starter-security'
