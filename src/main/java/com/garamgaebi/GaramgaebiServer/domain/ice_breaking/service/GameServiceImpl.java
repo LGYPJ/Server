@@ -44,7 +44,12 @@ public class GameServiceImpl implements GameService{
         for (int i = 0; i < 8; i++) { // 방 8개씩 생성
             roomId = UUID.randomUUID().toString();
 
-            ProgramGameroom room = ProgramGameroom.builder().programIdx(programIdx).roomId(roomId).currentImgIdx(0).build();
+            ProgramGameroom room = ProgramGameroom.builder()
+                            .programIdx(programIdx)
+                            .roomId(roomId)
+                            .currentImgIdx(0)
+                            .currentMemberIdx(0L)
+                            .build();
 
             programGameroomRepository.save(room);
             rooms.add(room);
@@ -97,7 +102,7 @@ public class GameServiceImpl implements GameService{
         GameroomMember gameroomMember = GameroomMember.builder().roomId(memberRoomReq.getRoomId()).memberIdx(memberRoomReq.getMemberIdx()).build();
         gameRoomMemberRepository.save(gameroomMember);
 
-        MemberRoomRes memberRoomRes = new MemberRoomRes("게임방 입장에 성공하였습니다.", room.getCurrentImgIdx());
+        MemberRoomRes memberRoomRes = new MemberRoomRes("게임방 입장에 성공하였습니다.", room.getCurrentImgIdx(), room.getCurrentMemberIdx());
 
         return memberRoomRes;
     }
@@ -129,7 +134,7 @@ public class GameServiceImpl implements GameService{
 
     // 게임방의 current image index 증가
     @Transactional
-    public String patchCurrentImgIdx(String roomId) {
+    public String patchCurrentImgIdx(String roomId, Long memberIdx) {
         ProgramGameroom room = programGameroomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 
@@ -140,6 +145,8 @@ public class GameServiceImpl implements GameService{
         } else {
             room.increaseCurrentImgIdx();
         }
+
+        room.setCurrentMemberIdx(memberIdx);
 
         return "current image index 증가가 완료되었습니다.";
     }
