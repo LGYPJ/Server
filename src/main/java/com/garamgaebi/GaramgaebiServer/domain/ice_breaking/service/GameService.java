@@ -31,5 +31,5 @@ public interface GameService {
     public List<String> getImageUrls(Long seed);
 
     /* 게임방의 current image index 증가 */
-    public String patchCurrentImgIdx(String roomId);
+    public String patchCurrentImgIdx(String roomId, Long memberIdx);
 }
