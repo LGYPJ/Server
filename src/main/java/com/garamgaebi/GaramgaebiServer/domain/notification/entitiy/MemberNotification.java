@@ -10,11 +10,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "MemberNotification")
-@AllArgsConstructor
-@NoArgsConstructor
-@DynamicInsert
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
-@Getter @Setter
+@Getter
 public class MemberNotification {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_notification_idx")
@@ -34,6 +32,13 @@ public class MemberNotification {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @Builder
+    public MemberNotification(Member member, Notification notification) {
+        this.member = member;
+        this.notification = notification;
+        this.isRead = false;
+        this.createdAt = LocalDateTime.now();
+    }
 
     // 연관관계 메서드
     public void setMember(Member member) {

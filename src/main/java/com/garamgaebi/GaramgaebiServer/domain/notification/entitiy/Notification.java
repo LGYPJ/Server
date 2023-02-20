@@ -13,10 +13,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "Notification")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@DynamicInsert
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
-@Getter @Setter
+@Getter
 public class Notification {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_idx")
@@ -34,6 +33,7 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private ProgramType resourceType;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private NotificationStatus status;
 
@@ -41,13 +41,12 @@ public class Notification {
     private List<MemberNotification> memberNotifications = new ArrayList<MemberNotification>();
 
     @Builder
-    private Notification(Long idx, NotificationType notificationType, String content, Long resourceIdx, ProgramType resourceType, NotificationStatus status) {
-        this.idx = idx;
+    private Notification(NotificationType notificationType, String content, Long resourceIdx, ProgramType resourceType) {
         this.notificationType =notificationType;
         this.content = content;
         this.resourceIdx = resourceIdx;
         this.resourceType = resourceType;
-        this.status = status;
+        this.status = NotificationStatus.ACTIVE;
     }
 
     // 연관관계 메서드

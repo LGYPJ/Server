@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.notification.dto;
+package com.garamgaebi.GaramgaebiServer.domain.notification.dto.response;
 
 import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.vo.NotificationType;
 import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramType;

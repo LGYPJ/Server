@@ -5,8 +5,8 @@ import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.MemberNotific
 import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.Notification;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationDto;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationResDto;
+import com.garamgaebi.GaramgaebiServer.domain.notification.dto.response.GetNotificationDto;
+import com.garamgaebi.GaramgaebiServer.domain.notification.dto.response.GetNotificationResDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.MemberNotificationRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
@@ -43,7 +43,7 @@ public class NotificationServiceImpl implements NotificationService {
             memberNotifications = memberNotificationRepository.findByMemberOrderByIdxDesc(member, PageRequest.of(0, 10));
         }
         else {
-            MemberNotification lastMemberNotification = memberNotificationRepository.findById(lastNotificationIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+            memberNotificationRepository.findById(lastNotificationIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
 
             memberNotifications = memberNotificationRepository.findByIdxLessThanAndMemberOrderByIdxDesc(lastNotificationIdx, member, PageRequest.of(0, 10));
         }
@@ -85,11 +85,10 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     public void addNotification(Notification notification, List<Member> members) {
         // MemberNotification 추가
-        for(Member member : members) {
-            MemberNotification memberNotification = new MemberNotification();
-            memberNotification.setMember(member);
-            memberNotification.setNotification(notification);
-        }
+        members.stream().forEach(member -> notification.addMemberNotifications(MemberNotification.builder()
+                        .member(member)
+                        .notification(notification)
+                .build()));
 
         // 리스트 저장
         notificationRepository.save(notification);
@@ -98,9 +97,11 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public void addNotification(Notification notification, Member member) {
-        MemberNotification memberNotification = new MemberNotification();
-        memberNotification.setMember(member);
-        memberNotification.setNotification(notification);
+
+        notification.addMemberNotifications(MemberNotification.builder()
+                .member(member)
+                .notification(notification)
+                .build());
 
         // 리스트 저장
         notificationRepository.save(notification);

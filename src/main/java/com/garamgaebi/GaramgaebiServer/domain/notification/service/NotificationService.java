@@ -2,7 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.notification.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.Notification;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationResDto;
+import com.garamgaebi.GaramgaebiServer.domain.notification.dto.response.GetNotificationResDto;
 
 import java.util.List;
 
