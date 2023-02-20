@@ -21,10 +21,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+
+/* Setter, Builder, AllArgsConstructor 일단 두기 */
 @Setter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
+
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @DynamicInsert
 @DynamicUpdate
 @Entity
@@ -63,6 +66,25 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
+    @Builder
+    public Member(String nickname,
+                  String profileEmail,
+                  String socialEmail,
+                  String uniEmail,
+                  String content,
+                  String profileUrl,
+                  String belong,
+                  MemberStatus status) {
+        this.nickname = nickname;
+        this.profileEmail = profileEmail;
+        this.socialEmail = socialEmail;
+        this.uniEmail = uniEmail;
+        this.content = content;
+        this.profileUrl = profileUrl;
+        this.belong = belong;
+        this.status = status;
+    }
+
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Education> educations = new ArrayList<Education>();
@@ -83,25 +105,6 @@ public class Member extends BaseTimeEntity implements UserDetails {
     // fcm 토큰 엔티티 연결
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberFcm> memberFcms = new ArrayList<MemberFcm>();
-
-    @Builder
-    public Member(String nickname,
-                  String profileEmail,
-                  String socialEmail,
-                  String uniEmail,
-                  String content,
-                  String profileUrl,
-                  String belong,
-                  MemberStatus status) {
-        this.nickname = nickname;
-        this.profileEmail = profileEmail;
-        this.socialEmail = socialEmail;
-        this.uniEmail = uniEmail;
-        this.content = content;
-        this.profileUrl = profileUrl;
-        this.belong = belong;
-        this.status = status;
-    }
 
     public void inactivedMember() {
         this.nickname = "-";

@@ -75,8 +75,7 @@ public class EmailService {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        EmailRes res = new EmailRes();
-        res.setMessage("이메일이 전송되었습니다.");
+        EmailRes res = new EmailRes("이메일이 전송되었습니다.");
 
         return res;
     }
@@ -95,8 +94,7 @@ public class EmailService {
             throw new RestApiException(ErrorCode.NOT_EXIST_VERIFY_EMAIL);
         }
 
-        EmailRes res = new EmailRes();
-        res.setMessage("인증에 성공하였습니다.");
+        EmailRes res = new EmailRes("인증에 성공하였습니다.");
 
         return res;
     }

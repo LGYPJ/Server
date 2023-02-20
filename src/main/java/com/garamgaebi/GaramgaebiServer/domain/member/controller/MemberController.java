@@ -1,7 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.controller;
 
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
-import com.garamgaebi.GaramgaebiServer.domain.member.service.MemberService;
+import com.garamgaebi.GaramgaebiServer.domain.member.service.MemberServiceImpl;
 import com.garamgaebi.GaramgaebiServer.global.security.dto.TokenInfo;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/member")
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
 
     @Autowired
-    public MemberController(MemberService memberService) { this.memberService = memberService; }
+    public MemberController(MemberServiceImpl memberService) { this.memberService = memberService; }
 
     @PostMapping("/post")
     public BaseResponse<PostMemberRes> postMember(@RequestBody PostMemberReq postMemberReq) {

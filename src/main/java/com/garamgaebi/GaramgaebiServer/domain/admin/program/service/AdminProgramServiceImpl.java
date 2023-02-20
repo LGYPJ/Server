@@ -8,7 +8,7 @@ import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramPayStatus;
 import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramStatus;
 import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramType;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameService;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service.GameServiceImpl;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEvent;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
@@ -33,7 +33,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
 
     private final AdminProgramRepository adminProgramRepository;
     private final AdminPresentationRepository adminPresentationRepository;
-    private final GameService gameService;
+    private final GameServiceImpl gameService;
 
     private final ApplicationEventPublisher publisher;
     private final S3Uploader s3Uploader;

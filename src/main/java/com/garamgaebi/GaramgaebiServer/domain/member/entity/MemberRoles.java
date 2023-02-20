@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@Setter
-@Builder
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
 @Table(name = "Member_roles")
@@ -21,6 +19,12 @@ public class MemberRoles {
 
     @Column(nullable = false)
     private String roles;
+
+    @Builder
+    public MemberRoles(Long memberIdx, String roles) {
+        this.memberIdx = memberIdx;
+        this.roles = roles;
+    }
 
     public void inactivedMember() {
         this.roles = "INACTIVE";

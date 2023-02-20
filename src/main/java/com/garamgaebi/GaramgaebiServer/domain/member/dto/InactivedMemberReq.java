@@ -11,15 +11,6 @@ public class InactivedMemberReq {
     private String content;
     private MemberQuitStatus category;
 
-    @Builder
-    public InactivedMemberReq(Long memberIdx,
-                              String content,
-                              MemberQuitStatus category) {
-        this.memberIdx = memberIdx;
-        this.content = content;
-        this.category = category;
-    }
-
     public MemberQuit toEntity() {
         return MemberQuit.builder()
                 .memberIdx(memberIdx)

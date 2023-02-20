@@ -1,26 +1,39 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.member.entity.MemberFcm;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.MemberRoles;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.*;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberQuitRepository;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRolesRepository;
+import com.garamgaebi.GaramgaebiServer.global.security.JwtTokenProvider;
 import com.garamgaebi.GaramgaebiServer.global.security.dto.TokenInfo;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.garamgaebi.GaramgaebiServer.global.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface MemberService {
-    /* 멤버 가입 */
-    public PostMemberRes postMember(PostMemberReq postMemberReq);
+import java.util.Optional;
 
-    /* 멤버 탈퇴 */
-    public InactivedMemberRes inactivedMember(InactivedMemberReq inactivedMemberReq);
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+@PropertySource("classpath:application.properties")
+public class MemberServiceImpl implements MemberService {
+    private final MemberRepository memberRepository;
+    private final MemberRolesRepository memberRolesRepository;
+    private final MemberQuitRepository memberQuitRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    /* 멤버 로그인 */
-    public TokenInfo login(MemberLoginReq memberLoginReq);
-    
-    /* 멤버 로그아웃 */
-    public MemberLogoutRes logout(MemberLogoutReq memberLogoutReq);
-
+    private final RedisUtil redisUtil;
 
 
     private boolean checkNicknameValidation(String nickname) {
@@ -38,6 +51,7 @@ public interface MemberService {
         return true;
     }
 
+    // 멤버 가입
     @Transactional
     public PostMemberRes postMember(PostMemberReq postMemberReq) {
         if (checkNicknameValidation(postMemberReq.getNickname())) { // 유효한 닉네임
@@ -56,9 +70,7 @@ public interface MemberService {
             Member member = memberRepository.save(postMemberReq.toEntity());
             Long memberIdx = member.getMemberIdx();
 
-            MemberRolesDto memberRolesDto = new MemberRolesDto();
-            memberRolesDto.setMemberIdx(memberIdx);
-            memberRolesDto.setRoles("USER");
+            MemberRolesDto memberRolesDto = new MemberRolesDto(memberIdx, "USER");
             memberRolesRepository.save(memberRolesDto.toEntity());
 
             PostMemberRes postMemberRes = new PostMemberRes(memberIdx);
@@ -69,6 +81,7 @@ public interface MemberService {
 
     }
 
+    // 멤버 탈퇴
     @Transactional
     public InactivedMemberRes inactivedMember(InactivedMemberReq inactivedMemberReq) {
         Member member = memberRepository.findById(inactivedMemberReq.getMemberIdx())
@@ -88,6 +101,7 @@ public interface MemberService {
         return new InactivedMemberRes(true);
     }
 
+    // 멤버 로그인
     @Transactional
     public TokenInfo login(MemberLoginReq memberLoginReq) {
         // MemberLoginReq.socialEmail로 MemberIdx 조회 및 반환
@@ -117,16 +131,10 @@ public interface MemberService {
                 tokenInfo.getRefreshToken(),
                 tokenInfo.getRefreshTokenExpirationTime());
 
-        if(!memberLoginReq.getFcmToken().isBlank()) {
-            member.addMemberFcms(MemberFcm.builder()
-                    .member(member)
-                    .fcmToken(memberLoginReq.getFcmToken())
-                    .build());
-            memberRepository.save(member);
-        }
         return tokenInfo;
     }
 
+    // 멤버 로그아웃
     public MemberLogoutRes logout(MemberLogoutReq memberLogoutReq) {
         // 1. Access Token 검증
         if (!jwtTokenProvider.validateToken(memberLogoutReq.getAccessToken())) {
@@ -148,15 +156,7 @@ public interface MemberService {
                 "logout",
                 expiration);
 
-        MemberLogoutRes memberLogoutRes = new MemberLogoutRes();
-        memberLogoutRes.setMemberInfo(authentication.getName());
-
-        if(memberLogoutReq.getFcmToken() != null) {
-            Member member = memberRepository.findBySocialEmail(authentication.getName()).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
-
-            member.deleteMemberFcm(memberLogoutReq.getFcmToken());
-        }
-
+        MemberLogoutRes memberLogoutRes = new MemberLogoutRes(authentication.getName());
 
         return memberLogoutRes;
     }
