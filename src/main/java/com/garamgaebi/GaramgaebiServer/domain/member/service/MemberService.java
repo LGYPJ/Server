@@ -131,7 +131,7 @@ public class MemberService {
                 tokenInfo.getRefreshToken(),
                 tokenInfo.getRefreshTokenExpirationTime());
 
-        if(memberLoginReq.getFcmToken() != null) {
+        if(!memberLoginReq.getFcmToken().isBlank()) {
             member.addMemberFcms(MemberFcm.builder()
                     .member(member)
                     .fcmToken(memberLoginReq.getFcmToken())
