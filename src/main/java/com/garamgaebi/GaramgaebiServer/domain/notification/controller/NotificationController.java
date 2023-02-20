@@ -3,6 +3,9 @@ package com.garamgaebi.GaramgaebiServer.domain.notification.controller;
 import com.garamgaebi.GaramgaebiServer.domain.notification.dto.response.GetNotificationResDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import com.garamgaebi.GaramgaebiServer.global.security.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NotificationController {
 
     private final NotificationService notificationService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     /**
      * 유저의 알림 리스트 조회
@@ -35,6 +39,9 @@ public class NotificationController {
     @GetMapping("/{member-idx}")
     public BaseResponse<GetNotificationResDto> getMemberNotification(@PathVariable("member-idx") Long memberIdx,
                                                                       @RequestParam(required = false) Long lastNotificationIdx) {
+        if(jwtTokenProvider.checkMemberIdx(memberIdx)) {
+            new RestApiException(ErrorCode.NOT_AUTHORIZED_ACCESS);
+        }
 
         return new BaseResponse<>(notificationService.getMemberNotificationList(memberIdx, lastNotificationIdx));
     }
@@ -51,6 +58,10 @@ public class NotificationController {
     })
     @GetMapping("/unread/{member-idx}")
     public BaseResponse<Map<String, Object>> getIsExistUnreadNotification(@PathVariable("member-idx") Long memberIdx) {
+        if(jwtTokenProvider.checkMemberIdx(memberIdx)) {
+            new RestApiException(ErrorCode.NOT_AUTHORIZED_ACCESS);
+        }
+
         Map<String, Object> result = new ConcurrentHashMap<>();
         result.put("isUnreadExist", notificationService.isMemberNotificationExist(memberIdx));
         return new BaseResponse<>(result);
