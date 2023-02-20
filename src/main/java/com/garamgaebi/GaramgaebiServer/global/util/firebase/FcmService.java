@@ -54,10 +54,8 @@ public class FcmService {
 
     public void sendMessageTo(List<String> targetTokenList, NotificationDto notificationDto) throws FirebaseMessagingException {
         MulticastMessage message = MulticastMessage.builder()
-                .setNotification(Notification.builder()
-                        .setTitle(notificationDto.getNotificationType().toString())
-                        .setBody(notificationDto.getContent())
-                        .build())
+                .putData("notificationType", notificationDto.getNotificationType().toString())
+                .putData("content", notificationDto.getContent())
                 .putData("programIdx", notificationDto.getResourceIdx().toString())
                 .putData("programType", notificationDto.getResourceType().toString())
                 .addAllTokens(targetTokenList)

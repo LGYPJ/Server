@@ -39,7 +39,7 @@ public class Presentation {
 
     @Builder
     public Presentation(Program program, String title, String nickname, String organization, String content, String presentationUrl, String profileImg) {
-        this.program = program;
+        this.setProgram(program);
         this.title = title;
         this.nickname = nickname;
         this.organization = organization;
