@@ -132,7 +132,8 @@ public class MemberServiceImpl implements MemberService {
                 tokenInfo.getRefreshToken(),
                 tokenInfo.getRefreshTokenExpirationTime());
 
-        if(!memberLoginReq.getFcmToken().isBlank()) {
+        if(!memberLoginReq.getFcmToken().isBlank()
+                && member.getMemberFcms().stream().noneMatch(memberFcm -> memberFcm.getFcmToken().equals(memberLoginReq.getFcmToken()))) {
             member.addMemberFcms(MemberFcm.builder()
                     .member(member)
                     .fcmToken(memberLoginReq.getFcmToken())
