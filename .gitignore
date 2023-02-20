@@ -3,7 +3,7 @@ application-garamgaebi.properties
 garamgaebi-firebase-secret.json
 
 ### log ###
-*.log
+log/
 
 HELP.md
 .gradle
