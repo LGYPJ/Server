@@ -154,9 +154,6 @@ public class Program {
         return ProgramOpenStatus.OPEN;
     }
 
-
-    // == 비즈니스 로직 == //
-
     // 유저 신청 가능 여부 조회
     public ProgramUserButtonStatus checkMemberCanApply(Member member) {
         // 프로그램 일자 지났으면 무조건 마감 버튼
@@ -227,4 +224,21 @@ public class Program {
         return participants;
     }
 
+    // == 비즈니스 로직 == //
+    public void close() {
+        if(this.getIsPay() == ProgramPayStatus.FREE) {
+            this.setStatus(ProgramStatus.CLOSED_CONFIRM);
+            for(Apply apply : this.getApplies()) {
+                if(apply.getStatus() == ApplyStatus.APPLY) {
+                    apply.setStatus(ApplyStatus.APPLY_CONFIRM);
+                }
+                else if(apply.getStatus() == ApplyStatus.CANCEL){
+                    apply.setStatus(ApplyStatus.CANCEL_CONFIRM);
+                }
+            }
+        }
+        else {
+            this.setStatus(ProgramStatus.CLOSED);
+        }
+    }
 }

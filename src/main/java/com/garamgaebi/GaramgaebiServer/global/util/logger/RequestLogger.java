@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.global.util.logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -39,9 +41,12 @@ public class RequestLogger {
             try {
                 params.put("controller", controllerName);
                 params.put("method", methodName);
-                params.put("params", mapper.registerModule(new JavaTimeModule()).writeValueAsString(getParams(joinPoint)));
+                Object param = getParams(joinPoint);
+                params.put("params", mapper.registerModule(new JavaTimeModule()).writeValueAsString(param));
                 params.put("http-method", request.getMethod());
                 params.put("request-uri", request.getRequestURI());
+            } catch (InvalidDefinitionException e) {
+                // MultipartFile request
             } catch (Exception e) {
                 log.error("로그 AOP 에러", e);
             }
