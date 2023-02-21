@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class NotificationServiceImpl implements NotificationService {
 
         Member member = validMember(memberIdx);
 
-        Slice<MemberNotification> memberNotifications = new SliceImpl<MemberNotification>(new ArrayList<>());
+        Slice<MemberNotification> memberNotifications;
 
         if(lastNotificationIdx == null) {
             memberNotifications = memberNotificationRepository.findByMemberOrderByIdxDesc(member, PageRequest.of(0, 10));
@@ -50,20 +51,11 @@ public class NotificationServiceImpl implements NotificationService {
 
         List<GetNotificationDto> getNotificationDtos = new ArrayList<GetNotificationDto>();
 
-
-        for(MemberNotification memberNotification : memberNotifications.getContent()) {
-            getNotificationDtos.add(GetNotificationDto.builder()
-                            .notificationIdx(memberNotification.getIdx())
-                                .content(memberNotification.getNotification().getContent())
-                            .notificationType(memberNotification.getNotification().getNotificationType())
-                            .resourceIdx(memberNotification.getNotification().getResourceIdx())
-                            .resourceType(memberNotification.getNotification().getResourceType())
-                            .isRead(memberNotification.getIsRead())
-                    .build());
-
+        for(MemberNotification memberNotification : memberNotifications) {
+            getNotificationDtos.add(memberNotification.toGetNotificationDto());
             memberNotification.read();
-            memberNotificationRepository.save(memberNotification);
         }
+        memberNotificationRepository.saveAll(memberNotifications);
 
         return GetNotificationResDto.builder()
                 .result(getNotificationDtos)
@@ -84,6 +76,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public void addNotification(Notification notification, List<Member> members) {
+
         // MemberNotification 추가
         members.stream().forEach(member -> notification.addMemberNotifications(MemberNotification.builder()
                         .member(member)
@@ -97,6 +90,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public void addNotification(Notification notification, Member member) {
+        notificationRepository.save(notification);
 
         notification.addMemberNotifications(MemberNotification.builder()
                 .member(member)

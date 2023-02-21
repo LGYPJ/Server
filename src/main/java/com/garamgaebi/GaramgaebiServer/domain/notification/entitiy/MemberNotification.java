@@ -1,6 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.entitiy;
 
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.notification.dto.response.GetNotificationDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -34,8 +35,8 @@ public class MemberNotification {
 
     @Builder
     public MemberNotification(Member member, Notification notification) {
-        this.member = member;
-        this.notification = notification;
+        this.setMember(member);
+        this.setNotification(notification);
         this.isRead = false;
         this.createdAt = LocalDateTime.now();
     }
@@ -55,6 +56,18 @@ public class MemberNotification {
         if(!notification.getMemberNotifications().contains(this)) {
             notification.addMemberNotifications(this);
         }
+    }
+
+    // Dto 변환 메서드
+    public GetNotificationDto toGetNotificationDto() {
+        return GetNotificationDto.builder()
+                .notificationIdx(this.getIdx())
+                .content(this.getNotification().getContent())
+                .notificationType(this.getNotification().getNotificationType())
+                .resourceIdx(this.getNotification().getResourceIdx())
+                .resourceType(this.getNotification().getResourceType())
+                .isRead(this.getIsRead())
+                .build();
     }
 
     // 비즈니스 로직
