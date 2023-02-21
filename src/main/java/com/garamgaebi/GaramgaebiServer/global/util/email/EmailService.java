@@ -3,6 +3,8 @@ package com.garamgaebi.GaramgaebiServer.global.util.email;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.SendEmailReq;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.EmailRes;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.VerifyEmailReq;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.util.RedisUtil;
@@ -14,6 +16,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -21,6 +24,7 @@ import java.util.Random;
 public class EmailService {
     private final JavaMailSender emailSender;
     private final RedisUtil redisUtil;
+    private final MemberRepository memberRepository;
 
     public static String ePw = null;
 
@@ -64,6 +68,11 @@ public class EmailService {
     }
 
     public EmailRes sendEmail(SendEmailReq sendEmailReq) throws Exception {
+        Optional<Member> member = memberRepository.findByUniEmail(sendEmailReq.getEmail());
+        if (member.isPresent()) {
+            throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
+        }
+
         createKey(); // 인증번호 생성
 
         redisUtil.setDataExpire(sendEmailReq.getEmail(), ePw, 60 * 3L); // 유효시간 3분
