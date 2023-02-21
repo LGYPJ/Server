@@ -1,9 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomDeleteReq;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomPostReq;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomRes;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetRes;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.ProgramGameroom;
 
 import java.util.List;
@@ -31,5 +28,5 @@ public interface GameService {
     public List<String> getImageUrls(Long seed);
 
     /* 게임방의 current image index 증가 */
-    public String patchCurrentImgIdx(String roomId, Long memberIdx);
+    public String patchCurrentImgIdx(CurrentImgIdxReq currentImgIdxReq, Long memberIdx);
 }

@@ -6,4 +6,5 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CurrentImgIdxReq {
     private String roomId;
+    private Long nextMemberIdx;
 }
