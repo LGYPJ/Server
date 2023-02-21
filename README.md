@@ -4,8 +4,9 @@
 # 목차
 [1. 프로젝트 소개](#프로젝트-소개)  
 [2. 주소](#주소)  
-[3. 기술 스택](#기술-스택)  
-[4. Dependency](#dependency)
+[3. Env](#Env)  
+[4. Architecture](#Architecture)  
+[5. Stack](#Stack)
 <br/>
 <br/>
 <br/>
@@ -29,41 +30,15 @@ __Spring Boot 3.0.1, Gradle 7.6, Java 17__
 <br/>
 <br/>
 
-## Stack
-- __Server__
-  - AWS EC2
-  
-  
-- __RDBMS__
-  - Mysql
-  - Redis
-  
+## Architecture
+![garamgaebi-server-structure drawio_1](https://user-images.githubusercontent.com/88525701/220366796-3ba0c57c-49db-43d6-a957-a3447acf8078.png)
 
-- __Storage__
-  - AWS RDS
-  - AWS S3
-  
-  
-- ORM
-  - Spring data JAP: Hibernate
-  
+## Stack
 
 - __Authorization__
   - Security
   - Jwt
   - Mail
-  
-
-- __Validation__
-  - Validation
-  
-
-- __Firebase__
-  - Firebase-admin
-  
-
-- __Image__
-  - AWS - S3
   
 
 - __Scheduler__

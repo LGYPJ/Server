@@ -4,7 +4,6 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberRoomReq {
+public class MemberRoomPostReq {
     private String roomId;
-    private Long memberIdx;
 }
