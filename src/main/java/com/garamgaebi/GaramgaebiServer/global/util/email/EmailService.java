@@ -68,10 +68,10 @@ public class EmailService {
     }
 
     public EmailRes sendEmail(SendEmailReq sendEmailReq) throws Exception {
-        Optional<Member> member = memberRepository.findByUniEmail(sendEmailReq.getEmail());
-        if (member.isPresent()) {
-            throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
-        }
+//        Optional<Member> member = memberRepository.findByUniEmail(sendEmailReq.getEmail());
+//        if (member.isPresent()) {
+//            throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
+//        }
 
         createKey(); // 인증번호 생성
 
