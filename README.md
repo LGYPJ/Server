@@ -29,6 +29,9 @@ __Spring Boot 3.0.1, Gradle 7.6, Java 17__
 <br/>
 <br/>
 
+## Architecture
+![garamgaebi-server-structure drawio_1](https://user-images.githubusercontent.com/88525701/220366796-3ba0c57c-49db-43d6-a957-a3447acf8078.png)
+
 ## Stack
 - __Server__
   - AWS EC2
