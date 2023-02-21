@@ -1,9 +1,10 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service;
 
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomDeleteReq;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.GameroomMember;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.ProgramGameroom;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomReq;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomPostReq;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.GameRoomMemberRepository;
@@ -87,19 +88,19 @@ public class GameServiceImpl implements GameService{
     }
 
     // roomId에 member 등록
-    public MemberRoomRes registerMemberToGameRoom(MemberRoomReq memberRoomReq) {
-        memberRepository.findById(memberRoomReq.getMemberIdx())
+    public MemberRoomRes registerMemberToGameRoom(MemberRoomPostReq memberRoomReq, Long memberIdx) {
+        memberRepository.findById(memberIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
         ProgramGameroom room = programGameroomRepository.findByRoomId(memberRoomReq.getRoomId())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 
-        Optional<GameroomMember> member = gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomReq.getRoomId(), memberRoomReq.getMemberIdx());
+        Optional<GameroomMember> member = gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomReq.getRoomId(), memberIdx);
         if (!member.isEmpty()) {
             throw new RestApiException(ErrorCode.ALREADY_ENTER_GAME);
         }
 
-        GameroomMember gameroomMember = GameroomMember.builder().roomId(memberRoomReq.getRoomId()).memberIdx(memberRoomReq.getMemberIdx()).build();
+        GameroomMember gameroomMember = GameroomMember.builder().roomId(memberRoomReq.getRoomId()).memberIdx(memberIdx).build();
         gameRoomMemberRepository.save(gameroomMember);
 
         MemberRoomRes memberRoomRes = new MemberRoomRes("게임방 입장에 성공하였습니다.", room.getCurrentImgIdx(), room.getCurrentMemberIdx());
@@ -109,17 +110,24 @@ public class GameServiceImpl implements GameService{
 
     // roomId에 member 삭제
     @Transactional
-    public String deleteMemberFromGameRoom(MemberRoomReq memberRoomReq) {
-        memberRepository.findById(memberRoomReq.getMemberIdx())
+    public String deleteMemberFromGameRoom(MemberRoomDeleteReq memberRoomDeleteReq, Long memberIdx) {
+        /* 멤버 퇴장 */
+        memberRepository.findById(memberIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
-        programGameroomRepository.findByRoomId(memberRoomReq.getRoomId())
+        ProgramGameroom programGameroom = programGameroomRepository.findByRoomId(memberRoomDeleteReq.getRoomId())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 
-        gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomReq.getRoomId(), memberRoomReq.getMemberIdx())
+        gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomDeleteReq.getRoomId(), memberIdx)
                         .orElseThrow(() -> new RestApiException(ErrorCode.NOT_REGISTERED_MEMBER_FROM_GAME_ROOM));
 
-        gameRoomMemberRepository.deleteByMemberIdx(memberRoomReq.getMemberIdx());
+        gameRoomMemberRepository.deleteByMemberIdx(memberIdx);
+
+        /* current_member_idx 갱신 */
+        gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomDeleteReq.getRoomId(), memberRoomDeleteReq.getNextMemberIdx())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_REGISTERED_MEMBER_FROM_GAME_ROOM));
+
+        programGameroom.setCurrentMemberIdx(memberRoomDeleteReq.getNextMemberIdx());
 
         return "게임방 퇴장에 성공하였습니다.";
     }
@@ -138,10 +146,8 @@ public class GameServiceImpl implements GameService{
         ProgramGameroom room = programGameroomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 
-        System.out.println("초기화 전 " + room.getCurrentImgIdx());
         if (room.getCurrentImgIdx() >= 29) {
             room.initCurrentImgIdx();
-            System.out.println("초기화 후 " + room.getCurrentImgIdx());
         } else {
             room.increaseCurrentImgIdx();
         }
