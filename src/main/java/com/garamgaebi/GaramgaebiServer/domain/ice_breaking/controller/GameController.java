@@ -97,7 +97,7 @@ public class GameController {
     @ResponseBody
     public BaseResponse<String> patchCurrentImgIdx(@RequestBody CurrentImgIdxReq currentImgIdxReq) {
         return new BaseResponse<>(gameService.patchCurrentImgIdx(
-                currentImgIdxReq.getRoomId(),
+                currentImgIdxReq,
                 jwtTokenProvider.getMemberIdx()
         ));
     }
