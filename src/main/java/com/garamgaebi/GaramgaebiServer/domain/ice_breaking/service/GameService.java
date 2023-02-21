@@ -1,10 +1,10 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomReq;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomDeleteReq;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomPostReq;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.ProgramGameroom;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,10 +22,10 @@ public interface GameService {
     public List<MembersGetRes> getMembersByGameRoomIdx(String roomId);
 
     /* roomId에 member 등록 */
-    public MemberRoomRes registerMemberToGameRoom(MemberRoomReq memberRoomReq);
+    public MemberRoomRes registerMemberToGameRoom(MemberRoomPostReq memberRoomReq, Long memberIdx);
 
     /* roomId에 member 삭제 */
-    public String deleteMemberFromGameRoom(MemberRoomReq memberRoomReq);
+    public String deleteMemberFromGameRoom(MemberRoomDeleteReq memberRoomDeleteReq, Long memberIdx);
 
     /* 이미지 url 리스트 조회 */
     public List<String> getImageUrls(Long seed);

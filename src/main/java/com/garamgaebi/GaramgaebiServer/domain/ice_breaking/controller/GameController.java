@@ -54,8 +54,10 @@ public class GameController {
     })
     @PostMapping("/member")
     @ResponseBody
-    public BaseResponse<MemberRoomRes> postMemberToGameRoom(@RequestBody MemberRoomReq memberRoomReq) {
-        return new BaseResponse<>(gameService.registerMemberToGameRoom(memberRoomReq));
+    public BaseResponse<MemberRoomRes> postMemberToGameRoom(@RequestBody MemberRoomPostReq memberRoomReq) {
+        return new BaseResponse<>(gameService.registerMemberToGameRoom(memberRoomReq,
+                jwtTokenProvider.getMemberIdx()
+        ));
     }
 
     // gameRoom에 member 삭제
@@ -66,8 +68,11 @@ public class GameController {
     })
     @DeleteMapping("/member")
     @ResponseBody
-    public BaseResponse<String> deleteMemberFromGameRoom(@RequestBody MemberRoomReq memberRoomReq) {
-        return new BaseResponse<>(gameService.deleteMemberFromGameRoom(memberRoomReq));
+    public BaseResponse<String> deleteMemberFromGameRoom(@RequestBody MemberRoomDeleteReq memberRoomDeleteReq) {
+        return new BaseResponse<>(gameService.deleteMemberFromGameRoom(
+                memberRoomDeleteReq,
+                jwtTokenProvider.getMemberIdx()
+        ));
     }
 
     // 랜덤 이미지 조회
