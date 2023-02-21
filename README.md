@@ -4,8 +4,9 @@
 # 목차
 [1. 프로젝트 소개](#프로젝트-소개)  
 [2. 주소](#주소)  
-[3. 기술 스택](#기술-스택)  
-[4. Dependency](#dependency)
+[3. Env](#Env)  
+[4. Architecture](#Architecture)  
+[5. Stack](#Stack)
 <br/>
 <br/>
 <br/>
