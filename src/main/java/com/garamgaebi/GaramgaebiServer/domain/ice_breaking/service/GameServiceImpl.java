@@ -85,6 +85,7 @@ public class GameServiceImpl implements GameService{
     }
 
     // roomId에 member 등록
+    @Transactional
     public MemberRoomRes registerMemberToGameRoom(MemberRoomPostReq memberRoomReq, Long memberIdx) {
         memberRepository.findById(memberIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
@@ -99,6 +100,12 @@ public class GameServiceImpl implements GameService{
 
         GameroomMember gameroomMember = GameroomMember.builder().roomId(memberRoomReq.getRoomId()).memberIdx(memberIdx).build();
         gameRoomMemberRepository.save(gameroomMember);
+
+        System.out.println("register member count: " + gameRoomMemberRepository.countByRoomId(memberRoomReq.getRoomId()));
+
+        if (gameRoomMemberRepository.countByRoomId(memberRoomReq.getRoomId()) == 1) {
+            room.setCurrentMemberIdx(memberIdx);
+        }
 
         MemberRoomRes memberRoomRes = new MemberRoomRes("게임방 입장에 성공하였습니다.", room.getCurrentImgIdx(), room.getCurrentMemberIdx());
 
@@ -119,6 +126,12 @@ public class GameServiceImpl implements GameService{
                         .orElseThrow(() -> new RestApiException(ErrorCode.NOT_REGISTERED_MEMBER_FROM_GAME_ROOM));
 
         gameRoomMemberRepository.deleteByMemberIdx(memberIdx);
+
+        System.out.println("delete member count: " + gameRoomMemberRepository.countByRoomId(memberRoomDeleteReq.getRoomId()));
+
+        if (gameRoomMemberRepository.countByRoomId(memberRoomDeleteReq.getRoomId()) == 0) {
+            programGameroom.setCurrentMemberIdx(0L);
+        }
 
         if (memberRoomDeleteReq.getNextMemberIdx() != -1) {
             /* current_member_idx 갱신 */
