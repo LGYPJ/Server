@@ -1,10 +1,14 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberLogoutRes {
     private String memberInfo;
+
+    @Builder
+    public MemberLogoutRes(String memberInfo) {
+        this.memberInfo = memberInfo;
+    }
 }

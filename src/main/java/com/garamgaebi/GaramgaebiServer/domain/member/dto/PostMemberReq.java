@@ -1,7 +1,7 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.dto;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
 import lombok.*;
 
 @Getter
@@ -12,19 +12,6 @@ public class PostMemberReq {
     private String socialEmail;
     private String uniEmail;
     private MemberStatus status;
-
-    @Builder
-    public PostMemberReq(String nickname,
-                         String profileEmail,
-                         String socialEmail,
-                         String uniEmail,
-                         MemberStatus status) {
-        this.nickname = nickname;
-        this.profileEmail = profileEmail;
-        this.socialEmail = socialEmail;
-        this.uniEmail = uniEmail;
-        this.status = status;
-    }
 
     public Member toEntity() {
         return Member.builder()

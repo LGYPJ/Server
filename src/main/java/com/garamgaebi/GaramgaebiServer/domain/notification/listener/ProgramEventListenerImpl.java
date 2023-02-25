@@ -1,24 +1,22 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.listener;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.notification.NotificationType;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.vo.NotificationType;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.Notification;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.DeadlineEvent;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEvent;
-import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
-import com.garamgaebi.GaramgaebiServer.domain.notification.sender.NotificationSender;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
+import com.garamgaebi.GaramgaebiServer.global.util.firebase.NotificationSender;
 import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component

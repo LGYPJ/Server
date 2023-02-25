@@ -1,16 +1,16 @@
 package com.garamgaebi.GaramgaebiServer.domain.program.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramStatus;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramType;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.program.ProgramUserButtonStatus;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.ProgramGameroomRepository;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramStatus;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramType;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramUserButtonStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.GetParticipantsRes;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ParticipantDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramDto;
 import com.garamgaebi.GaramgaebiServer.domain.program.dto.response.ProgramInfoDto;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import com.garamgaebi.GaramgaebiServer.domain.program.repository.ProgramRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
@@ -24,17 +24,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NetworkingServiceImpl implements NetworkingService {
     private final ProgramRepository programRepository;
     private final MemberRepository memberRepository;
 
     // 이번 달 네트워킹 조회
-    @Transactional(readOnly = true)
     @Override
     public ProgramDto findThisMonthNetworking() {
 
@@ -44,12 +44,11 @@ public class NetworkingServiceImpl implements NetworkingService {
             return null;
         }
 
-        return programDtoBuilder(thisMonthProgram.get(0));
+        return thisMonthProgram.get(0).toProgramDto();
     }
 
 
     // 가장 빠른 예정된 네트워킹 조회
-    @Transactional(readOnly = true)
     @Override
     public ProgramDto findReadyNetworking() {
 
@@ -59,34 +58,24 @@ public class NetworkingServiceImpl implements NetworkingService {
             return null;
         }
 
-        return programDtoBuilder(readyProgram.get(0));
+        return readyProgram.get(0).toProgramDto();
     }
 
 
     // 마감된 네트워킹 리스트 조회
-    @Transactional(readOnly = true)
     @Override
     public List<ProgramDto> findClosedNetworkingList() {
         List<Program> closePrograms = programRepository.findClosedProgramList(LocalDateTime.now(), ProgramType.NETWORKING);
-        List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
-        for(Program program : closePrograms) {
-            programDtos.add(programDtoBuilder(program));
-        }
+        return closePrograms.stream().map(program -> program.toProgramDto()).collect(Collectors.toList());
 
-        return programDtos;
     }
 
     // 홈 화면 네트워킹 리스트 조회
-    @Transactional(readOnly = true)
     @Override
     public List<ProgramDto> findMainNetworkingList() {
 
         ProgramDto thisMonthNetworking = findThisMonthNetworking();
-
-        List<Program> readyNetworkings = programRepository.findReadyProgramList(getLastDayOfMonth(), ProgramType.NETWORKING);
-
-        List<ProgramDto> closeNetworkings = findClosedNetworkingList();
 
         List<ProgramDto> programDtos = new ArrayList<ProgramDto>();
 
@@ -94,19 +83,14 @@ public class NetworkingServiceImpl implements NetworkingService {
             programDtos.add(thisMonthNetworking);
         }
 
-        for(Program program : readyNetworkings) {
-            programDtos.add(programDtoBuilder(program));
-        }
+        programRepository.findReadyProgramList(getLastDayOfMonth(), ProgramType.NETWORKING).stream().forEach(program -> programDtos.add(program.toProgramDto()));
+        findClosedNetworkingList().forEach(program -> programDtos.add(program));
 
-        for(ProgramDto programDto : closeNetworkings) {
-            programDtos.add(programDto);
-        }
 
         return programDtos;
     }
 
     // 네트워킹 상세페이지 상단 정보
-    @Transactional(readOnly = true)
     @Override
     public ProgramInfoDto findNetworkingDetails(Long networkingIdx, Long memberIdx) {
 
@@ -114,16 +98,7 @@ public class NetworkingServiceImpl implements NetworkingService {
 
         Program networking = validNetworking(networkingIdx);
 
-        ProgramInfoDto programInfoDto = ProgramInfoDto.builder()
-                .programIdx(networking.getIdx())
-                .title(networking.getTitle())
-                .date(networking.getDate())
-                .location(networking.getLocation())
-                .fee(networking.getFee())
-                .endDate(networking.getEndDate())
-                .programStatus(networking.getStatus())
-                .userButtonStatus(networking.checkMemberCanApply(member))
-                .build();
+        ProgramInfoDto programInfoDto = networking.toProgramInfoDto(member);
 
         if(programInfoDto.getUserButtonStatus() == ProgramUserButtonStatus.ERROR) {
             log.info("NETWORKING ACCESS DENIED : {}", networkingIdx);
@@ -134,7 +109,6 @@ public class NetworkingServiceImpl implements NetworkingService {
     }
 
     // 네트워킹 신청자 리스트 조회
-    @Transactional(readOnly = true)
     @Override
     public GetParticipantsRes findNetworkingParticipantsList(Long networkingIdx, Long memberIdx) {
 
@@ -170,21 +144,6 @@ public class NetworkingServiceImpl implements NetworkingService {
                 .participantList(participantDtos)
                 .isApply(isApply)
                 .build();
-    }
-
-    // programDto 빌더
-    private ProgramDto programDtoBuilder(Program program) {
-
-        return ProgramDto.builder()
-                .programIdx(program.getIdx())
-                .title(program.getTitle())
-                .date(program.getDate())
-                .location(program.getLocation())
-                .type(program.getProgramType())
-                .payment(program.getIsPay())
-                .status(program.getThisMonthStatus())
-                .isOpen(program.isOpen())
-        .build();
     }
 
     // participantsDto 빌더

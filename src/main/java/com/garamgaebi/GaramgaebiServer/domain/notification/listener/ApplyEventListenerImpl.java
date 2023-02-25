@@ -1,25 +1,20 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.listener;
 
-import com.garamgaebi.GaramgaebiServer.domain.apply.ApplyRepository;
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.notification.NotificationType;
-import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.NotificationDto;
+import com.garamgaebi.GaramgaebiServer.domain.apply.entitiy.Apply;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.vo.NotificationType;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.Notification;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.*;
-import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
-import com.garamgaebi.GaramgaebiServer.domain.notification.sender.NotificationSender;
+import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
+import com.garamgaebi.GaramgaebiServer.global.util.firebase.NotificationSender;
 import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 //@Async("applyThreadPoolExecutor")
@@ -69,7 +64,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         // 알림 엔티티 insert
         Notification notification = Notification.builder()
                 .notificationType(NotificationType.APPLY_CANCEL_COMPLETE)
-                .content(apply.getProgram().getTitle() + " 신청이 취소 되었어요")
+                .content(apply.getProgram().getTitle() + " 신청이 취소되었어요")
                 .resourceIdx(apply.getProgram().getIdx())
                 .resourceType(apply.getProgram().getProgramType())
                 .build();
@@ -158,7 +153,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         // 알림 메세지 내용 가공
         // 알림 엔티티 insert
         Notification notification = Notification.builder()
-                .notificationType(NotificationType.APPLY_CONFIRM)
+                .notificationType(NotificationType.NON_DEPOSIT_CANCEL)
                 .content("참가비 미입금으로 " + program.getTitle() + " 신청이 취소되었어요")
                 .resourceIdx(program.getIdx())
                 .resourceType(program.getProgramType())

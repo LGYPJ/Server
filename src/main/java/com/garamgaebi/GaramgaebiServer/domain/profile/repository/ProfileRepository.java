@@ -1,9 +1,13 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.repository;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.*;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetCareerList;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetEducationList;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetSNSList;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.Career;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.Education;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.QnA;
+import com.garamgaebi.GaramgaebiServer.domain.profile.entity.SNS;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;

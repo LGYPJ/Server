@@ -14,10 +14,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ErrorResponseLogger {
 
-
     @Pointcut("within(com.garamgaebi.GaramgaebiServer.global.response.exception.GlobalExceptionHandler)")
     public void onErrorResponse() {}
-
 
     @Around("com.garamgaebi.GaramgaebiServer.global.util.logger.ErrorResponseLogger.onErrorResponse()")
     public Object doErrorLoging(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -32,5 +30,4 @@ public class ErrorResponseLogger {
         }
         return result;
     }
-
 }

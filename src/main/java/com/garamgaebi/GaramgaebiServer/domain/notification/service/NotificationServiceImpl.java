@@ -1,12 +1,12 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.entity.MemberNotification;
-import com.garamgaebi.GaramgaebiServer.domain.entity.Notification;
-import com.garamgaebi.GaramgaebiServer.domain.entity.status.member.MemberStatus;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.MemberNotification;
+import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.Notification;
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationDto;
-import com.garamgaebi.GaramgaebiServer.domain.notification.dto.GetNotificationResDto;
+import com.garamgaebi.GaramgaebiServer.domain.notification.dto.response.GetNotificationDto;
+import com.garamgaebi.GaramgaebiServer.domain.notification.dto.response.GetNotificationResDto;
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.MemberNotificationRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,33 +38,24 @@ public class NotificationServiceImpl implements NotificationService {
 
         Member member = validMember(memberIdx);
 
-        Slice<MemberNotification> memberNotifications = new SliceImpl<MemberNotification>(new ArrayList<>());
+        Slice<MemberNotification> memberNotifications;
 
         if(lastNotificationIdx == null) {
             memberNotifications = memberNotificationRepository.findByMemberOrderByIdxDesc(member, PageRequest.of(0, 10));
         }
         else {
-            MemberNotification lastMemberNotification = memberNotificationRepository.findById(lastNotificationIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+            memberNotificationRepository.findById(lastNotificationIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
 
             memberNotifications = memberNotificationRepository.findByIdxLessThanAndMemberOrderByIdxDesc(lastNotificationIdx, member, PageRequest.of(0, 10));
         }
 
         List<GetNotificationDto> getNotificationDtos = new ArrayList<GetNotificationDto>();
 
-
-        for(MemberNotification memberNotification : memberNotifications.getContent()) {
-            getNotificationDtos.add(GetNotificationDto.builder()
-                            .notificationIdx(memberNotification.getIdx())
-                                .content(memberNotification.getNotification().getContent())
-                            .notificationType(memberNotification.getNotification().getNotificationType())
-                            .resourceIdx(memberNotification.getNotification().getResourceIdx())
-                            .resourceType(memberNotification.getNotification().getResourceType())
-                            .isRead(memberNotification.getIsRead())
-                    .build());
-
+        for(MemberNotification memberNotification : memberNotifications) {
+            getNotificationDtos.add(memberNotification.toGetNotificationDto());
             memberNotification.read();
-            memberNotificationRepository.save(memberNotification);
         }
+        memberNotificationRepository.saveAll(memberNotifications);
 
         return GetNotificationResDto.builder()
                 .result(getNotificationDtos)
@@ -84,12 +76,12 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public void addNotification(Notification notification, List<Member> members) {
+
         // MemberNotification 추가
-        for(Member member : members) {
-            MemberNotification memberNotification = new MemberNotification();
-            memberNotification.setMember(member);
-            memberNotification.setNotification(notification);
-        }
+        members.stream().forEach(member -> notification.addMemberNotifications(MemberNotification.builder()
+                        .member(member)
+                        .notification(notification)
+                .build()));
 
         // 리스트 저장
         notificationRepository.save(notification);
@@ -98,9 +90,12 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public void addNotification(Notification notification, Member member) {
-        MemberNotification memberNotification = new MemberNotification();
-        memberNotification.setMember(member);
-        memberNotification.setNotification(notification);
+        notificationRepository.save(notification);
+
+        notification.addMemberNotifications(MemberNotification.builder()
+                .member(member)
+                .notification(notification)
+                .build());
 
         // 리스트 저장
         notificationRepository.save(notification);
