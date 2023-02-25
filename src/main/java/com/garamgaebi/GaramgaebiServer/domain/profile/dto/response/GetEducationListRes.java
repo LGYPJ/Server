@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
+package com.garamgaebi.GaramgaebiServer.domain.profile.dto.response;
 
 import com.garamgaebi.GaramgaebiServer.domain.profile.entity.vo.IsLearning;
 import lombok.*;
@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class GetEducationList {
+public class GetEducationListRes {
     private Long educationIdx;
     private String institution;
     private String major;
