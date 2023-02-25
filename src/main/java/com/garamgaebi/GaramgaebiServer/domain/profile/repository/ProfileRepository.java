@@ -1,9 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.repository;
 
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetCareerList;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetEducationList;
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.GetSNSList;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.response.GetCareerListRes;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.response.GetEducationListRes;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.response.GetSNSListRes;
 import com.garamgaebi.GaramgaebiServer.domain.profile.entity.Career;
 import com.garamgaebi.GaramgaebiServer.domain.profile.entity.Education;
 import com.garamgaebi.GaramgaebiServer.domain.profile.entity.QnA;
@@ -60,13 +60,13 @@ public class ProfileRepository {
         em.remove(career);
     }
 
-    public List<GetSNSList> findAllSNS(Long id) {
+    public List<GetSNSListRes> findAllSNS(Long id) {
         Member member = em.find(Member.class, id);
         List<SNS> s = member.getSNSs();
 
-        List<GetSNSList> snsList = new ArrayList<>();
+        List<GetSNSListRes> snsList = new ArrayList<>();
         for (int i = 0; i < s.size(); i++) {
-            GetSNSList sns = new GetSNSList();
+            GetSNSListRes sns = new GetSNSListRes();
             sns.setSnsIdx(s.get(i).getSnsIdx());
             sns.setAddress(s.get(i).getAddress());
             sns.setType(s.get(i).getType());
@@ -75,13 +75,13 @@ public class ProfileRepository {
         return snsList;
     }
 
-    public List<GetEducationList> findAllEducation(Long id) {
+    public List<GetEducationListRes> findAllEducation(Long id) {
         Member member = em.find(Member.class, id);
         List<Education> m = member.getEducations();
 
-        List<GetEducationList> educations = new ArrayList<>();
+        List<GetEducationListRes> educations = new ArrayList<>();
         for (int i = 0; i < m.size(); i++) {
-            GetEducationList education = new GetEducationList();
+            GetEducationListRes education = new GetEducationListRes();
             education.setEducationIdx(m.get(i).getEducationIdx());
             education.setInstitution(m.get(i).getInstitution());
             education.setMajor(m.get(i).getMajor());
@@ -92,13 +92,13 @@ public class ProfileRepository {
         }
         return educations;
     }
-    public List<GetCareerList> findAllCareer(long id) {
+    public List<GetCareerListRes> findAllCareer(long id) {
         Member member = em.find(Member.class, id);
         List<Career> c = member.getCareers();
 
-        List<GetCareerList> careers = new ArrayList<>();
+        List<GetCareerListRes> careers = new ArrayList<>();
         for (int i = 0; i < c.size(); i++) {
-            GetCareerList career = new GetCareerList();
+            GetCareerListRes career = new GetCareerListRes();
             career.setCareerIdx(c.get(i).getCareerIdx());
             career.setCompany(c.get(i).getCompany());
             career.setPosition(c.get(i).getPosition());
@@ -126,7 +126,7 @@ public class ProfileRepository {
     }
 
     public List<Member> findMembers(int c) {
-        String jpql = "SELECT m FROM Member m";
+        String jpql = "SELECT m FROM Member m WHERE status = 'ACTIVE'";
         List<Member> resultList = em.createQuery(jpql, Member.class)
                 .setFirstResult(c)
                 .setMaxResults(11)
@@ -135,7 +135,7 @@ public class ProfileRepository {
     }
 
     public long countMember() {
-        Query jpql = em.createQuery("SELECT COUNT(m) FROM Member m");
+        Query jpql = em.createQuery("SELECT COUNT(m) FROM Member m WHERE status = 'ACTIVE'");
         Long singleResult = (Long) jpql.getSingleResult();
         return singleResult;
     }

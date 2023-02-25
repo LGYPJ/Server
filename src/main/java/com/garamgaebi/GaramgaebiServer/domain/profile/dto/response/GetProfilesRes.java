@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
+package com.garamgaebi.GaramgaebiServer.domain.profile.dto.response;
 
 import lombok.*;
 
@@ -6,11 +6,11 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class GetProfileRes {
+public class GetProfilesRes {
     private Long memberIdx;
     private String nickName;
-    private String profileEmail;
     private String belong;
-    private String content;
     private String profileUrl;
+    private String group;
+    private String detail;
 }

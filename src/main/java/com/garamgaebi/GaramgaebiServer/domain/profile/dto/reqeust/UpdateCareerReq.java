@@ -1,17 +1,17 @@
-package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
+package com.garamgaebi.GaramgaebiServer.domain.profile.dto.reqeust;
 
-import com.garamgaebi.GaramgaebiServer.domain.profile.entity.vo.IsWorking;
+
 import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class GetCareerList {
+public class UpdateCareerReq {
     private Long careerIdx;
     private String company;
     private String position;
-    private IsWorking isWorking;
+    private String isWorking;
     private String startDate;
     private String endDate;
 }
