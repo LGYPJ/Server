@@ -13,6 +13,7 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiExceptio
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -27,9 +28,10 @@ public class GameServiceImpl implements GameService{
     private final IceBreakingImagesRepository iceBreakingImagesRepository;
 
     // Program index로 게임방 불러오기
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<ProgramGameroom> getRoomsByProgram(Long programIdx) {
         List<ProgramGameroom> rooms = programGameroomRepository.findRoomsByProgramIdx(programIdx)
-                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM)); // 방 생성되는 시점에 따라 에러 나중에 바꿔주기
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM));
 
         return rooms;
     }
@@ -65,6 +67,7 @@ public class GameServiceImpl implements GameService{
     }
 
     // game room idx로 member 찾기
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<MembersGetRes> getMembersByGameRoomIdx(String roomId) {
         List<MembersGetRes> members = new ArrayList<>();
         MembersGetRes res = null;

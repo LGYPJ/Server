@@ -37,49 +37,30 @@ public class MemberServiceImpl implements MemberService {
     private final RedisUtil redisUtil;
 
 
-    private boolean checkNicknameValidation(String nickname) {
-//        if (nickname.length() > 8) {
-//            return false;
-//        }
-//
-//        String pattern = String.valueOf(Pattern.compile("^[a-zA-Z0-9]*$"));  // 영문자와 숫자만 있는지 확인
-//
-//        boolean result = Pattern.matches(pattern, nickname);
-//        System.out.println(result);
-//
-//        return result;
-
-        return true;
-    }
-
     // 멤버 가입
     @Transactional
     public PostMemberRes postMember(PostMemberReq postMemberReq) {
-        if (checkNicknameValidation(postMemberReq.getNickname())) { // 유효한 닉네임
-            // 이미 존재하는 소셜 이메일인지 확인
-            Optional<Member> memberBySocial = memberRepository.findBySocialEmail(postMemberReq.getSocialEmail());
-            if (memberBySocial.isEmpty() == false) {
-                throw new RestApiException(ErrorCode.ALREADY_EXIST_SOCIAL_EMAIL);
-            }
-
-            // 이미 존재하는 학교 이메일인지 확인
-            Optional<Member> memberByUni = memberRepository.findByUniEmail(postMemberReq.getUniEmail());
-            if (memberByUni.isEmpty() == false) {
-                throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
-            }
-
-            Member member = memberRepository.save(postMemberReq.toEntity());
-            Long memberIdx = member.getMemberIdx();
-
-            MemberRolesDto memberRolesDto = new MemberRolesDto(memberIdx, "USER");
-            memberRolesRepository.save(memberRolesDto.toEntity());
-
-            PostMemberRes postMemberRes = new PostMemberRes(memberIdx);
-            return postMemberRes;
-        } else { // 유효하지 않은 닉네임
-            throw new RestApiException(ErrorCode.INVALID_NICKNAME);
+        // 이미 존재하는 소셜 이메일인지 확인
+        Optional<Member> memberBySocial = memberRepository.findBySocialEmail(postMemberReq.getSocialEmail());
+        if (memberBySocial.isEmpty() == false) {
+            throw new RestApiException(ErrorCode.ALREADY_EXIST_SOCIAL_EMAIL);
         }
 
+        // 이미 존재하는 학교 이메일인지 확인
+        Optional<Member> memberByUni = memberRepository.findByUniEmail(postMemberReq.getUniEmail());
+        if (memberByUni.isEmpty() == false) {
+            throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
+        }
+
+        Member member = memberRepository.save(postMemberReq.toEntity());
+        Long memberIdx = member.getMemberIdx();
+
+        MemberRolesDto memberRolesDto = new MemberRolesDto(memberIdx, "USER");
+        memberRolesRepository.save(memberRolesDto.toEntity());
+
+
+        PostMemberRes postMemberRes = new PostMemberRes(memberIdx);
+        return postMemberRes;
     }
 
     // 멤버 탈퇴
@@ -148,7 +129,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberLogoutRes logout(MemberLogoutReq memberLogoutReq) {
         // 1. Access Token 검증
         if (!jwtTokenProvider.validateToken(memberLogoutReq.getAccessToken())) {
-            throw new RestApiException(ErrorCode.INVALID_NICKNAME);
+            throw new RestApiException(ErrorCode.INVALID_JWT_TOKEN);
         }
 
         // 2. Access Token에서 User email을 가져옴
