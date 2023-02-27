@@ -14,8 +14,6 @@ public enum ErrorCode {
     NOT_EXIST_MEMBER(2001, "존재하지 않는 회원입니다."),
     NOT_EXIST_PROGRAM(2002, "존재하지 않는 프로그램입니다."),
 
-    INVALID_NICKNAME(2003, "유효하지 않은 닉네임입니다."),
-
     INVALID_ACCESS_TOKEN(2004, "유효하지 않은 ACCESS_TOKEN입니다."),
 
     ALREADY_EXIST_UNI_EMAIL(2005, "이미 존재하는 학교 이메일입니다."),

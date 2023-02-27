@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "MemberController", description = "멤버 컨트롤러(담당자:애플)")
@@ -26,7 +27,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     @PostMapping("/post")
-    public BaseResponse<PostMemberRes> postMember(@RequestBody PostMemberReq postMemberReq) {
+    public BaseResponse<PostMemberRes> postMember(@Validated @RequestBody PostMemberReq postMemberReq) {
         return new BaseResponse<>(memberService.postMember(postMemberReq));
     }
 
