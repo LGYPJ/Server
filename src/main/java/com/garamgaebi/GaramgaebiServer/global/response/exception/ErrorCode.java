@@ -53,6 +53,8 @@ public enum ErrorCode {
     INACTIVE_MEMBER(2024, "탈퇴한 회원입니다."),
     NOT_EXIST_NOTIFICATION(2025, "존재하지 않는 알림입니다."),
 
+    IN_CORRECT_EMAIL(2026, "이메일 형식에 맞지 않습니다."),
+
     EXPIRED_JWT_TOKEN(401, "만료된 JWT 토큰입니다."),
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),
 
