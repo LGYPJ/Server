@@ -311,10 +311,16 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public List<GetProfilesRes> getProfiles() {
         List<GetProfilesRes> resList = new ArrayList<>();
-        //유저프로필 랜덤 11명 난수 설정
-        int a = randomCount();
-        List<Member> members = profileRepository.findMembers(a);
-        getProfileMembers(resList, members);
+
+        Long count = profileRepository.countMember();
+        int c = Math.toIntExact(count);
+        if (c <= 11) {
+            List<Member> members = profileRepository.findMembers();
+            getProfileMembers(resList, members);
+        } else {
+            List<Member> members2 = profileRepository.findMembers2();
+            getProfileMembers(resList, members2);
+        }
         return resList;
     }
 
@@ -345,22 +351,6 @@ public class ProfileServiceImpl implements ProfileService {
             }
             resList.add(res);
         }
-    }
-
-    /** 프로필 추천(11명)을 위한 난수설정 메서드 */
-    private int randomCount() {
-        Long count = profileRepository.countMember();
-        System.out.println(count);
-        int c = Math.toIntExact(count);
-        int a;
-        if (c <= 11) {
-            a = 0;
-        } else {
-            Random random = new Random();
-            random.setSeed(System.currentTimeMillis());
-            a = random.nextInt(c - 11);
-        }
-        return a;
     }
 
     /** POST 유저 프로필 수정 API*/

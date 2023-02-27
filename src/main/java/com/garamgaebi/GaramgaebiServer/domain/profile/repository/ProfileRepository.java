@@ -125,10 +125,17 @@ public class ProfileRepository {
         return career;
     }
 
-    public List<Member> findMembers(int c) {
+    public List<Member> findMembers() {
         String jpql = "SELECT m FROM Member m WHERE status = 'ACTIVE'";
         List<Member> resultList = em.createQuery(jpql, Member.class)
-                .setFirstResult(c)
+                .setMaxResults(11)
+                .getResultList();
+        return resultList;
+    }
+
+    public List<Member> findMembers2() {
+        String jpql = "SELECT m FROM Member m WHERE status = 'ACTIVE' ORDER BY RAND()";
+        List<Member> resultList = em.createQuery(jpql, Member.class)
                 .setMaxResults(11)
                 .getResultList();
         return resultList;
