@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.CompletableFuture;
+
 //@RestController
 @Tag(name = "EmailController", description = "이메일 컨트롤러(담당자:애플)")
 @RestController
@@ -22,8 +24,8 @@ public class EmailController {
     public EmailController(EmailService emailService) { this.emailService = emailService; }
 
     @PostMapping("/sendEmail")
-    public BaseResponse<EmailRes> sendEmail(@RequestBody SendEmailReq emailReq) throws Exception {
-        return new BaseResponse<>(emailService.sendEmail(emailReq));
+    public void sendEmail(@RequestBody SendEmailReq emailReq) throws Exception {
+        emailService.sendEmail(emailReq);
     }
 
     @PostMapping("/verify")
