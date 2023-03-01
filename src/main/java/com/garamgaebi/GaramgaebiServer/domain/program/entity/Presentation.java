@@ -8,30 +8,45 @@ import org.hibernate.annotations.DynamicUpdate;
 
 @Entity
 @Table(name = "Presentation")
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Getter @Setter
-@DynamicInsert
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicUpdate
-@Builder
+@Getter
 public class Presentation {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "presentation_idx")
     private Long idx;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "program_idx")
     private Program program;
 
+    @Setter
     private String title;
+    @Setter
     private String nickname;
+    @Setter
     private String organization;
+    @Setter
     private String content;
+    @Setter
     @Column(name = "presentation_url")
     private String presentationUrl;
+    @Setter
     @Column(name = "profile_img")
     private String profileImg;
+
+    @Builder
+    public Presentation(Program program, String title, String nickname, String organization, String content, String presentationUrl, String profileImg) {
+        this.setProgram(program);
+        this.title = title;
+        this.nickname = nickname;
+        this.organization = organization;
+        this.content = content;
+        this.presentationUrl = presentationUrl;
+        this.profileImg = profileImg;
+    }
 
     // == 연관관계 메서드 == //
     public void setProgram(Program program) {

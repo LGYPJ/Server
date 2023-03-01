@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.notification.dto;
+package com.garamgaebi.GaramgaebiServer.domain.notification.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;

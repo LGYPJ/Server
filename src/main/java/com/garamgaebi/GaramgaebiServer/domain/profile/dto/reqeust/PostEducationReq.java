@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
+package com.garamgaebi.GaramgaebiServer.domain.profile.dto.reqeust;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;

@@ -1,7 +1,8 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.controller;
 
-import com.garamgaebi.GaramgaebiServer.domain.profile.dto.*;
-import com.garamgaebi.GaramgaebiServer.domain.profile.service.ProfileService;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.reqeust.*;
+import com.garamgaebi.GaramgaebiServer.domain.profile.dto.response.*;
+import com.garamgaebi.GaramgaebiServer.domain.profile.service.ProfileServiceImpl;
 import com.garamgaebi.GaramgaebiServer.global.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,10 +20,10 @@ import java.util.List;
 public class ProfileController {
     //--------------------------------------------------------//
     @Autowired
-    private final ProfileService profileService;
+    private final ProfileServiceImpl profileServiceImpl;
 
-    public ProfileController(ProfileService profileService) {
-        this.profileService = profileService;
+    public ProfileController(ProfileServiceImpl profileServiceImpl) {
+        this.profileServiceImpl = profileServiceImpl;
     }
     //--------------------------------------------------------//
 
@@ -38,7 +39,7 @@ public class ProfileController {
         if (req.getContent().isEmpty() == true) {
             return new BaseResponse<>(false);
         }
-        profileService.saveQna(req);
+        profileServiceImpl.saveQna(req);
         return new BaseResponse<>( true);
     }
 
@@ -52,7 +53,7 @@ public class ProfileController {
         if (req.getAddress().isEmpty() == true) {
             return new BaseResponse<>(false);
         }
-        profileService.saveSns(req);
+        profileServiceImpl.saveSns(req);
         return new BaseResponse<>(true);
     }
 
@@ -63,7 +64,7 @@ public class ProfileController {
     @ResponseBody
     @PatchMapping("/sns")
     public BaseResponse<Boolean> updateSNS(@RequestBody UpdateSNSReq req) {
-        Boolean res = profileService.updateSNS(req);
+        Boolean res = profileServiceImpl.updateSNS(req);
         return new BaseResponse<>(res);
     }
 
@@ -74,7 +75,7 @@ public class ProfileController {
     @ResponseBody
     @DeleteMapping("/sns/{snsIdx}")
     public BaseResponse<Boolean> deleteSNS(@PathVariable long snsIdx) {
-        Boolean res = profileService.deleteSNS(snsIdx);
+        Boolean res = profileServiceImpl.deleteSNS(snsIdx);
         return new BaseResponse<>(res);
     }
 
@@ -85,7 +86,7 @@ public class ProfileController {
     @ResponseBody
     @PostMapping("/education")
     public BaseResponse<Boolean> saveEducation(@RequestBody PostEducationReq req) {
-        profileService.saveEducation(req);
+        profileServiceImpl.saveEducation(req);
         return new BaseResponse<>(true);
     }
 
@@ -96,7 +97,7 @@ public class ProfileController {
     @ResponseBody
     @PatchMapping("/education")
     public BaseResponse<Boolean> updateEducation(@RequestBody UpdateEducationReq req) {
-        Boolean res = profileService.updateEducation(req);
+        Boolean res = profileServiceImpl.updateEducation(req);
         return new BaseResponse<>(res);
     }
 
@@ -107,7 +108,7 @@ public class ProfileController {
     @ResponseBody
     @DeleteMapping("/education/{educationIdx}")
     public BaseResponse<Boolean> deleteEducation(@PathVariable long educationIdx) {
-        Boolean res = profileService.deleteEducation(educationIdx);
+        Boolean res = profileServiceImpl.deleteEducation(educationIdx);
         return new BaseResponse<>(res);
     }
 
@@ -118,7 +119,7 @@ public class ProfileController {
     @ResponseBody
     @PostMapping("/career")
     public BaseResponse<Boolean> saveCareer(@RequestBody PostCareerReq req) {
-        profileService.saveCareer(req);
+        profileServiceImpl.saveCareer(req);
         return new BaseResponse<>(true);
     }
 
@@ -129,7 +130,7 @@ public class ProfileController {
     @ResponseBody
     @PatchMapping("/career")
     public BaseResponse<Boolean> updateCareer(@RequestBody UpdateCareerReq req) {
-        Boolean res = profileService.updateCareer(req);
+        Boolean res = profileServiceImpl.updateCareer(req);
         return new BaseResponse<>(res);
     }
 
@@ -140,7 +141,7 @@ public class ProfileController {
     @ResponseBody
     @DeleteMapping("/career/{careerIdx}")
     public BaseResponse<Boolean> deleteCareer(@PathVariable long careerIdx) {
-        Boolean res = profileService.deleteCareer(careerIdx);
+        Boolean res = profileServiceImpl.deleteCareer(careerIdx);
         return new BaseResponse<>(res);
     }
 
@@ -151,7 +152,7 @@ public class ProfileController {
     @ResponseBody
     @GetMapping("/{memberIdx}")
     public BaseResponse<GetProfileRes> getProfile(@PathVariable long memberIdx) {
-        GetProfileRes res = profileService.getProfile(memberIdx);
+        GetProfileRes res = profileServiceImpl.getProfile(memberIdx);
         return new BaseResponse<>(res);
     }
 
@@ -161,8 +162,8 @@ public class ProfileController {
     @Operation(summary = "GET 프로필 SNS 조회 API", description = "유저프로필 SNS 리스트조회")
     @ResponseBody
     @GetMapping("/sns/{memberIdx}")
-    public BaseResponse<List<GetSNSList>> getSNSList(@PathVariable long memberIdx) {
-        List<GetSNSList> snsList =profileService.getSNSList(memberIdx);
+    public BaseResponse<List<GetSNSListRes>> getSNSList(@PathVariable long memberIdx) {
+        List<GetSNSListRes> snsList = profileServiceImpl.getSNSList(memberIdx);
         return new BaseResponse<>(snsList);
     }
 
@@ -172,8 +173,8 @@ public class ProfileController {
     @Operation(summary = "GET 프로필 경력 조회 API", description = "유저프로필 경력 리스트조회")
     @ResponseBody
     @GetMapping("/career/{memberIdx}")
-    public BaseResponse<List<GetCareerList>> getCareerList(@PathVariable long memberIdx) {
-        List<GetCareerList> careerList =profileService.getCareerList(memberIdx);
+    public BaseResponse<List<GetCareerListRes>> getCareerList(@PathVariable long memberIdx) {
+        List<GetCareerListRes> careerList = profileServiceImpl.getCareerList(memberIdx);
         return new BaseResponse<>(careerList);
     }
 
@@ -183,8 +184,8 @@ public class ProfileController {
     @Operation(summary = "GET 프로필 교육 조회 API", description = "유저프로필 교육 리스트조회")
     @ResponseBody
     @GetMapping("/education/{memberIdx}")
-    public BaseResponse<List<GetEducationList>> getEducationList(@PathVariable long memberIdx) {
-        List<GetEducationList> educationList =profileService.getEducationList(memberIdx);
+    public BaseResponse<List<GetEducationListRes>> getEducationList(@PathVariable long memberIdx) {
+        List<GetEducationListRes> educationList = profileServiceImpl.getEducationList(memberIdx);
         return new BaseResponse<>(educationList);
     }
 
@@ -195,7 +196,7 @@ public class ProfileController {
     @ResponseBody
     @GetMapping("/profiles")
     public BaseResponse<List<GetProfilesRes>> getProfiles() {
-        List<GetProfilesRes> resList = profileService.getProfiles();
+        List<GetProfilesRes> resList = profileServiceImpl.getProfiles();
         return new BaseResponse<>(resList);
     }
 
@@ -207,7 +208,7 @@ public class ProfileController {
     @PostMapping("/edit")
     public BaseResponse<ProfileRes> updateProfile(@RequestPart("info") PostUpdateProfileReq req, @RequestPart(name = "image", required = false) MultipartFile multipartFile) {
 
-        return new BaseResponse<>(new ProfileRes(profileService.updateProfile(req, multipartFile)));
+        return new BaseResponse<>(new ProfileRes(profileServiceImpl.updateProfile(req, multipartFile)));
     }
 
     /**

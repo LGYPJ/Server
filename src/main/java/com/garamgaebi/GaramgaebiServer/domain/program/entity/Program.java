@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "Program")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-@Getter @Setter
+@Getter
 public class Program {
 
     // 모임 신청 마감일 정책 : 모임 날짜 1주 전
@@ -32,16 +32,23 @@ public class Program {
     @Column(name = "program_idx")
     private Long idx;
 
+    @Setter
     private String title;
 
+    @Setter
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime date;
 
+    @Setter
     private String location;
+    @Setter
     private Integer fee;
+
+    @Setter
     @Enumerated(EnumType.STRING)
     private ProgramStatus status;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(name = "program_type")
     private ProgramType programType;
@@ -52,6 +59,15 @@ public class Program {
     @OneToMany(mappedBy = "program", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Presentation> presentations = new ArrayList<Presentation>();
 
+    @Builder
+    public Program(String title, LocalDateTime date, String location, Integer fee, ProgramType programType) {
+        this.title = title;
+        this.date = date;
+        this.location = location;
+        this.fee = fee;
+        this.programType = programType;
+        this.status = ProgramStatus.READY_TO_OPEN;
+    }
 
     // == 연관관계 메서드 -- //
     public void addApply(Apply apply) {
@@ -138,9 +154,6 @@ public class Program {
         return ProgramOpenStatus.OPEN;
     }
 
-
-    // == 비즈니스 로직 == //
-
     // 유저 신청 가능 여부 조회
     public ProgramUserButtonStatus checkMemberCanApply(Member member) {
         // 프로그램 일자 지났으면 무조건 마감 버튼
@@ -211,4 +224,21 @@ public class Program {
         return participants;
     }
 
+    // == 비즈니스 로직 == //
+    public void close() {
+        if(this.getIsPay() == ProgramPayStatus.FREE) {
+            this.setStatus(ProgramStatus.CLOSED_CONFIRM);
+            for(Apply apply : this.getApplies()) {
+                if(apply.getStatus() == ApplyStatus.APPLY) {
+                    apply.setStatus(ApplyStatus.APPLY_CONFIRM);
+                }
+                else if(apply.getStatus() == ApplyStatus.CANCEL){
+                    apply.setStatus(ApplyStatus.CANCEL_CONFIRM);
+                }
+            }
+        }
+        else {
+            this.setStatus(ProgramStatus.CLOSED);
+        }
+    }
 }

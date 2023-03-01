@@ -56,29 +56,14 @@ public class ProgramServiceImpl implements ProgramService {
     @Override
     public void closeProgram(Long programIdx) {
 
-        Optional<Program> programWrapper = programRepository.findById(programIdx);
+        Program program = programRepository.findById(programIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM));
 
-        if(programWrapper.isEmpty()) {
+        if(program.getStatus().equals(ProgramStatus.DELETE)) {
             log.info("PROGRAM NOT EXIST : {}", programIdx);
             return;
         }
 
-        Program program = programWrapper.get();
-
-        if(program.getIsPay() == ProgramPayStatus.FREE) {
-            program.setStatus(ProgramStatus.CLOSED_CONFIRM);
-            for(Apply apply : program.getApplies()) {
-                if(apply.getStatus() == ApplyStatus.APPLY) {
-                    apply.setStatus(ApplyStatus.APPLY_CONFIRM);
-                }
-                else if(apply.getStatus() == ApplyStatus.CANCEL){
-                    apply.setStatus(ApplyStatus.CANCEL_CONFIRM);
-                }
-            }
-        }
-        else {
-            program.setStatus(ProgramStatus.CLOSED);
-        }
+        program.close();
         programRepository.save(program);
     }
 

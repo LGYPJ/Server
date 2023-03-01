@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
+package com.garamgaebi.GaramgaebiServer.domain.profile.dto.response;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Profiles {
+public class ProfilesRes {
     private Long memberIdx;
     private String nickName;
 }

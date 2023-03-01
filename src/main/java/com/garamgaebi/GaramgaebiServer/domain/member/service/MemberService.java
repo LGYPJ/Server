@@ -17,7 +17,7 @@ public interface MemberService {
 
     /* 멤버 로그인 */
     public TokenInfo login(MemberLoginReq memberLoginReq);
-
+    
     /* 멤버 로그아웃 */
     public MemberLogoutRes logout(MemberLogoutReq memberLogoutReq);
 
