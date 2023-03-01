@@ -250,6 +250,7 @@ public class ProfileServiceImpl implements ProfileService {
         res.setBelong(member.getBelong());
         res.setContent(member.getContent());
         res.setProfileUrl(member.getProfileUrl());
+        res.setUniEmail(member.getUniEmail());
         return res;
     }
 
