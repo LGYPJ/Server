@@ -30,14 +30,19 @@ public class EmailService {
 
     public static String ePw = null;
 
-    private MimeMessage createMessage(String to) throws Exception {
+    private MimeMessage createMessage(String to) {
         System.out.println("받는 사람: " + to);
         System.out.println("인증 번호: " + ePw);
 
         MimeMessage message = emailSender.createMimeMessage();
 
-        message.addRecipients(Message.RecipientType.TO, to); // 받는 사람
-        message.setSubject("가람개비 회원가입 이메일 인증"); // 메일 제목
+        try {
+            message.addRecipients(Message.RecipientType.TO, to); // 받는 사람
+            message.setSubject("가람개비 회원가입 이메일 인증"); // 메일 제목
+        } catch (Exception es) {
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
 
         String msgg = "";
         msgg+= "<div style='margin:100px;'>";
@@ -53,8 +58,14 @@ public class EmailService {
         msgg+= "CODE : <strong>";
         msgg+= ePw+"</strong><div><br/> ";
         msgg+= "</div>";
-        message.setText(msgg, "utf-8", "html"); //내용
-        message.setFrom(new InternetAddress("gachon2023@gmail.com","Garamgaebi")); //보내는 사람
+
+        try {
+            message.setText(msgg, "utf-8", "html"); //내용
+            message.setFrom(new InternetAddress("gachon2023@gmail.com","Garamgaebi")); //보내는 사람
+        } catch (Exception es) {
+            es.printStackTrace();
+            throw new IllegalArgumentException();
+        }
 
         return message;
     }
@@ -70,12 +81,7 @@ public class EmailService {
     }
 
     @Async
-    public void sendEmail(SendEmailReq sendEmailReq) throws Exception {
-        Optional<Member> member = memberRepository.findByUniEmail(sendEmailReq.getEmail());
-        if (member.isPresent()) {
-            throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
-        }
-
+    public void sendEmailAsync(SendEmailReq sendEmailReq) {
         createKey(); // 인증번호 생성
 
         redisUtil.setDataExpire(sendEmailReq.getEmail(), ePw, 60 * 3L); // 유효시간 3분

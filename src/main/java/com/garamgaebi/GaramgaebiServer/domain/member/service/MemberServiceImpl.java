@@ -13,6 +13,7 @@ import com.garamgaebi.GaramgaebiServer.global.security.dto.TokenInfo;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.util.RedisUtil;
+import com.garamgaebi.GaramgaebiServer.global.util.email.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,7 @@ public class MemberServiceImpl implements MemberService {
     private final MemberQuitRepository memberQuitRepository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final EmailService emailService;
 
     private final RedisUtil redisUtil;
 
@@ -156,5 +158,14 @@ public class MemberServiceImpl implements MemberService {
         }
 
         return memberLogoutRes;
+    }
+
+    public void sendEmail(SendEmailReq sendEmailReq) {
+        Optional<Member> member = memberRepository.findByUniEmail(sendEmailReq.getEmail());
+        if (member.isPresent()) {
+            throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
+        }
+
+        emailService.sendEmailAsync(sendEmailReq);
     }
 }
