@@ -1,4 +1,4 @@
-package com.garamgaebi.GaramgaebiServer.domain.profile.dto;
+package com.garamgaebi.GaramgaebiServer.domain.profile.dto.response;
 
 import lombok.*;
 

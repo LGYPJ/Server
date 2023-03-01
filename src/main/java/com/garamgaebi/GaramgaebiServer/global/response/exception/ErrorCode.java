@@ -14,8 +14,6 @@ public enum ErrorCode {
     NOT_EXIST_MEMBER(2001, "존재하지 않는 회원입니다."),
     NOT_EXIST_PROGRAM(2002, "존재하지 않는 프로그램입니다."),
 
-    INVALID_NICKNAME(2003, "유효하지 않은 닉네임입니다."),
-
     INVALID_ACCESS_TOKEN(2004, "유효하지 않은 ACCESS_TOKEN입니다."),
 
     ALREADY_EXIST_UNI_EMAIL(2005, "이미 존재하는 학교 이메일입니다."),
@@ -52,6 +50,8 @@ public enum ErrorCode {
     ALREADY_EXIST_SOCIAL_EMAIL(2023, "이미 존재하는 소셜 이메일입니다."),
     INACTIVE_MEMBER(2024, "탈퇴한 회원입니다."),
     NOT_EXIST_NOTIFICATION(2025, "존재하지 않는 알림입니다."),
+
+    IN_CORRECT_EMAIL(2026, "이메일 형식에 맞지 않습니다."),
 
     EXPIRED_JWT_TOKEN(401, "만료된 JWT 토큰입니다."),
     NOT_FOUND(404, "요청하신 페이지를 찾을 수 없습니다."),

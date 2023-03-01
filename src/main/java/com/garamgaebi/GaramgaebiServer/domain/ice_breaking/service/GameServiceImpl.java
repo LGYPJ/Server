@@ -1,12 +1,9 @@
 package com.garamgaebi.GaramgaebiServer.domain.ice_breaking.service;
 
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomDeleteReq;
+import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.*;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.GameroomMember;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.entity.ProgramGameroom;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomPostReq;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MemberRoomRes;
-import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.dto.MembersGetRes;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.GameRoomMemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.IceBreakingImagesRepository;
 import com.garamgaebi.GaramgaebiServer.domain.ice_breaking.repository.ProgramGameroomRepository;
@@ -16,6 +13,7 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiExceptio
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
@@ -30,9 +28,10 @@ public class GameServiceImpl implements GameService{
     private final IceBreakingImagesRepository iceBreakingImagesRepository;
 
     // Program index로 게임방 불러오기
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<ProgramGameroom> getRoomsByProgram(Long programIdx) {
         List<ProgramGameroom> rooms = programGameroomRepository.findRoomsByProgramIdx(programIdx)
-                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM)); // 방 생성되는 시점에 따라 에러 나중에 바꿔주기
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM));
 
         return rooms;
     }
@@ -68,6 +67,7 @@ public class GameServiceImpl implements GameService{
     }
 
     // game room idx로 member 찾기
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<MembersGetRes> getMembersByGameRoomIdx(String roomId) {
         List<MembersGetRes> members = new ArrayList<>();
         MembersGetRes res = null;
@@ -88,6 +88,7 @@ public class GameServiceImpl implements GameService{
     }
 
     // roomId에 member 등록
+    @Transactional
     public MemberRoomRes registerMemberToGameRoom(MemberRoomPostReq memberRoomReq, Long memberIdx) {
         memberRepository.findById(memberIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
@@ -102,6 +103,12 @@ public class GameServiceImpl implements GameService{
 
         GameroomMember gameroomMember = GameroomMember.builder().roomId(memberRoomReq.getRoomId()).memberIdx(memberIdx).build();
         gameRoomMemberRepository.save(gameroomMember);
+
+        System.out.println("register member count: " + gameRoomMemberRepository.countByRoomId(memberRoomReq.getRoomId()));
+
+        if (gameRoomMemberRepository.countByRoomId(memberRoomReq.getRoomId()) == 1) {
+            room.setCurrentMemberIdx(memberIdx);
+        }
 
         MemberRoomRes memberRoomRes = new MemberRoomRes("게임방 입장에 성공하였습니다.", room.getCurrentImgIdx(), room.getCurrentMemberIdx());
 
@@ -123,11 +130,19 @@ public class GameServiceImpl implements GameService{
 
         gameRoomMemberRepository.deleteByMemberIdx(memberIdx);
 
-        /* current_member_idx 갱신 */
-        gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomDeleteReq.getRoomId(), memberRoomDeleteReq.getNextMemberIdx())
-                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_REGISTERED_MEMBER_FROM_GAME_ROOM));
+        System.out.println("delete member count: " + gameRoomMemberRepository.countByRoomId(memberRoomDeleteReq.getRoomId()));
 
-        programGameroom.setCurrentMemberIdx(memberRoomDeleteReq.getNextMemberIdx());
+        if (gameRoomMemberRepository.countByRoomId(memberRoomDeleteReq.getRoomId()) == 0) {
+            programGameroom.setCurrentMemberIdx(0L);
+        }
+
+        if (memberRoomDeleteReq.getNextMemberIdx() != -1) {
+            /* current_member_idx 갱신 */
+            gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomDeleteReq.getRoomId(), memberRoomDeleteReq.getNextMemberIdx())
+                    .orElseThrow(() -> new RestApiException(ErrorCode.NOT_REGISTERED_MEMBER_FROM_GAME_ROOM));
+
+            programGameroom.setCurrentMemberIdx(memberRoomDeleteReq.getNextMemberIdx());
+        }
 
         return "게임방 퇴장에 성공하였습니다.";
     }
@@ -142,8 +157,8 @@ public class GameServiceImpl implements GameService{
 
     // 게임방의 current image index 증가
     @Transactional
-    public String patchCurrentImgIdx(String roomId, Long memberIdx) {
-        ProgramGameroom room = programGameroomRepository.findByRoomId(roomId)
+    public String patchCurrentImgIdx(CurrentImgIdxReq currentImgIdxReq, Long memberIdx) {
+        ProgramGameroom room = programGameroomRepository.findByRoomId(currentImgIdxReq.getRoomId())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 
         if (room.getCurrentImgIdx() >= 29) {
@@ -154,6 +169,12 @@ public class GameServiceImpl implements GameService{
 
         room.setCurrentMemberIdx(memberIdx);
 
-        return "current image index 증가가 완료되었습니다.";
+        /* current_member_idx 갱신 */
+        gameRoomMemberRepository.findByRoomIdAndMemberIdx(currentImgIdxReq.getRoomId(), currentImgIdxReq.getNextMemberIdx())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_REGISTERED_MEMBER_FROM_GAME_ROOM));
+
+        room.setCurrentMemberIdx(currentImgIdxReq.getNextMemberIdx());
+
+        return "current image index와 current member index가 갱신 되었습니다.";
     }
 }

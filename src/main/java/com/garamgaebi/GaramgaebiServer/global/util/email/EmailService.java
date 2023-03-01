@@ -14,10 +14,12 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -67,11 +69,12 @@ public class EmailService {
         ePw = key.toString();
     }
 
-    public EmailRes sendEmail(SendEmailReq sendEmailReq) throws Exception {
-//        Optional<Member> member = memberRepository.findByUniEmail(sendEmailReq.getEmail());
-//        if (member.isPresent()) {
-//            throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
-//        }
+    @Async
+    public void sendEmail(SendEmailReq sendEmailReq) throws Exception {
+        Optional<Member> member = memberRepository.findByUniEmail(sendEmailReq.getEmail());
+        if (member.isPresent()) {
+            throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
+        }
 
         createKey(); // 인증번호 생성
 
@@ -84,9 +87,6 @@ public class EmailService {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-        EmailRes res = new EmailRes("이메일이 전송되었습니다.");
-
-        return res;
     }
 
     public EmailRes verifyEmail(VerifyEmailReq verifyEmailReq) {
