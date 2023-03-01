@@ -20,4 +20,7 @@ public interface MemberService {
 
     /* 멤버 로그아웃 */
     public MemberLogoutRes logout(MemberLogoutReq memberLogoutReq);
+
+    /* 이메일 인증번호 전송 */
+    public void sendEmail(SendEmailReq sendEmailReq);
 }
