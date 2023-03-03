@@ -160,12 +160,14 @@ public class MemberServiceImpl implements MemberService {
         return memberLogoutRes;
     }
 
-    public void sendEmail(SendEmailReq sendEmailReq) {
+    public Boolean sendEmail(SendEmailReq sendEmailReq) {
         Optional<Member> member = memberRepository.findByUniEmail(sendEmailReq.getEmail());
         if (member.isPresent()) {
             throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
         }
 
         emailService.sendEmailAsync(sendEmailReq);
+
+        return true;
     }
 }
