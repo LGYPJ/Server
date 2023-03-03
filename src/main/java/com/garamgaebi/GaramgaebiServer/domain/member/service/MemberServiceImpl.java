@@ -42,10 +42,10 @@ public class MemberServiceImpl implements MemberService {
     // 멤버 가입
     @Transactional
     public PostMemberRes postMember(PostMemberReq postMemberReq) {
-        // 이미 존재하는 소셜 이메일인지 확인
-        Optional<Member> memberBySocial = memberRepository.findBySocialEmail(postMemberReq.getSocialEmail());
-        if (memberBySocial.isEmpty() == false) {
-            throw new RestApiException(ErrorCode.ALREADY_EXIST_SOCIAL_EMAIL);
+        // 이미 존재하는 카카오 고유번호인지 확인
+        Optional<Member> memberByIdentifier = memberRepository.findByIdentifier(postMemberReq.getIdentifier());
+        if (memberByIdentifier.isEmpty() == false) {
+            throw new RestApiException(ErrorCode.ALREADY_EXIST_IDENTIFIER);
         }
 
         // 이미 존재하는 학교 이메일인지 확인
@@ -88,9 +88,9 @@ public class MemberServiceImpl implements MemberService {
     // 멤버 로그인
     @Transactional
     public TokenInfo login(MemberLoginReq memberLoginReq) {
-        // MemberLoginReq.socialEmail로 MemberIdx 조회 및 반환
-        String socialEmail = memberLoginReq.getSocialEmail();
-        Member member = memberRepository.findBySocialEmail(socialEmail)
+        // MemberLoginReq.identifier로 MemberIdx 조회 및 반환
+        String identifier = memberLoginReq.getIdentifier();
+        Member member = memberRepository.findByIdentifier(identifier)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
         if (member.getStatus() == MemberStatus.INACTIVE) {
@@ -100,7 +100,7 @@ public class MemberServiceImpl implements MemberService {
         // 1. ID/PW를 기반으로 Authentication 객체 생성
         // 이 때, authentication은 인증 여부를 확인하는 authenticated 값이 false
         Long memberIdx = member.getMemberIdx();
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberLoginReq.getSocialEmail(), memberIdx.toString());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberLoginReq.getIdentifier(), memberIdx.toString());
 
         // 2. 실제 검증 (사용자 비밀번호 체크)
         // authenticate 메서드가 실행될 때 CustomUserDetailsService에서 만든 loadUserByUsername 메서드가 실행
@@ -152,7 +152,7 @@ public class MemberServiceImpl implements MemberService {
         MemberLogoutRes memberLogoutRes = new MemberLogoutRes(authentication.getName());
 
         if(memberLogoutReq.getFcmToken() != null) {
-            Member member = memberRepository.findBySocialEmail(authentication.getName()).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+            Member member = memberRepository.findByIdentifier(authentication.getName()).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
             member.deleteMemberFcm(memberLogoutReq.getFcmToken());
         }

@@ -47,7 +47,7 @@ public enum ErrorCode {
 
     ALREADY_ENTER_GAME(2022, "이미 입장한 방입니다."),
 
-    ALREADY_EXIST_SOCIAL_EMAIL(2023, "이미 존재하는 소셜 이메일입니다."),
+    ALREADY_EXIST_IDENTIFIER(2023, "이미 존재하는 카카오 고유번호입니다."),
     INACTIVE_MEMBER(2024, "탈퇴한 회원입니다."),
     NOT_EXIST_NOTIFICATION(2025, "존재하지 않는 알림입니다."),
 

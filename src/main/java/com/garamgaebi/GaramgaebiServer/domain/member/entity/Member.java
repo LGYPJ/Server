@@ -44,8 +44,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Column(name = "profile_email", nullable = false)
     private String profileEmail;
 
-    @Column(name = "social_email", nullable = false)
-    private String socialEmail;
+    @Column(name = "identifier", nullable = false)
+    private String identifier;
 
     @Column(name = "uni_email", nullable = false)
     private String uniEmail;
@@ -57,7 +57,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     private String profileUrl;
 
     @Column(name = "belong")
-    private  String belong;
+    private String belong;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
@@ -69,7 +69,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Builder
     public Member(String nickname,
                   String profileEmail,
-                  String socialEmail,
+                  String identifier,
                   String uniEmail,
                   String content,
                   String profileUrl,
@@ -77,7 +77,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
                   MemberStatus status) {
         this.nickname = nickname;
         this.profileEmail = profileEmail;
-        this.socialEmail = socialEmail;
+        this.identifier = identifier;
         this.uniEmail = uniEmail;
         this.content = content;
         this.profileUrl = profileUrl;
@@ -109,7 +109,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void inactivedMember() {
         this.nickname = "-";
         this.profileEmail = "-";
-        this.socialEmail = "-";
+        this.identifier = "-";
         this.uniEmail = "-";
         this.content = "-";
         this.profileUrl = null;
