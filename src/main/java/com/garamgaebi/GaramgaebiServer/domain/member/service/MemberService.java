@@ -22,5 +22,5 @@ public interface MemberService {
     public MemberLogoutRes logout(MemberLogoutReq memberLogoutReq);
 
     /* 이메일 인증번호 전송 */
-    public void sendEmail(SendEmailReq sendEmailReq);
+    public Boolean sendEmail(SendEmailReq sendEmailReq);
 }

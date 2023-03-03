@@ -40,8 +40,8 @@ public class EmailController {
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     @PostMapping("/sendEmail")
-    public void sendEmail(@Validated @RequestBody SendEmailReq emailReq) {
-        memberService.sendEmail(emailReq);
+    public BaseResponse<Boolean> sendEmail(@Validated @RequestBody SendEmailReq emailReq) {
+        return new BaseResponse<>(memberService.sendEmail(emailReq));
     }
 
     @Operation(summary = "이메일 인증", description = "request에 담긴 인증번호로 이메일 인증", responses = {
