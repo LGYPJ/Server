@@ -335,21 +335,21 @@ public class ProfileServiceImpl implements ProfileService {
             res.setBelong(members.get(i).getBelong());
             res.setProfileUrl(members.get(i).getProfileUrl());
 
-            List<Education> major = profileRepository.findIsLearning(members.get(i).getMemberIdx());
-            List<Career> career = profileRepository.findIsWorking(members.get(i).getMemberIdx());
-            if (career.isEmpty() && major.isEmpty()) {
-                res.setGroup("group이 없습니다.");
-                res.setDetail("detail이 없습니다.");
-                resList.add(res);
-                continue;
-            }
-            if (career.size() > 0) {
-                res.setGroup(career.get(0).getCompany());
-                res.setDetail(career.get(0).getPosition());
-            } else {
-                res.setGroup(major.get(0).getInstitution());
-                res.setDetail(major.get(0).getMajor());
-            }
+//            List<Education> major = profileRepository.findIsLearning(members.get(i).getMemberIdx());
+//            List<Career> career = profileRepository.findIsWorking(members.get(i).getMemberIdx());
+//            if (career.isEmpty() && major.isEmpty()) {
+//                res.setGroup("group이 없습니다.");
+//                res.setDetail("detail이 없습니다.");
+//                resList.add(res);
+//                continue;
+//            }
+//            if (career.size() > 0) {
+//                res.setGroup(career.get(0).getCompany());
+//                res.setDetail(career.get(0).getPosition());
+//            } else {
+//                res.setGroup(major.get(0).getInstitution());
+//                res.setDetail(major.get(0).getMajor());
+//            }
             resList.add(res);
         }
     }

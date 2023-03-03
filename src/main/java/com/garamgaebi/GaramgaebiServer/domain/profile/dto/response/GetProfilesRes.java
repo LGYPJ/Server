@@ -11,6 +11,4 @@ public class GetProfilesRes {
     private String nickName;
     private String belong;
     private String profileUrl;
-    private String group;
-    private String detail;
 }
