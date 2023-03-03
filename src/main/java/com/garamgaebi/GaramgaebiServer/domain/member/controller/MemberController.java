@@ -41,7 +41,7 @@ public class MemberController {
         return new BaseResponse<>(memberService.inactivedMember(inactivedMemberReq));
     }
 
-    @Operation(summary = "로그인", description = "request에 담긴 사용자의 이메일로 로그인, jwt token 부여", responses = {
+    @Operation(summary = "로그인", description = "request에 담긴 사용자의 identifier로 로그인, jwt token 부여", responses = {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
