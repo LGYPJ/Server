@@ -3,8 +3,6 @@ package com.garamgaebi.GaramgaebiServer.global.util.email;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.SendEmailReq;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.EmailRes;
 import com.garamgaebi.GaramgaebiServer.domain.member.dto.VerifyEmailReq;
-import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
-import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.util.RedisUtil;
@@ -17,16 +15,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender emailSender;
     private final RedisUtil redisUtil;
-    private final MemberRepository memberRepository;
 
     public static String ePw = null;
 

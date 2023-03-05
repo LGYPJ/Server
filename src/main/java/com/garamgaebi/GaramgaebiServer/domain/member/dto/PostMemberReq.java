@@ -12,12 +12,12 @@ public class PostMemberReq {
     private String nickname;
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식에 맞지 않습니다.")
     private String profileEmail;
-    private String identifier;
+    private String access_token;
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,6}$", message = "이메일 형식에 맞지 않습니다.")
     private String uniEmail;
     private MemberStatus status;
 
-    public Member toEntity() {
+    public Member toEntity(String identifier) {
         return Member.builder()
                 .nickname(nickname)
                 .profileEmail(profileEmail)

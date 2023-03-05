@@ -22,6 +22,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -35,15 +37,17 @@ public class MemberServiceImpl implements MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
-
+    private final KakaoService kakaoService;
     private final RedisUtil redisUtil;
 
 
     // 멤버 가입
     @Transactional
-    public PostMemberRes postMember(PostMemberReq postMemberReq) {
-        // 이미 존재하는 카카오 고유번호인지 확인
-        Optional<Member> memberByIdentifier = memberRepository.findByIdentifier(postMemberReq.getIdentifier());
+    public PostMemberRes postMemberWithKakao(PostMemberReq postMemberReq) throws IOException {
+        Map<String, Object> result = kakaoService.getUserInfo(postMemberReq.getAccess_token());
+        String identifier = result.get("id").toString();
+
+        Optional<Member> memberByIdentifier = memberRepository.findByIdentifier(identifier);
         if (memberByIdentifier.isEmpty() == false) {
             throw new RestApiException(ErrorCode.ALREADY_EXIST_IDENTIFIER);
         }
@@ -54,7 +58,7 @@ public class MemberServiceImpl implements MemberService {
             throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
         }
 
-        Member member = memberRepository.save(postMemberReq.toEntity());
+        Member member = memberRepository.save(postMemberReq.toEntity(identifier));
         Long memberIdx = member.getMemberIdx();
 
         MemberRolesDto memberRolesDto = new MemberRolesDto(memberIdx, "USER");
@@ -87,9 +91,10 @@ public class MemberServiceImpl implements MemberService {
 
     // 멤버 로그인
     @Transactional
-    public TokenInfo login(MemberLoginReq memberLoginReq) {
-        // MemberLoginReq.identifier로 MemberIdx 조회 및 반환
-        String identifier = memberLoginReq.getIdentifier();
+    public TokenInfo loginWithKakao(MemberLoginReq memberLoginReq) throws IOException {
+        Map<String, Object> result = kakaoService.getUserInfo(memberLoginReq.getAccess_token());
+        String identifier = result.get("id").toString();
+
         Member member = memberRepository.findByIdentifier(identifier)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
@@ -100,7 +105,7 @@ public class MemberServiceImpl implements MemberService {
         // 1. ID/PW를 기반으로 Authentication 객체 생성
         // 이 때, authentication은 인증 여부를 확인하는 authenticated 값이 false
         Long memberIdx = member.getMemberIdx();
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(memberLoginReq.getIdentifier(), memberIdx.toString());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(identifier, memberIdx.toString());
 
         // 2. 실제 검증 (사용자 비밀번호 체크)
         // authenticate 메서드가 실행될 때 CustomUserDetailsService에서 만든 loadUserByUsername 메서드가 실행
