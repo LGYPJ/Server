@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberLoginReq {
-    private String access_token;
+    private String accessToken;
     private String fcmToken;
 }
