@@ -44,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
     // 멤버 가입
     @Transactional
     public PostMemberRes postMemberWithKakao(PostMemberReq postMemberReq) throws IOException {
-        Map<String, Object> result = kakaoService.getUserInfo(postMemberReq.getAccess_token());
+        Map<String, Object> result = kakaoService.getUserInfo(postMemberReq.getAccessToken());
         String identifier = result.get("id").toString();
 
         Optional<Member> memberByIdentifier = memberRepository.findByIdentifier(identifier);
@@ -92,7 +92,7 @@ public class MemberServiceImpl implements MemberService {
     // 멤버 로그인
     @Transactional
     public TokenInfo loginWithKakao(MemberLoginReq memberLoginReq) throws IOException {
-        Map<String, Object> result = kakaoService.getUserInfo(memberLoginReq.getAccess_token());
+        Map<String, Object> result = kakaoService.getUserInfo(memberLoginReq.getAccessToken());
         String identifier = result.get("id").toString();
 
         Member member = memberRepository.findByIdentifier(identifier)
