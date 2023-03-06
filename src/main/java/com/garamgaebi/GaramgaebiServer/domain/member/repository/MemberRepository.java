@@ -13,5 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUniEmail(String uniEmail);
 
     List<Member> findByStatus(MemberStatus memberStatus);
+
+    Optional<Member> findByMemberIdx(Long memberIdx);
     Member findTopByOrderByMemberIdxDesc();
 }

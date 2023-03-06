@@ -132,6 +132,11 @@ public class MemberServiceImpl implements MemberService {
         return tokenInfo;
     }
 
+    public TokenInfo autoLogin(String refreshToken) {
+        return jwtTokenProvider.refresh(refreshToken);
+    }
+
+
     // 멤버 로그아웃
     public MemberLogoutRes logout(MemberLogoutReq memberLogoutReq) {
         // 1. Access Token 검증

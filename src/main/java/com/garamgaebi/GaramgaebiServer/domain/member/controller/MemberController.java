@@ -58,6 +58,16 @@ public class MemberController {
         return new BaseResponse<>(memberService.loginWithKakao(memberLoginReq));
     }
 
+    @Operation(summary = "자동 로그인", description = "refresh token으로 자동 로그인, access token & refresh token(필요시) 재발급", responses = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
+    })
+    @PostMapping("/login/auto")
+    public BaseResponse<TokenInfo> autoLogin(@RequestBody AutoLoginReq autoLoginReq) {
+        return new BaseResponse<>(memberService.autoLogin(autoLoginReq.getRefreshToken()));
+    }
+
     @Operation(summary = "로그아웃", description = "사용자 로그아웃, jwt token 비활성화", responses = {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),

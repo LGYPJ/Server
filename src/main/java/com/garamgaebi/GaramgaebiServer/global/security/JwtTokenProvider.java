@@ -1,8 +1,11 @@
 package com.garamgaebi.GaramgaebiServer.global.security;
 
+import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.security.dto.TokenInfo;
+import com.garamgaebi.GaramgaebiServer.global.util.RedisUtil;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -10,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,20 +28,30 @@ import java.security.Key;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 public class JwtTokenProvider {
     private final Key key;
+    private final MemberRepository memberRepository;
+    private final RedisUtil redisUtil;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
+                            MemberRepository memberRepository,
+                            RedisUtil redisUtil,
+                            AuthenticationManagerBuilder authenticationManagerBuilder) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.memberRepository = memberRepository;
+        this.redisUtil = redisUtil;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;              // 30분
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일
+    private static final long REFRESH_TOKEN_EXPIRE_TIME = 30 * 24 * 60 * 60 * 1000L;    // 30일
 
     // 유저 정보를 가지고 AccessToken, RefreshToken 생성
     public TokenInfo generateToken(Authentication authentication, Long memberIdx) {
@@ -61,6 +75,7 @@ public class JwtTokenProvider {
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
+                .claim("memberIdx", memberIdx)
                 .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -69,6 +84,59 @@ public class JwtTokenProvider {
                 .grantType("Bearer")
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
+                .build();
+    }
+
+    public TokenInfo refresh(String refreshToken) {
+        String newAccessToken;
+        String newRefreshToken;
+
+        // refresh token 유효성 검사
+        Claims claims = parseClaims(refreshToken);
+        Long memberIdx = claims.get("memberIdx", Long.class);
+
+        Member member = memberRepository.findByMemberIdx(memberIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+        String identifier = member.getIdentifier();
+
+        String tokenFromRedis = redisUtil.getData("RT: " + identifier);
+        if (!tokenFromRedis.equals(refreshToken)) {
+            throw new RestApiException(ErrorCode.INVALID_JWT_TOKEN);
+        }
+
+        // access token 재발급
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(identifier, memberIdx.toString());
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        String authorities = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        newAccessToken = Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("auth", authorities)
+                .claim("memberIdx", memberIdx)
+                .setExpiration(new Date((new Date()).getTime() + ACCESS_TOKEN_EXPIRE_TIME))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        // 1주일 미만으로 남은 refresh token일 경우, refresh token도 갱신
+        System.out.println("refreshToken expiration time: " + getExpiration(refreshToken));
+        Long expiration = getExpiration(refreshToken);
+        if (expiration < 7 * 24 * 60 * 60 * 1000L) {
+            newRefreshToken = Jwts.builder()
+                    .claim("memberIdx", memberIdx)
+                    .setExpiration(new Date((new Date()).getTime() + REFRESH_TOKEN_EXPIRE_TIME))
+                    .signWith(key, SignatureAlgorithm.HS256)
+                    .compact();
+        } else {
+            newRefreshToken = refreshToken;
+        }
+
+        return TokenInfo.builder()
+                .grantType("Bearer")
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
                 .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                 .build();
     }
