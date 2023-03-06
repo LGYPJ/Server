@@ -58,6 +58,11 @@ public class MemberController {
         return new BaseResponse<>(memberService.loginWithKakao(memberLoginReq));
     }
 
+    @PostMapping("/login/auto")
+    public BaseResponse<TokenInfo> autoLogin(@RequestBody AutoLoginReq autoLoginReq) {
+        return new BaseResponse<>(memberService.autoLogin(autoLoginReq.getRefreshToken()));
+    }
+
     @Operation(summary = "로그아웃", description = "사용자 로그아웃, jwt token 비활성화", responses = {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
