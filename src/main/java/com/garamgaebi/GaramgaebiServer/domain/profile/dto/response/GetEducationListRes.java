@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Builder
 public class GetEducationListRes {
     private Long educationIdx;
     private String institution;

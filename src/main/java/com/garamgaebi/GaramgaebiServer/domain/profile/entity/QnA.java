@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "QnA")
@@ -22,12 +21,15 @@ public class QnA {
     private Member member;
 
     @Column(nullable = false)
+    @Setter
     private String email;
 
     @Column(nullable = false)
+    @Setter
     private String category;
 
     @Column(nullable = false)
+    @Setter
     private String content;
 
     //== 연관관계 메서드 == //

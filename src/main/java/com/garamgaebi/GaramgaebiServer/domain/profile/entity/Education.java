@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "Education")
@@ -20,19 +19,24 @@ public class Education{
     private Long educationIdx;
 
     @Column(name = "institution", nullable = false)
+    @Setter
     private String institution;
 
     @Column(name = "major", nullable = false)
+    @Setter
     private String major;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "is_learning", nullable = false)
+    @Setter
     private IsLearning isLearning;
 
     @Column(name = "start_date", nullable = false)
+    @Setter
     private String startDate;
 
     @Column(name = "end_date")
+    @Setter
     private String endDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_idx")
