@@ -12,13 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-//@Async("applyThreadPoolExecutor")
 @RequiredArgsConstructor
+@Transactional
 public class ApplyEventListenerImpl implements ApplyEventListener {
 
     private final NotificationSender notificationSender;
