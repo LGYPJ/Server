@@ -21,6 +21,8 @@ public class QProgramGameroom extends EntityPathBase<ProgramGameroom> {
 
     public final NumberPath<Integer> currentImgIdx = createNumber("currentImgIdx", Integer.class);
 
+    public final NumberPath<Long> currentMemberIdx = createNumber("currentMemberIdx", Long.class);
+
     public final NumberPath<Long> programGameRoomIdx = createNumber("programGameRoomIdx", Long.class);
 
     public final NumberPath<Long> programIdx = createNumber("programIdx", Long.class);
