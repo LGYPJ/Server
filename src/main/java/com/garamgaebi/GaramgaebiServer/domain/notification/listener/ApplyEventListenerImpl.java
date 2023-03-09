@@ -8,6 +8,7 @@ import com.garamgaebi.GaramgaebiServer.domain.notification.event.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import com.garamgaebi.GaramgaebiServer.global.util.firebase.NotificationSender;
 import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -25,14 +26,16 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     private final NotificationSender notificationSender;
     private final NotificationService notificationService;
+    private final EntityManager em;
 
 
     @Override
     @Async
-    @TransactionalEventListener
+    @EventListener
     public void handleApplyEvent(ApplyEvent applyEvent) {
 
         Apply apply = applyEvent.getApply();
+        em.persist(apply);
 
         Member member = apply.getMember();
 
@@ -55,10 +58,11 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     @Override
     @Async
-    @TransactionalEventListener
+    @EventListener
     public void handleApplyCancelEvent(ApplyCancelEvent applyCancelEvent) {
 
         Apply apply = applyCancelEvent.getApply();
+        em.persist(apply);
 
         Member member = apply.getMember();
 
@@ -80,7 +84,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     @Override
     @Async
-    @TransactionalEventListener
+    @EventListener
     public void handleRefundEvent(RefundEvent refundEvent) {
         List<Apply> applies = refundEvent.getApplies();
 
@@ -89,6 +93,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         Program program = refundEvent.getProgram();
 
         for(Apply apply : applies) {
+            em.persist(apply);
             members.add(apply.getMember());
         }
 
@@ -110,7 +115,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     @Override
     @Async
-    @TransactionalEventListener
+    @EventListener
     public void handleApplyConfirmEvent(ApplyConfirmEvent applyConfirmEvent) {
         List<Apply> applies = applyConfirmEvent.getApplies();
 
@@ -119,6 +124,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         Program program = applyConfirmEvent.getProgram();
 
         for(Apply apply : applies) {
+            em.persist(apply);
             members.add(apply.getMember());
         }
 
@@ -140,7 +146,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     @Override
     @Async
-    @TransactionalEventListener
+    @EventListener
     public void handleNonDepositCancelEvent(NonDepositCancelEvent nonDepositCancelEvent) {
         List<Apply> applies = nonDepositCancelEvent.getApplies();
 
@@ -149,6 +155,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         Program program = nonDepositCancelEvent.getProgram();
 
         for(Apply apply : applies) {
+            em.persist(apply);
             members.add(apply.getMember());
         }
 
