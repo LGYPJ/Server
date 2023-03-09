@@ -13,6 +13,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     @Override
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void handleApplyEvent(ApplyEvent applyEvent) {
 
         Apply apply = applyEvent.getApply();
@@ -54,7 +55,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     @Override
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void handleApplyCancelEvent(ApplyCancelEvent applyCancelEvent) {
 
         Apply apply = applyCancelEvent.getApply();
@@ -79,7 +80,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     @Override
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void handleRefundEvent(RefundEvent refundEvent) {
         List<Apply> applies = refundEvent.getApplies();
 
@@ -109,7 +110,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     @Override
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void handleApplyConfirmEvent(ApplyConfirmEvent applyConfirmEvent) {
         List<Apply> applies = applyConfirmEvent.getApplies();
 
@@ -139,7 +140,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
     @Override
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void handleNonDepositCancelEvent(NonDepositCancelEvent nonDepositCancelEvent) {
         List<Apply> applies = nonDepositCancelEvent.getApplies();
 
