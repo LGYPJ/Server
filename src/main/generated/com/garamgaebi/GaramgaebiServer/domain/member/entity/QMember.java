@@ -33,6 +33,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final ListPath<com.garamgaebi.GaramgaebiServer.domain.profile.entity.Education, com.garamgaebi.GaramgaebiServer.domain.profile.entity.QEducation> educations = this.<com.garamgaebi.GaramgaebiServer.domain.profile.entity.Education, com.garamgaebi.GaramgaebiServer.domain.profile.entity.QEducation>createList("educations", com.garamgaebi.GaramgaebiServer.domain.profile.entity.Education.class, com.garamgaebi.GaramgaebiServer.domain.profile.entity.QEducation.class, PathInits.DIRECT2);
 
+    public final StringPath identifier = createString("identifier");
+
     public final ListPath<MemberFcm, QMemberFcm> memberFcms = this.<MemberFcm, QMemberFcm>createList("memberFcms", MemberFcm.class, QMemberFcm.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> memberIdx = createNumber("memberIdx", Long.class);
@@ -50,8 +52,6 @@ public class QMember extends EntityPathBase<Member> {
     public final ListPath<String, StringPath> roles = this.<String, StringPath>createList("roles", String.class, StringPath.class, PathInits.DIRECT2);
 
     public final ListPath<com.garamgaebi.GaramgaebiServer.domain.profile.entity.SNS, com.garamgaebi.GaramgaebiServer.domain.profile.entity.QSNS> SNSs = this.<com.garamgaebi.GaramgaebiServer.domain.profile.entity.SNS, com.garamgaebi.GaramgaebiServer.domain.profile.entity.QSNS>createList("SNSs", com.garamgaebi.GaramgaebiServer.domain.profile.entity.SNS.class, com.garamgaebi.GaramgaebiServer.domain.profile.entity.QSNS.class, PathInits.DIRECT2);
-
-    public final StringPath socialEmail = createString("socialEmail");
 
     public final EnumPath<com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus> status = createEnum("status", com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus.class);
 
