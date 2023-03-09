@@ -6,6 +6,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Builder
 public class GetProfileRes {
     private Long memberIdx;
     private String nickName;

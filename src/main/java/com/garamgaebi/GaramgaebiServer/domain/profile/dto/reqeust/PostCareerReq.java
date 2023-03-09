@@ -10,17 +10,12 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class PostCareerReq {
     private Long memberIdx;
     private String company;
     private String position;
     private String isWorking;
-
-//    @DateTimeFormat(pattern = "yyyy-MM")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM", timezone = "Asia/Seoul")
     private String startDate;
-
-//    @DateTimeFormat(pattern = "yyyy-MM")
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM", timezone = "Asia/Seoul")
     private String endDate;
 }

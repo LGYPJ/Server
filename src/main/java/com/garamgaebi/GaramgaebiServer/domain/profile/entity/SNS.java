@@ -10,7 +10,6 @@ import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Table(name = "SNS")
 public class SNS {
@@ -20,9 +19,11 @@ public class SNS {
     private Long snsIdx;
 
     @Column(name = "address", nullable = false)
+    @Setter
     private String address;
 
     @Column(name = "type", nullable = false)
+    @Setter
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)

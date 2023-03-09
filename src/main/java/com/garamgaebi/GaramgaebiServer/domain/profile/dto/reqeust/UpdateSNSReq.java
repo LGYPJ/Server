@@ -7,6 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Builder
 public class UpdateSNSReq {
     private Long snsIdx;
     private String address;
