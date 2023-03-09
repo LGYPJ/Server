@@ -17,6 +17,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
     @Override
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void handleProgramOpenEvent(ProgramOpenEvent seminarOpenEvent) {
 
         Program program = seminarOpenEvent.getProgram();
@@ -71,7 +72,7 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
     @Override
     @Async
-    @EventListener
+    @TransactionalEventListener
     public void handleProgramDeadlineEvent(DeadlineEvent deadlineEvent) {
 
         Program program = deadlineEvent.getProgram();
