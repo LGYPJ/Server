@@ -33,7 +33,7 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
     @Override
     @Async
-    @TransactionalEventListener
+    @EventListener
     public void handleProgramOpenEvent(ProgramOpenEvent seminarOpenEvent) {
 
         Program program = seminarOpenEvent.getProgram();
@@ -72,7 +72,7 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
 
     @Override
     @Async
-    @TransactionalEventListener
+    @EventListener
     public void handleProgramDeadlineEvent(DeadlineEvent deadlineEvent) {
 
         Program program = deadlineEvent.getProgram();
