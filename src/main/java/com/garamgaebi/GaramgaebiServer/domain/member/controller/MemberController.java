@@ -34,8 +34,18 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     @PostMapping("/post/kakao")
-    public BaseResponse<PostMemberRes> postMember(@Validated @RequestBody PostMemberReq postMemberReq) throws IOException {
-        return new BaseResponse<>(memberService.postMemberWithKakao(postMemberReq));
+    public BaseResponse<PostMemberRes> postKakaoMember(@Validated @RequestBody PostMemberKakaoReq postMemberKakaoReq) throws IOException {
+        return new BaseResponse<>(memberService.postMemberWithKakao(postMemberKakaoReq));
+    }
+
+    @Operation(summary = "애플 회원가입", description = "입력한 사용자의 정보들로 애플 회원가입", responses = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
+    })
+    @PostMapping("/post/apple")
+    public BaseResponse<PostMemberRes> postAppleMember(@Validated @RequestBody PostMemberAppleReq postMemberAppleReq) throws IOException {
+        return new BaseResponse<>(memberService.postMemberWithApple(postMemberAppleReq));
     }
 
     @Operation(summary = "회원탈퇴", description = "회원 비활성화", responses = {
@@ -54,8 +64,18 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     @PostMapping("/login/kakao")
-    public BaseResponse<TokenInfo> login(@RequestBody MemberLoginReq memberLoginReq) throws IOException {
-        return new BaseResponse<>(memberService.loginWithKakao(memberLoginReq));
+    public BaseResponse<TokenInfo> loginWithKakao(@RequestBody MemberKakaoLoginReq memberKakaoLoginReq) throws IOException {
+        return new BaseResponse<>(memberService.loginWithKakao(memberKakaoLoginReq));
+    }
+
+    @Operation(summary = "애플 로그인", description = "애플 id_token으로 로그인, jwt token 부여", responses = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
+    })
+    @PostMapping("/login/apple")
+    public BaseResponse<TokenInfo> loginWithApple(@RequestBody MemberAppleLoginReq memberAppleLoginReq) throws IOException {
+        return new BaseResponse<>(memberService.loginWithApple(memberAppleLoginReq));
     }
 
     @Operation(summary = "자동 로그인", description = "refresh token으로 자동 로그인, access token & refresh token(필요시) 재발급", responses = {

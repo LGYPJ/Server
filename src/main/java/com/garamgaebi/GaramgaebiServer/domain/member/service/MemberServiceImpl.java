@@ -38,27 +38,56 @@ public class MemberServiceImpl implements MemberService {
     private final JwtTokenProvider jwtTokenProvider;
     private final EmailService emailService;
     private final KakaoService kakaoService;
+    private final AppleService appleService;
     private final RedisUtil redisUtil;
 
 
     // 멤버 가입
     @Transactional
-    public PostMemberRes postMemberWithKakao(PostMemberReq postMemberReq) throws IOException {
-        Map<String, Object> result = kakaoService.getUserInfo(postMemberReq.getAccessToken());
+    public PostMemberRes postMemberWithKakao(PostMemberKakaoReq postMemberKakaoReq) throws IOException {
+        Map<String, Object> result = kakaoService.getUserInfo(postMemberKakaoReq.getAccessToken());
         String identifier = result.get("id").toString();
 
+        // 이미 존재하는 유저인지 확인
         Optional<Member> memberByIdentifier = memberRepository.findByIdentifier(identifier);
         if (memberByIdentifier.isEmpty() == false) {
             throw new RestApiException(ErrorCode.ALREADY_EXIST_IDENTIFIER);
         }
 
         // 이미 존재하는 학교 이메일인지 확인
-        Optional<Member> memberByUni = memberRepository.findByUniEmail(postMemberReq.getUniEmail());
+        Optional<Member> memberByUni = memberRepository.findByUniEmail(postMemberKakaoReq.getUniEmail());
         if (memberByUni.isEmpty() == false) {
             throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
         }
 
-        Member member = memberRepository.save(postMemberReq.toEntity(identifier));
+        Member member = memberRepository.save(postMemberKakaoReq.toEntity(identifier));
+        Long memberIdx = member.getMemberIdx();
+
+        MemberRolesDto memberRolesDto = new MemberRolesDto(memberIdx, "USER");
+        memberRolesRepository.save(memberRolesDto.toEntity());
+
+
+        PostMemberRes postMemberRes = new PostMemberRes(memberIdx);
+        return postMemberRes;
+    }
+
+    @Transactional
+    public PostMemberRes postMemberWithApple(PostMemberAppleReq postMemberAppleReq) throws IOException {
+        String identifier = appleService.getUserIdFromApple(postMemberAppleReq.getIdToken());
+
+        // 이미 존재하는 유저인지 확인
+        Optional<Member> memberByIdentifier = memberRepository.findByIdentifier(identifier);
+        if (memberByIdentifier.isEmpty() == false) {
+            throw new RestApiException(ErrorCode.ALREADY_EXIST_IDENTIFIER);
+        }
+
+        // 이미 존재하는 학교 이메일인지 확인
+        Optional<Member> memberByUni = memberRepository.findByUniEmail(postMemberAppleReq.getUniEmail());
+        if (memberByUni.isEmpty() == false) {
+            throw new RestApiException(ErrorCode.ALREADY_EXIST_UNI_EMAIL);
+        }
+
+        Member member = memberRepository.save(postMemberAppleReq.toEntity(identifier));
         Long memberIdx = member.getMemberIdx();
 
         MemberRolesDto memberRolesDto = new MemberRolesDto(memberIdx, "USER");
@@ -91,8 +120,8 @@ public class MemberServiceImpl implements MemberService {
 
     // 멤버 로그인
     @Transactional
-    public TokenInfo loginWithKakao(MemberLoginReq memberLoginReq) throws IOException {
-        Map<String, Object> result = kakaoService.getUserInfo(memberLoginReq.getAccessToken());
+    public TokenInfo loginWithKakao(MemberKakaoLoginReq memberKakaoLoginReq) throws IOException {
+        Map<String, Object> result = kakaoService.getUserInfo(memberKakaoLoginReq.getAccessToken());
         String identifier = result.get("id").toString();
 
         Member member = memberRepository.findByIdentifier(identifier)
@@ -120,11 +149,52 @@ public class MemberServiceImpl implements MemberService {
                 tokenInfo.getRefreshToken(),
                 tokenInfo.getRefreshTokenExpirationTime());
 
-        if(memberLoginReq.getFcmToken() != null && !memberLoginReq.getFcmToken().isBlank()
-                && member.getMemberFcms().stream().noneMatch(memberFcm -> memberFcm.getFcmToken().equals(memberLoginReq.getFcmToken()))) {
+        if(memberKakaoLoginReq.getFcmToken() != null && !memberKakaoLoginReq.getFcmToken().isBlank()
+                && member.getMemberFcms().stream().noneMatch(memberFcm -> memberFcm.getFcmToken().equals(memberKakaoLoginReq.getFcmToken()))) {
             member.addMemberFcms(MemberFcm.builder()
                     .member(member)
-                    .fcmToken(memberLoginReq.getFcmToken())
+                    .fcmToken(memberKakaoLoginReq.getFcmToken())
+                    .build());
+            memberRepository.save(member);
+        }
+
+        return tokenInfo;
+    }
+
+    @Transactional
+    public TokenInfo loginWithApple(MemberAppleLoginReq memberAppleLoginReq) throws IOException {
+        String identifier = appleService.getUserIdFromApple(memberAppleLoginReq.getIdToken());
+
+        Member member = memberRepository.findByIdentifier(identifier)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+
+        if (member.getStatus() == MemberStatus.INACTIVE) {
+            throw new RestApiException(ErrorCode.INACTIVE_MEMBER);
+        }
+
+        // 1. ID/PW를 기반으로 Authentication 객체 생성
+        // 이 때, authentication은 인증 여부를 확인하는 authenticated 값이 false
+        Long memberIdx = member.getMemberIdx();
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(identifier, memberIdx.toString());
+
+        // 2. 실제 검증 (사용자 비밀번호 체크)
+        // authenticate 메서드가 실행될 때 CustomUserDetailsService에서 만든 loadUserByUsername 메서드가 실행
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        // 3. 인증 정보를 기반으로 JWT Token 생성
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication, memberIdx);
+        tokenInfo.setMemberIdx(memberIdx);
+
+        // 4. RefreshToken Redis 저장 (expirationTime 설정을 통해 자동 삭제 처리)
+        redisUtil.setDataExpire("RT: " + authentication.getName(),
+                tokenInfo.getRefreshToken(),
+                tokenInfo.getRefreshTokenExpirationTime());
+
+        if(memberAppleLoginReq.getFcmToken() != null && !memberAppleLoginReq.getFcmToken().isBlank()
+                && member.getMemberFcms().stream().noneMatch(memberFcm -> memberFcm.getFcmToken().equals(memberAppleLoginReq.getFcmToken()))) {
+            member.addMemberFcms(MemberFcm.builder()
+                    .member(member)
+                    .fcmToken(memberAppleLoginReq.getFcmToken())
                     .build());
             memberRepository.save(member);
         }
@@ -133,6 +203,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public TokenInfo autoLogin(String refreshToken) {
+        System.out.println("DEBUG> jwt expiration" + jwtTokenProvider.getExpiration(refreshToken));
+        
         if (jwtTokenProvider.getExpiration(refreshToken) < 0) { // 만료된 토큰
             throw new RestApiException(ErrorCode.EXPIRED_REFRESH_TOKEN);
         }
