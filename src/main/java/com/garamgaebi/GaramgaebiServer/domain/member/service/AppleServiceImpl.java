@@ -1,13 +1,12 @@
 package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
-import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
-import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
-import org.json.JSONArray;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -21,10 +20,10 @@ import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
 import java.security.PublicKey;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
-import java.util.Objects;
 
 @Service
 public class AppleServiceImpl implements AppleService{
@@ -61,17 +60,17 @@ public class AppleServiceImpl implements AppleService{
             String header = new String(Base64.getDecoder().decode(decodeArray[0]));
 
             // apple에서 제공해주는 kid 값과 일치하는지 비교
-            JsonElement kid = ((JsonObject) parser.parse(header)).get("kid");
-            JsonElement alg = ((JsonObject) parser.parse(header)).get("alg");
+            String kid = (String) ((JSONObject) parser.parse(header)).get("kid");
+            String alg = (String) ((JSONObject) parser.parse(header)).get("alg");
 
             // 사용해야하는 Element 추출 (kid & alg 값이 일치하는 element)
             JSONObject availableObject = null;
-            for (int i = 0; i < keyArray.toList().size(); i++) {
+            for (int i = 0; i < keyArray.size(); i++) {
                 JSONObject appleObject = (JSONObject) keyArray.get(i);
-                JsonElement appleKid = (JsonElement) appleObject.get("kid");
-                JsonElement appleAlg = (JsonElement) appleObject.get("alg");
+                String appleKid = (String) appleObject.get("kid");
+                String appleAlg = (String) appleObject.get("alg");
 
-                if (Objects.equals(appleKid, kid) && Objects.equals(appleAlg, alg)) {
+                if (appleKid.equals(kid) && appleAlg.equals(alg)) {
                     availableObject = appleObject;
                     break;
                 }
@@ -90,7 +89,8 @@ public class AppleServiceImpl implements AppleService{
             System.out.println("3. DEBUG: 새로 만든 공개키 \n" + publicKey);
 
             /* 4. 만든 공개키의 JWT token body를 decode하여 유저 정보 얻기 */
-            Claims userInfo = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(idToken).getBody();
+            Claims userInfo = Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(idToken).getBody();
+//            Claims userInfo = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(idToken).getBody();
             JSONObject userInfoObject = (JSONObject) parser.parse(new Gson().toJson(userInfo));
             JsonElement appleAlg = (JsonElement) userInfoObject.get("sub");
             String userId = appleAlg.getAsString();
