@@ -203,6 +203,8 @@ public class MemberServiceImpl implements MemberService {
     }
 
     public TokenInfo autoLogin(String refreshToken) {
+        System.out.println("DEBUG> jwt expiration" + jwtTokenProvider.getExpiration(refreshToken));
+        
         if (jwtTokenProvider.getExpiration(refreshToken) < 0) { // 만료된 토큰
             throw new RestApiException(ErrorCode.EXPIRED_REFRESH_TOKEN);
         }
