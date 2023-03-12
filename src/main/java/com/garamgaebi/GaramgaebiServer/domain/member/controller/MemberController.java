@@ -64,7 +64,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     @PostMapping("/login/kakao")
-    public BaseResponse<TokenInfo> loginWithKakao(@RequestBody MemberKakaoLoginReq memberKakaoLoginReq) throws IOException {
+    public BaseResponse<LoginRes> loginWithKakao(@RequestBody MemberKakaoLoginReq memberKakaoLoginReq) throws IOException {
         return new BaseResponse<>(memberService.loginWithKakao(memberKakaoLoginReq));
     }
 
@@ -74,7 +74,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     @PostMapping("/login/apple")
-    public BaseResponse<TokenInfo> loginWithApple(@RequestBody MemberAppleLoginReq memberAppleLoginReq) throws IOException {
+    public BaseResponse<LoginRes> loginWithApple(@RequestBody MemberAppleLoginReq memberAppleLoginReq) throws IOException {
         return new BaseResponse<>(memberService.loginWithApple(memberAppleLoginReq));
     }
 
@@ -84,7 +84,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     @PostMapping("/login/auto")
-    public BaseResponse<TokenInfo> autoLogin(@RequestBody AutoLoginReq autoLoginReq) {
+    public BaseResponse<LoginRes> autoLogin(@RequestBody AutoLoginReq autoLoginReq) {
         return new BaseResponse<>(memberService.autoLogin(autoLoginReq.getRefreshToken()));
     }
 
