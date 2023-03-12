@@ -64,7 +64,7 @@ public class FcmService {
                                         .setTitle(notificationDto.getNotificationType().getKor())
                                         .setBody(notificationDto.getContent())
                                         .build())
-                                .setContentAvailable(false)
+                                .setContentAvailable(true)
                                 .setMutableContent(true)
                                 .setSound("default")
                                 .build())
@@ -81,8 +81,6 @@ public class FcmService {
                     log.error("firebase messaging fail response : {} {}", responses.get(i).getException(), targetTokenList.get(i));
                 }
             }
-
         }
     }
-
 }
