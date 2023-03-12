@@ -66,6 +66,7 @@ public class FcmService {
                                         .build())
                                 .setContentAvailable(false)
                                 .setMutableContent(true)
+                                .setSound("default")
                                 .build())
                         .build())
                 .addAllTokens(targetTokenList)
