@@ -58,6 +58,16 @@ public class FcmService {
                 .putData("content", notificationDto.getContent())
                 .putData("programIdx", notificationDto.getResourceIdx().toString())
                 .putData("programType", notificationDto.getResourceType().toString())
+                .setApnsConfig(ApnsConfig.builder()
+                        .setAps(Aps.builder()
+                                .setAlert(ApsAlert.builder()
+                                        .setTitle(notificationDto.getNotificationType().getKor())
+                                        .setBody(notificationDto.getContent())
+                                        .build())
+                                .setContentAvailable(false)
+                                .setMutableContent(true)
+                                .build())
+                        .build())
                 .addAllTokens(targetTokenList)
                 .build();
 
