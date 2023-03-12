@@ -2,10 +2,8 @@ package com.garamgaebi.GaramgaebiServer.domain.member.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.JwtParserBuilder;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,14 +12,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.KeyFactory;
+import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
+import java.security.spec.RSAKeyGenParameterSpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 
@@ -90,10 +91,9 @@ public class AppleServiceImpl implements AppleService{
 
             /* 4. 만든 공개키의 JWT token body를 decode하여 유저 정보 얻기 */
             Claims userInfo = Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(idToken).getBody();
-//            Claims userInfo = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(idToken).getBody();
             JSONObject userInfoObject = (JSONObject) parser.parse(new Gson().toJson(userInfo));
-            JsonElement appleAlg = (JsonElement) userInfoObject.get("sub");
-            String userId = appleAlg.getAsString();
+            String appleAlg = (String) userInfoObject.get("sub");
+            String userId = appleAlg;
 
             System.out.println("4. DEBUG: userId \n" + userId);
 
@@ -105,12 +105,12 @@ public class AppleServiceImpl implements AppleService{
         return null;
     }
 
-    public PublicKey getPublicKey(JSONObject object) {
+    public PublicKey getPublicKey(JSONObject object) throws IOException {
         String nStr = object.get("n").toString();
         String eStr = object.get("e").toString();
 
-        byte[] nBytes = Base64.getUrlDecoder().decode(nStr.substring(1, nStr.length() - 1));
-        byte[] eBytes = Base64.getUrlDecoder().decode(eStr.substring(1, eStr.length() - 1));
+        byte[] nBytes = Base64.getUrlDecoder().decode(nStr);
+        byte[] eBytes = Base64.getUrlDecoder().decode(eStr);
 
         BigInteger n = new BigInteger(1, nBytes);
         BigInteger e = new BigInteger(1, eBytes);

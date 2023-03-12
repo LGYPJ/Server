@@ -120,7 +120,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 멤버 로그인
     @Transactional
-    public TokenInfo loginWithKakao(MemberKakaoLoginReq memberKakaoLoginReq) throws IOException {
+    public LoginRes loginWithKakao(MemberKakaoLoginReq memberKakaoLoginReq) throws IOException {
         Map<String, Object> result = kakaoService.getUserInfo(memberKakaoLoginReq.getAccessToken());
         String identifier = result.get("id").toString();
 
@@ -158,11 +158,11 @@ public class MemberServiceImpl implements MemberService {
             memberRepository.save(member);
         }
 
-        return tokenInfo;
+        return new LoginRes(tokenInfo, member.getUniEmail(), member.getNickname());
     }
 
     @Transactional
-    public TokenInfo loginWithApple(MemberAppleLoginReq memberAppleLoginReq) throws IOException {
+    public LoginRes loginWithApple(MemberAppleLoginReq memberAppleLoginReq) throws IOException {
         String identifier = appleService.getUserIdFromApple(memberAppleLoginReq.getIdToken());
 
         Member member = memberRepository.findByIdentifier(identifier)
@@ -199,17 +199,21 @@ public class MemberServiceImpl implements MemberService {
             memberRepository.save(member);
         }
 
-        return tokenInfo;
+        return new LoginRes(tokenInfo, member.getUniEmail(), member.getNickname());
     }
 
-    public TokenInfo autoLogin(String refreshToken) {
-        System.out.println("DEBUG> jwt expiration" + jwtTokenProvider.getExpiration(refreshToken));
-        
+    public LoginRes autoLogin(String refreshToken) {
         if (jwtTokenProvider.getExpiration(refreshToken) < 0) { // 만료된 토큰
             throw new RestApiException(ErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
-        return jwtTokenProvider.refresh(refreshToken);
+        TokenRefreshRes result = jwtTokenProvider.refresh(refreshToken);
+
+        return new LoginRes(
+                result.getTokenInfo(),
+                result.getMember().getUniEmail(),
+                result.getMember().getNickname()
+        );
     }
 
 
