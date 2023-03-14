@@ -101,4 +101,28 @@ public class GameController {
                 jwtTokenProvider.getMemberIdx()
         ));
     }
+
+    // 게임방 진행중 유무 조회
+    @Operation(summary = "게임방 진행중 유무 조회", description = "전달한 roomId 게임방의 진행중 유무를 boolean으로 조회", responses = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
+    })
+    @GetMapping("/isStarted")
+    @ResponseBody
+    public BaseResponse<Boolean> getIsStarted(@RequestBody IsStartedReq isStartedReq) {
+        return new BaseResponse<>(gameService.getIsStarted(isStartedReq.getRoomId()));
+    }
+
+    // 게임방 상태를 진행중으로 변경
+    @Operation(summary = "게임방 상태 진행중으로 변경", description = "전달한 roomId 게임방의 상태를 진행중으로 변경", responses = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
+            @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
+    })
+    @PatchMapping("/startGame")
+    @ResponseBody
+    public BaseResponse<String> startGame(@RequestBody IsStartedReq isStartedReq) {
+        return new BaseResponse<>(gameService.patchIsStarted(isStartedReq.getRoomId()));
+    }
 }

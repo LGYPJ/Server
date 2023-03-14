@@ -25,4 +25,6 @@ public class MessageController {
     public void enter(MessageDto message) {
         sendingOperations.convertAndSend("/topic/game/room/" + message.getRoomId(), message);
     }
+
+
 }
