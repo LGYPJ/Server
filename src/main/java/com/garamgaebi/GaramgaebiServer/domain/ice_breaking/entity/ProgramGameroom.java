@@ -25,12 +25,15 @@ public class ProgramGameroom {
     @Column(name = "current_member_idx")
     private Long currentMemberIdx;
 
+    private boolean isStarted;
+
     @Builder
-    public ProgramGameroom(Long programIdx, String roomId, int currentImgIdx, Long currentMemberIdx) {
+    public ProgramGameroom(Long programIdx, String roomId, int currentImgIdx, Long currentMemberIdx, boolean isStarted) {
         this.programIdx = programIdx;
         this.roomId = roomId;
         this.currentImgIdx = currentImgIdx;
         this.currentMemberIdx = currentMemberIdx;
+        this.isStarted = isStarted;
     }
 
     public void increaseCurrentImgIdx() {
@@ -42,4 +45,6 @@ public class ProgramGameroom {
     }
 
     public void setCurrentMemberIdx(Long currentMemberIdx) { this.currentMemberIdx = currentMemberIdx; }
+
+    public void startGame() { this.isStarted = true; }
 }

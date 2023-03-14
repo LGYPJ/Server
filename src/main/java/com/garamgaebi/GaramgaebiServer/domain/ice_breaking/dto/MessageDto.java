@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MessageDto {
     public enum MessageType {
-        ENTER, NEXT, TALK, EXIT
+        ENTER, START, NEXT, TALK, EXIT
     }
 
     private MessageType type; // message type
