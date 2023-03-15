@@ -39,8 +39,7 @@ public class GameServiceImpl implements GameService{
             result.add(new GameroomListRes(
                     room.getProgramGameRoomIdx(),
                     room.getProgramIdx(),
-                    room.getRoomId(),
-                    room.isStarted()
+                    room.getRoomId()
             ));
         }
 
