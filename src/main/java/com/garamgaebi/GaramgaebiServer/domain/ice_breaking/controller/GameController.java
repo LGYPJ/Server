@@ -30,7 +30,7 @@ public class GameController {
     })
     @GetMapping("/{programIdx}/rooms")
     @ResponseBody
-    public BaseResponse<List<ProgramGameroom>> getRooms(@PathVariable Long programIdx) {
+    public BaseResponse<List<GameroomListRes>> getRooms(@PathVariable Long programIdx) {
         return new BaseResponse<>(gameService.getRoomsByProgram(programIdx));
     }
 
@@ -108,7 +108,7 @@ public class GameController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스", content = @Content()),
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
-    @GetMapping("/isStarted")
+    @PostMapping("/isStarted")
     @ResponseBody
     public BaseResponse<Boolean> getIsStarted(@RequestBody IsStartedReq isStartedReq) {
         return new BaseResponse<>(gameService.getIsStarted(isStartedReq.getRoomId()));
