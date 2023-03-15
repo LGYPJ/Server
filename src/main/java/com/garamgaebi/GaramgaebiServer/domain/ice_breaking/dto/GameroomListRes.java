@@ -15,13 +15,10 @@ public class GameroomListRes {
 
     private String roomId;
 
-    private boolean isStarted;
-
     @Builder
-    public GameroomListRes(Long programGameRoomIdx, Long programIdx, String roomId, boolean isStarted) {
+    public GameroomListRes(Long programGameRoomIdx, Long programIdx, String roomId) {
         this.programGameRoomIdx = programGameRoomIdx;
         this.programIdx = programIdx;
         this.roomId = roomId;
-        this.isStarted = isStarted;
     }
 }
