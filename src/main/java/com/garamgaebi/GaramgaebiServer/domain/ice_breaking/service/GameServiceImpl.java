@@ -29,11 +29,22 @@ public class GameServiceImpl implements GameService{
 
     // Program index로 게임방 불러오기
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public List<ProgramGameroom> getRoomsByProgram(Long programIdx) {
+    public List<GameroomListRes> getRoomsByProgram(Long programIdx) {
         List<ProgramGameroom> rooms = programGameroomRepository.findRoomsByProgramIdx(programIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM));
 
-        return rooms;
+        List<GameroomListRes> result = null;
+
+        for (ProgramGameroom room : rooms) {
+            result.add(new GameroomListRes(
+                    room.getProgramGameRoomIdx(),
+                    room.getProgramIdx(),
+                    room.getRoomId(),
+                    room.isStarted()
+            ));
+        }
+
+        return result;
     }
 
     // 게임방 생성
