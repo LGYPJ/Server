@@ -33,7 +33,7 @@ public class GameServiceImpl implements GameService{
         List<ProgramGameroom> rooms = programGameroomRepository.findRoomsByProgramIdx(programIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM));
 
-        List<GameroomListRes> result = null;
+        List<GameroomListRes> result = new ArrayList<GameroomListRes>();
 
         for (ProgramGameroom room : rooms) {
             result.add(new GameroomListRes(
