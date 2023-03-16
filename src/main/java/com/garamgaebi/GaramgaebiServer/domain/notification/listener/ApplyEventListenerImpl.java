@@ -1,29 +1,37 @@
 package com.garamgaebi.GaramgaebiServer.domain.notification.listener;
 
 import com.garamgaebi.GaramgaebiServer.domain.apply.entitiy.Apply;
+import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.vo.NotificationType;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.Notification;
 import com.garamgaebi.GaramgaebiServer.domain.notification.event.*;
 import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
+import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.util.firebase.NotificationSender;
 import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-//@Async("applyThreadPoolExecutor")
+@Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class ApplyEventListenerImpl implements ApplyEventListener {
 
     private final NotificationSender notificationSender;
     private final NotificationService notificationService;
-
+    private final MemberRepository memberRepository;
 
     @Override
     @Async
@@ -32,7 +40,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
         Apply apply = applyEvent.getApply();
 
-        Member member = apply.getMember();
+        Member member = memberRepository.findById(apply.getMember().getMemberIdx()).orElseThrow( () -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
         // 알림 메세지 내용 가공
         // 알림 엔티티 insert
@@ -58,7 +66,7 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
 
         Apply apply = applyCancelEvent.getApply();
 
-        Member member = apply.getMember();
+        Member member = memberRepository.findById(apply.getMember().getMemberIdx()).orElseThrow( () -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
         // 알림 메세지 내용 가공
         // 알림 엔티티 insert
@@ -87,7 +95,8 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         Program program = refundEvent.getProgram();
 
         for(Apply apply : applies) {
-            members.add(apply.getMember());
+            memberRepository.findById(apply.getMember().getMemberIdx()).ifPresent((member) ->
+                    members.add(member));
         }
 
         // 알림 메세지 내용 가공
@@ -117,7 +126,8 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         Program program = applyConfirmEvent.getProgram();
 
         for(Apply apply : applies) {
-            members.add(apply.getMember());
+            memberRepository.findById(apply.getMember().getMemberIdx()).ifPresent((member) ->
+                    members.add(member));
         }
 
         // 알림 메세지 내용 가공
@@ -147,7 +157,8 @@ public class ApplyEventListenerImpl implements ApplyEventListener {
         Program program = nonDepositCancelEvent.getProgram();
 
         for(Apply apply : applies) {
-            members.add(apply.getMember());
+            memberRepository.findById(apply.getMember().getMemberIdx()).ifPresent((member) ->
+                    members.add(member));
         }
 
         // 알림 메세지 내용 가공

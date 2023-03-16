@@ -58,6 +58,17 @@ public class FcmService {
                 .putData("content", notificationDto.getContent())
                 .putData("programIdx", notificationDto.getResourceIdx().toString())
                 .putData("programType", notificationDto.getResourceType().toString())
+                .setApnsConfig(ApnsConfig.builder()
+                        .setAps(Aps.builder()
+                                .setAlert(ApsAlert.builder()
+                                        .setTitle(notificationDto.getNotificationType().getKor())
+                                        .setBody(notificationDto.getContent())
+                                        .build())
+                                .setContentAvailable(true)
+                                .setMutableContent(true)
+                                .setSound("default")
+                                .build())
+                        .build())
                 .addAllTokens(targetTokenList)
                 .build();
 
@@ -70,8 +81,6 @@ public class FcmService {
                     log.error("firebase messaging fail response : {} {}", responses.get(i).getException(), targetTokenList.get(i));
                 }
             }
-
         }
     }
-
 }

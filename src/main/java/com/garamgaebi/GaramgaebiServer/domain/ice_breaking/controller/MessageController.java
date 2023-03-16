@@ -23,9 +23,8 @@ public class MessageController {
             @ApiResponse(responseCode = "500", description = "알 수 없는 서버 에러", content = @Content())
     })
     public void enter(MessageDto message) {
-//        if (MessageDto.MessageType.ENTER.equals(message.getType())) {
-//            message.setMessage(message.getSender() + "님이 입장하였습니다.");
-//        }
         sendingOperations.convertAndSend("/topic/game/room/" + message.getRoomId(), message);
     }
+
+
 }

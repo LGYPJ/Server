@@ -160,7 +160,7 @@ public class ApplyService {
 
         return GetApplyRes.builder()
                 .name(apply.getName())
-                .nickname(apply.getNickname())
+                .nickname(apply.getMember().getNickname())
                 .phone(apply.getPhone())
                 .build();
     }

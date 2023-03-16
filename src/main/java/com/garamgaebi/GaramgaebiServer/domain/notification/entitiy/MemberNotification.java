@@ -19,7 +19,7 @@ public class MemberNotification {
     @Column(name = "member_notification_idx")
     private Long idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "member_idx")
     private Member member;
 

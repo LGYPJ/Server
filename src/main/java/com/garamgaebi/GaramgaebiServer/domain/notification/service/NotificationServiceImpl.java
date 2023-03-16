@@ -11,6 +11,7 @@ import com.garamgaebi.GaramgaebiServer.domain.notification.repository.MemberNoti
 import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
@@ -29,7 +30,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final MemberRepository memberRepository;
     private final MemberNotificationRepository memberNotificationRepository;
-
     private final NotificationRepository notificationRepository;
 
     @Override
@@ -64,7 +64,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     }
 
-
     @Override
     @Transactional
     public Boolean isMemberNotificationExist(Long memberIdx) {
@@ -90,7 +89,6 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     @Transactional
     public void addNotification(Notification notification, Member member) {
-        notificationRepository.save(notification);
 
         notification.addMemberNotifications(MemberNotification.builder()
                 .member(member)

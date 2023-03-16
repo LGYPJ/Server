@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GameService {
     /* Program index로 게임방 불러오기 */
-    public List<ProgramGameroom> getRoomsByProgram(Long programIdx);
+    public List<GameroomListRes> getRoomsByProgram(Long programIdx);
 
     /* 게임방 생성 */
     public List<ProgramGameroom> createRooms(Long programIdx);

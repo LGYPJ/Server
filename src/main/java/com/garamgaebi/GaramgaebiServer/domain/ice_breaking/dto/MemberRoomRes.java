@@ -7,7 +7,6 @@ import lombok.*;
 public class MemberRoomRes {
     private String message;
     private int currentImgIdx;
-
     private Long currentMemberIdx;
 
     @Builder

@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.global.security;
 
+import com.garamgaebi.GaramgaebiServer.domain.member.dto.TokenRefreshRes;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
@@ -88,7 +89,7 @@ public class JwtTokenProvider {
                 .build();
     }
 
-    public TokenInfo refresh(String refreshToken) {
+    public TokenRefreshRes refresh(String refreshToken) {
         String newAccessToken;
         String newRefreshToken;
 
@@ -133,13 +134,14 @@ public class JwtTokenProvider {
             newRefreshToken = refreshToken;
         }
 
-        return TokenInfo.builder()
+        return new TokenRefreshRes(TokenInfo.builder()
                 .grantType("Bearer")
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
                 .memberIdx(memberIdx)
-                .build();
+                .build(),
+                member);
     }
 
     // JWT Token을 복호화하여 토큰의 정보를 꺼냄

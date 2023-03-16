@@ -29,11 +29,21 @@ public class GameServiceImpl implements GameService{
 
     // Program index로 게임방 불러오기
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public List<ProgramGameroom> getRoomsByProgram(Long programIdx) {
+    public List<GameroomListRes> getRoomsByProgram(Long programIdx) {
         List<ProgramGameroom> rooms = programGameroomRepository.findRoomsByProgramIdx(programIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM));
 
-        return rooms;
+        List<GameroomListRes> result = null;
+
+        for (ProgramGameroom room : rooms) {
+            result.add(new GameroomListRes(
+                    room.getProgramGameRoomIdx(),
+                    room.getProgramIdx(),
+                    room.getRoomId()
+            ));
+        }
+
+        return result;
     }
 
     // 게임방 생성
@@ -49,6 +59,7 @@ public class GameServiceImpl implements GameService{
                             .roomId(roomId)
                             .currentImgIdx(0)
                             .currentMemberIdx(0L)
+                            .isStarted(false)
                             .build();
 
             programGameroomRepository.save(room);
@@ -176,5 +187,21 @@ public class GameServiceImpl implements GameService{
         room.setCurrentMemberIdx(currentImgIdxReq.getNextMemberIdx());
 
         return "current image index와 current member index가 갱신 되었습니다.";
+    }
+
+    public boolean getIsStarted(String roomId) {
+        ProgramGameroom gameroom = programGameroomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
+
+        return gameroom.isStarted();
+    }
+
+    public String patchIsStarted(String roomId) {
+        ProgramGameroom gameroom = programGameroomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
+
+        gameroom.startGame();
+
+        return "게임방의 상태가 진행중으로 변경되었습니다.";
     }
 }
