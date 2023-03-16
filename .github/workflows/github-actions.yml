@@ -40,12 +40,12 @@ jobs:
     
     ## make garamgaebi-firebase-secret.json
     - name: make garamgaebi-firebase-secret.json
-      if: contains(github.ref, 'dev')
-      run: |
-        cd ./src/main/resources
-        touch ./garamgaebi-firebase-secret.json
-        echo "${{ secrets.FIREBASE-SECRET }}" > ./garamgaebi-firebase-secret.json
-      shell: bash
+      id: create-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "gcp.json"
+        json: ${{ secrets.FIREBASE-SECRET }}
+        dir: './src/main/resources'
 
     ## docker build & push to production
     - name: Docker build & push to prod
