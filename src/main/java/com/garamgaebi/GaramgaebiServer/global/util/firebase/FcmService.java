@@ -80,6 +80,9 @@ public class FcmService {
                 if (!responses.get(i).isSuccessful()) {
                     log.error("firebase messaging fail response : {} {}", responses.get(i).getException(), targetTokenList.get(i));
                 }
+                else {
+                    log.info("firebase messaging success response : {}", targetTokenList.get(i));
+                }
             }
         }
     }
