@@ -35,8 +35,11 @@ jobs:
           ${{ runner.os }}-gradle-
 
     ## gradle build
-    - name: Build with Gradle
-      run: sudo ./gradlew clean build 
+    - name: Change gradlew permissions
+      run: chmod +x ./gradlew
+      
+    - name: Buid with Gradle
+      run: ./gradlew build
     
     ## make garamgaebi-firebase-secret.json
     - name: make garamgaebi-firebase-secret.json
