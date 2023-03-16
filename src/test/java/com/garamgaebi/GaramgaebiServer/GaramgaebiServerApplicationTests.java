@@ -12,21 +12,4 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class GaramgaebiServerApplicationTests {
-
-    @Qualifier("jasyptStringEncryptor")
-    @Autowired StringEncryptor baseEncryptor;
-
-    @Test
-    public void jasypt_test() {
-        String plainText = "admin";
-
-        PooledPBEStringEncryptor encryptor = (PooledPBEStringEncryptor) baseEncryptor;
-
-        String encryptText = encryptor.encrypt(plainText);
-        Assertions.assertThat(plainText).isNotEqualTo(encryptText);
-        System.out.println(encryptText);
-        Assertions.assertThat(plainText).isEqualTo(encryptor.decrypt(encryptText));
-        System.out.println(encryptor.decrypt(encryptText));
-
-    }
 }
