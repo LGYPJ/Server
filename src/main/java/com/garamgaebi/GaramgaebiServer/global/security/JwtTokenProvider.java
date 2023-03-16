@@ -138,6 +138,7 @@ public class JwtTokenProvider {
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
+                .memberIdx(memberIdx)
                 .build();
     }
 
