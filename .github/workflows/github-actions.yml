@@ -76,4 +76,4 @@ jobs:
               sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
               sudo docker pull ${{ secrets.DOCKER_REPO }}
               sudo docker image prune -f
-              sudo docker run -p 80:8080 -e JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }} -d docker.io/${{ secrets.DOCKER_REPO }}:latest
+              sudo docker run -p 80:8080 -e JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }} -e TZ=Asia/Seoul docker.io/${{ secrets.DOCKER_REPO }}:latest
