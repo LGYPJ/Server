@@ -36,7 +36,7 @@ jobs:
 
     ## gradle build
     - name: Build with Gradle
-      run: ./gradlew clean build 
+      run: sudo ./gradlew clean build 
     
     ## make garamgaebi-firebase-secret.json
     - name: make garamgaebi-firebase-secret.json
