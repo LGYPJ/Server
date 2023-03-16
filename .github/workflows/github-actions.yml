@@ -44,7 +44,7 @@ jobs:
       uses: jsdaniell/create-json@1.1.2
       with:
         name: "gcp.json"
-        json: ${{ secrets.FIREBASE-SECRET }}
+        json: ${{ secrets.FIREBASE_SECRET }}
         dir: './src/main/resources'
 
     ## docker build & push to production
