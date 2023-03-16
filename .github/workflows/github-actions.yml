@@ -55,8 +55,8 @@ jobs:
       if: contains(github.ref, 'dev')
       run: |
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          sudo docker build -t ${{ secrets.DOCKER_REPO }}/garamgaebi-dev .
-          sudo docker push ${{ secrets.DOCKER_REPO }}/garamgaebi-dev
+          sudo docker build -t ${{ secrets.DOCKER_REPO }} .
+          sudo docker push ${{ secrets.DOCKER_REPO }}
 
     # ## deploy to production
     # - name: Deploy to prod
