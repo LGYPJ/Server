@@ -51,7 +51,7 @@ jobs:
         dir: './src/main/resources'
 
     ## docker build & push to production
-    - name: Docker build & push to prod
+    - name: Docker build & push
       if: contains(github.ref, 'dev')
       run: |
           sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
@@ -59,16 +59,19 @@ jobs:
           sudo docker push ${{ secrets.DOCKER_REPO }}
 
     # ## deploy to production
-    # - name: Deploy to prod
-    #   uses: appleboy/ssh-action@master
-    #   id: deploy-prod
-    #   if: contains(github.ref, 'dev')
-    #   with:
-    #       host: ${{ secrets.HOST_PROD }}
-    #       username: ec2-user
-    #       key: ${{ secrets.PRIVATE_KEY }}
-    #       envs: GITHUB_SHA
-    #       script: |
-    #           sudo docker rm -f $(docker ps -qa)
-    #           sudo docker pull ${{ secrets.DOCKER_REPO }}/garamgaebi-dev
-    #           sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_REPO }}/garamgaebi-dev
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      id: deploy
+      if: contains(github.ref, 'dev')
+      with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          script: |
+              sudo docker stop $(sudo docker ps -a -q)
+              sudo docker rm -f $(docker ps -qa)
+              sudo docker rmi $(sudo docker images -q)
+              sudo docker pull ${{ secrets.DOCKER_REPO }}
+              sudo docker image prune -f
+              sudo docker run -p 80:8080 -e JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }} -d docker.io/${{ secrets.DOCKER_REPO }}:latest
