@@ -23,6 +23,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin' # https://github.com/actions/setup-java
 
+      ## make garamgaebi-firebase-secret.json
+    - name: make garamgaebi-firebase-secret.json
+      id: create-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+        name: "gcp.json"
+        json: ${{ secrets.FIREBASE_SECRET }}
+        dir: './src/main/resources'
+
     ## gradle caching
     - name: Gradle Caching
       uses: actions/cache@v3
@@ -40,15 +49,6 @@ jobs:
       
     - name: Buid with Gradle
       run: ./gradlew build -x test
-    
-    ## make garamgaebi-firebase-secret.json
-    - name: make garamgaebi-firebase-secret.json
-      id: create-json
-      uses: jsdaniell/create-json@1.1.2
-      with:
-        name: "gcp.json"
-        json: ${{ secrets.FIREBASE_SECRET }}
-        dir: './src/main/resources'
 
     ## docker build & push to production
     - name: Docker build & push
