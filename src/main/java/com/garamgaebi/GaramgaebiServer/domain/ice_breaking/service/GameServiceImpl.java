@@ -196,6 +196,7 @@ public class GameServiceImpl implements GameService{
         return gameroom.isStarted();
     }
 
+    @Transactional
     public String patchIsStarted(String roomId) {
         ProgramGameroom gameroom = programGameroomRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
