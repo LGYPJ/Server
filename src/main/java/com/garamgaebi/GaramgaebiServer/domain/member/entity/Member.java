@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -158,10 +159,14 @@ public class Member extends BaseTimeEntity implements UserDetails {
     }
 
     public void deleteMemberFcm(String fcmToken) {
-        for(MemberFcm memberFcm : this.memberFcms) {
+        Iterator<MemberFcm> fcmIterator = this.memberFcms.iterator();
+
+        // Concurrent issue -> iterator 사용
+        while(fcmIterator.hasNext()) {
+            MemberFcm memberFcm = fcmIterator.next();
             if(memberFcm.getFcmToken().equals(fcmToken)) {
                 memberFcm.setMember(null);
-                this.memberFcms.remove(memberFcm);
+                fcmIterator.remove();
             }
         }
     }
