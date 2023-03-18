@@ -218,6 +218,7 @@ public class MemberServiceImpl implements MemberService {
 
 
     // 멤버 로그아웃
+    @Transactional
     public MemberLogoutRes logout(MemberLogoutReq memberLogoutReq) {
         // 1. Access Token 검증
         if (!jwtTokenProvider.validateToken(memberLogoutReq.getAccessToken())) {
@@ -245,6 +246,7 @@ public class MemberServiceImpl implements MemberService {
             Member member = memberRepository.findByIdentifier(authentication.getName()).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
             member.deleteMemberFcm(memberLogoutReq.getFcmToken());
+            memberRepository.save(member);
         }
 
         return memberLogoutRes;
