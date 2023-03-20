@@ -10,6 +10,9 @@
     <springProfile name="dev-logging">
         <property name="LOG_PATH" value="/var/log"/>
     </springProfile>
+    <springProfile name="prod-logging">
+        <property name="LOG_PATH" value="/var/log"/>
+    </springProfile>
     <property name="MAX_FILE_SIZE" value="50MB"/>
     <property name="MAX_HISTORY" value="14"/>
     <property name="TOTAL_SIZE_CAP" value="1GB"/>
