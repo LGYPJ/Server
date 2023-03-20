@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - dev
+      - main
 
 permissions:
   contents: read
@@ -59,10 +60,10 @@ jobs:
           sudo docker push ${{ secrets.DOCKER_REPO }}
 
     # ## deploy to production
-    - name: Deploy
+    - name: Deploy to prod
       uses: appleboy/ssh-action@master
       id: deploy
-      if: contains(github.ref, 'dev')
+      if: contains(github.ref, 'main')
       with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
@@ -76,4 +77,25 @@ jobs:
               sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
               sudo docker pull ${{ secrets.DOCKER_REPO }}
               sudo docker image prune -f
-              sudo docker run -v /var/log:/var/log -p 8080:8080 -e JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }} -e TZ=Asia/Seoul -e "SPRING_PROFILES_ACTIVE=dev" --add-host=host.docker.internal:host-gateway -d docker.io/${{ secrets.DOCKER_REPO }}:latest
+              sudo docker run -v /var/log:/var/log -p 8080:8080 -e JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }} -e TZ=Asia/Seoul -e "SPRING_PROFILES_ACTIVE=prod" --add-host=host.docker.internal:host-gateway -d docker.io/${{ secrets.DOCKER_REPO }}:latest
+
+    # ## deploy to develop
+    - name: Deploy to dev
+      uses: appleboy/ssh-action@master
+      id: deploy
+      if: contains(github.ref, 'dev')
+      with:
+        host: ${{ secrets.DEV_HOST }}
+        username: ${{ secrets.DEV_USERNAME }}
+        port: ${{ secrets.DEV_PORT }}
+        key: ${{ secrets.DEV_PRIVATE_KEY }}
+        envs: GITHUB_SHA
+        script: |
+          sudo docker stop $(sudo docker ps -a -q)
+          sudo docker rm -f $(docker ps -qa)
+          sudo docker rmi $(sudo docker images -q)
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker pull ${{ secrets.DOCKER_REPO }}
+          sudo docker image prune -f
+          sudo docker run -v /var/log:/var/log -p 8080:8080 -e JASYPT_PASSWORD=${{ secrets.JASYPT_PASSWORD }} -e TZ=Asia/Seoul -e "SPRING_PROFILES_ACTIVE=dev" --add-host=host.docker.internal:host-gateway -d docker.io/${{ secrets.DOCKER_REPO }}:latest
+
