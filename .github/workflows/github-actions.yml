@@ -62,7 +62,7 @@ jobs:
     # ## deploy to production
     - name: Deploy to prod
       uses: appleboy/ssh-action@master
-      id: deploy
+      id: deploy-prod
       if: contains(github.ref, 'main')
       with:
           host: ${{ secrets.HOST }}
@@ -82,7 +82,7 @@ jobs:
     # ## deploy to develop
     - name: Deploy to dev
       uses: appleboy/ssh-action@master
-      id: deploy
+      id: deploy-dev
       if: contains(github.ref, 'dev')
       with:
         host: ${{ secrets.DEV_HOST }}
