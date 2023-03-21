@@ -19,6 +19,7 @@ create table Member
         primary key,
     nickname      varchar(255) not null,
     profile_email varchar(255) not null,
+    identifier    varchar(255) not null unique,
     social_email  varchar(255) not null unique,
     uni_email     varchar(255) not null unique,
     content       varchar(255) null,
