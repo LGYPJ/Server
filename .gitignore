@@ -1,3 +1,9 @@
+.DS_Store
+garamgaebi-firebase-secret.json
+
+### log ###
+log/
+
 HELP.md
 .gradle
 build/
