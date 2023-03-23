@@ -379,7 +379,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // util 메서드 : 이미지 업로드
     private String uploadImgToS3(MultipartFile multipartFile, String fileName) throws Exception {
         if (!multipartFile.isEmpty()) {
-            return s3Uploader.upload(multipartFile, fileName, "presentation");
+            return s3Uploader.upload(multipartFile, "presentation");
         }
 
         return null;
