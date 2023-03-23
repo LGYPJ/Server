@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.domain.profile.service;
 
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.reqeust.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.dto.response.*;
 import com.garamgaebi.GaramgaebiServer.domain.profile.entity.vo.IsLearning;
@@ -20,8 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -368,21 +372,25 @@ public class ProfileServiceImpl implements ProfileService {
         member.setContent(req.getContent());
         member.setBelong(req.getBelong());
 
-        String profileUrl = null;
         if(multipartFile != null) {
+            try {
+                if(member.getProfileUrl() != null) {
+                    String filePath = (new URI(member.getProfileUrl())).getPath().substring(1);
+                    s3Uploader.remove(filePath);
+                    member.setProfileUrl(null);
+                }
+            } catch(URISyntaxException e) {
+                log.error("S3 이미지 삭제 실패!!");
+            }
             if(!multipartFile.isEmpty()) {
                 try {
                     // S3Uploader.upload(업로드 할 이미지 파일, S3 디렉토리명) : S3에 저장된 이미지의 주소(url) 반환
-                    String fileName = "Member" + member.getMemberIdx() + "_Profile.png";
-                    profileUrl = s3Uploader.upload(multipartFile, fileName, "profile");
+                    String profileUrl = s3Uploader.upload(multipartFile, "profile");
                     member.setProfileUrl(profileUrl);
                 } catch (Exception e) {
                     // 이미지 업로드 실패 에러 로그
                     throw new RestApiException(ErrorCode.FAIL_IMAGE_UPLOAD);
                 }
-            }
-            else {
-                member.setProfileUrl(null);
             }
         }
 
