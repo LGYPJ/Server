@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer;
 
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.MemberFcm;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
@@ -26,4 +27,5 @@ import java.util.UUID;
 
 @SpringBootTest
 class GaramgaebiServerApplicationTests {
+
 }
