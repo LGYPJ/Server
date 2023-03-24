@@ -27,5 +27,4 @@ import java.util.UUID;
 
 @SpringBootTest
 class GaramgaebiServerApplicationTests {
-
 }
