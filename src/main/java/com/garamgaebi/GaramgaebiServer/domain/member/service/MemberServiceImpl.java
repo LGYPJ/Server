@@ -111,7 +111,6 @@ public class MemberServiceImpl implements MemberService {
         }
 
         member.inactivedMember();
-
         memberRoles.inactivedMember();
         memberQuitRepository.save(inactivedMemberReq.toEntity());
 
@@ -123,6 +122,8 @@ public class MemberServiceImpl implements MemberService {
     public LoginRes loginWithKakao(MemberKakaoLoginReq memberKakaoLoginReq) throws IOException {
         Map<String, Object> result = kakaoService.getUserInfo(memberKakaoLoginReq.getAccessToken());
         String identifier = result.get("id").toString();
+
+        System.out.println("id: "  + identifier);
 
         Member member = memberRepository.findByIdentifier(identifier)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
