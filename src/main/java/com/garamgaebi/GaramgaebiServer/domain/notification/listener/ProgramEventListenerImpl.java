@@ -2,6 +2,7 @@ package com.garamgaebi.GaramgaebiServer.domain.notification.listener;
 
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.vo.MemberStatus;
 import com.garamgaebi.GaramgaebiServer.domain.notification.entitiy.vo.NotificationType;
+import com.garamgaebi.GaramgaebiServer.domain.notification.repository.NotificationRepository;
 import com.garamgaebi.GaramgaebiServer.domain.program.entity.vo.ProgramType;
 import com.garamgaebi.GaramgaebiServer.domain.member.entity.Member;
 import com.garamgaebi.GaramgaebiServer.domain.member.repository.MemberRepository;
@@ -11,6 +12,7 @@ import com.garamgaebi.GaramgaebiServer.domain.notification.event.ProgramOpenEven
 import com.garamgaebi.GaramgaebiServer.domain.program.entity.Program;
 import com.garamgaebi.GaramgaebiServer.global.util.firebase.NotificationSender;
 import com.garamgaebi.GaramgaebiServer.domain.notification.service.NotificationService;
+import com.garamgaebi.GaramgaebiServer.global.util.scheduler.event.DeleteProgramEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -26,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 public class ProgramEventListenerImpl implements ProgramEventListener {
+    private final NotificationRepository notificationRepository;
 
     private final NotificationSender notificationSender;
     private final NotificationService notificationService;
@@ -94,5 +97,18 @@ public class ProgramEventListenerImpl implements ProgramEventListener {
         // 알림 전송
         notificationSender.sendNotification(notification, members);
 
+    }
+
+    @Override
+    @Async
+    @EventListener
+    public void handleProgramDeleteEvent(DeleteProgramEvent deleteProgramEvent) {
+
+        Program program = deleteProgramEvent.getProgram();
+
+        // 삭제된 프로그램 관련 알림 가져오기
+        List<Notification> notifications = notificationRepository.findByResourceIdx(program.getIdx());
+        // 관련 알림 삭제
+        notifications.stream().forEach(notification -> notification.deleteNotificaiton());
     }
 }
