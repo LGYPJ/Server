@@ -37,7 +37,7 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationStatus status;
 
-    @OneToMany(mappedBy = "notification", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "notification", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MemberNotification> memberNotifications = new ArrayList<MemberNotification>();
 
     @Builder
@@ -56,5 +56,12 @@ public class Notification {
         if(memberNotification.getNotification() != this) {
             memberNotification.setNotification(this);
         }
+    }
+
+    // 비즈니스 메서드
+    public void deleteNotificaiton() {
+        this.setStatus(NotificationStatus.DELETE);
+        // 연관된 memberNotification 모두 삭제
+        this.memberNotifications.clear();
     }
 }
