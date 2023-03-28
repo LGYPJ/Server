@@ -229,8 +229,10 @@ public class MemberServiceImpl implements MemberService {
         // 2. Access Token에서 User identifier를 가져옴
         Authentication authentication = jwtTokenProvider.getAuthentication(memberLogoutReq.getAccessToken());
 
+        System.out.println("DEBUG: authentication.getName() = " + authentication.getName());
         // 3. Redis에서 해당 User email로 저장된 Refresh Token이 있는지 여부를 확인한 후 있으면 삭제
         if (redisUtil.getData("RT: " + authentication.getName()) != null) {
+            System.out.println("DEBUG: key 찾음");
             // Refresh Token 삭제
             redisUtil.deleteData("RT: " + authentication.getName());
         }
