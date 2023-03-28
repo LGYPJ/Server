@@ -101,7 +101,7 @@ public class JwtTokenProvider {
         String identifier = member.getIdentifier();
 
         String tokenFromRedis = redisUtil.getData("RT: " + identifier);
-        if (!tokenFromRedis.equals(refreshToken) || tokenFromRedis.isEmpty()) {
+        if (tokenFromRedis.isEmpty() || !tokenFromRedis.equals(refreshToken)) {
             throw new RestApiException(ErrorCode.INVALID_JWT_TOKEN);
         }
 
