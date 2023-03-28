@@ -14,7 +14,9 @@ import com.garamgaebi.GaramgaebiServer.global.response.exception.ErrorCode;
 import com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException;
 import com.garamgaebi.GaramgaebiServer.global.util.RedisUtil;
 import com.garamgaebi.GaramgaebiServer.global.util.email.EmailService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -226,15 +229,30 @@ public class MemberServiceImpl implements MemberService {
             throw new RestApiException(ErrorCode.INVALID_JWT_TOKEN);
         }
 
-        // 2. Access Token에서 User identifier를 가져옴
-        Authentication authentication = jwtTokenProvider.getAuthentication(memberLogoutReq.getAccessToken());
+//        // 2. Access Token에서 User identifier를 가져옴
+//        Authentication authentication = jwtTokenProvider.getAuthentication(memberLogoutReq.getAccessToken());
+//
+//        System.out.println("DEBUG: authentication.getName() = " + authentication.getName());
+//        // 3. Redis에서 해당 User email로 저장된 Refresh Token이 있는지 여부를 확인한 후 있으면 삭제
+//        if (redisUtil.getData("RT: " + authentication.getName()) != null) {
+//            System.out.println("DEBUG: key 찾음");
+//            // Refresh Token 삭제
+//            redisUtil.deleteData("RT: " + authentication.getName());
+//        }
 
-        System.out.println("DEBUG: authentication.getName() = " + authentication.getName());
+        // 2. Refresh Token에서 User identifier를 가져옴
+        Claims claims = jwtTokenProvider.parseClaims(memberLogoutReq.getRefreshToken());
+        Long memberIdx = claims.get("memberIdx", Long.class);
+
+        Member member = memberRepository.findByMemberIdx(memberIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
+        String identifier = member.getIdentifier();
+
+        log.info("DEBUG - identifier: {}", identifier);
         // 3. Redis에서 해당 User email로 저장된 Refresh Token이 있는지 여부를 확인한 후 있으면 삭제
-        if (redisUtil.getData("RT: " + authentication.getName()) != null) {
-            System.out.println("DEBUG: key 찾음");
+        if (redisUtil.getData("RT: " + identifier) != null) {
+            log.info("key 찾음");
             // Refresh Token 삭제
-            redisUtil.deleteData("RT: " + authentication.getName());
+            redisUtil.deleteData("RT: " + identifier);
         }
 
         // 4. 해당 Access Token 유효시간을 가지고 와서 BlackList에 저장
@@ -243,11 +261,9 @@ public class MemberServiceImpl implements MemberService {
                 "logout",
                 expiration);
 
-        MemberLogoutRes memberLogoutRes = new MemberLogoutRes(authentication.getName());
+        MemberLogoutRes memberLogoutRes = new MemberLogoutRes(identifier);
 
         if(memberLogoutReq.getFcmToken() != null) {
-            Member member = memberRepository.findByIdentifier(authentication.getName()).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
-
             member.deleteMemberFcm(memberLogoutReq.getFcmToken());
             memberRepository.save(member);
         }
