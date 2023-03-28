@@ -226,7 +226,7 @@ public class MemberServiceImpl implements MemberService {
             throw new RestApiException(ErrorCode.INVALID_JWT_TOKEN);
         }
 
-        // 2. Access Token에서 User email을 가져옴
+        // 2. Access Token에서 User identifier를 가져옴
         Authentication authentication = jwtTokenProvider.getAuthentication(memberLogoutReq.getAccessToken());
 
         // 3. Redis에서 해당 User email로 저장된 Refresh Token이 있는지 여부를 확인한 후 있으면 삭제

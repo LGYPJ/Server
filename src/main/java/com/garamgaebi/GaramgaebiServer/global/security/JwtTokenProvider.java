@@ -101,7 +101,7 @@ public class JwtTokenProvider {
         String identifier = member.getIdentifier();
 
         String tokenFromRedis = redisUtil.getData("RT: " + identifier);
-        if (!tokenFromRedis.equals(refreshToken)) {
+        if (!tokenFromRedis.equals(refreshToken) || tokenFromRedis.isEmpty()) {
             throw new RestApiException(ErrorCode.INVALID_JWT_TOKEN);
         }
 
@@ -122,7 +122,6 @@ public class JwtTokenProvider {
                 .compact();
 
         // 1주일 미만으로 남은 refresh token일 경우, refresh token도 갱신
-        System.out.println("refreshToken expiration time: " + getExpiration(refreshToken));
         Long expiration = getExpiration(refreshToken);
         if (expiration < 7 * 24 * 60 * 60 * 1000L) {
             newRefreshToken = Jwts.builder()
@@ -134,7 +133,7 @@ public class JwtTokenProvider {
             newRefreshToken = refreshToken;
         }
 
-        return new TokenRefreshRes(TokenInfo.builder()
+        TokenRefreshRes res = new TokenRefreshRes(TokenInfo.builder()
                 .grantType("Bearer")
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
@@ -142,6 +141,12 @@ public class JwtTokenProvider {
                 .memberIdx(memberIdx)
                 .build(),
                 member);
+
+        redisUtil.setDataExpire("RT: " + authentication.getName(),
+                res.getTokenInfo().getRefreshToken(),
+                res.getTokenInfo().getRefreshTokenExpirationTime());
+
+        return res;
     }
 
     // JWT Token을 복호화하여 토큰의 정보를 꺼냄
