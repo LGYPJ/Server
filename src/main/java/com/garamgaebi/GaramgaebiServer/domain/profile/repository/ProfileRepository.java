@@ -25,42 +25,57 @@ public class ProfileRepository {
     private final EntityManager em;
 
     public Member findMember(Long id) {
-        log.info("ProfileRepository findMember = {}" , id);
+        log.info("ProfileRepository findMember id = {}" , id);
         return em.find(Member.class, id);
     }
 
-    public SNS findSNS(Long id){ return em.find(SNS.class, id);}
+    public SNS findSNS(Long id){
+        log.info("ProfileRepository findSNS id = {}" , id);
+        return em.find(SNS.class, id);}
 
     public void deleteSNS(SNS sns) {
+        log.info("ProfileRepository deleteSNS id = {}" , sns.getMember().getMemberIdx());
         em.remove(sns);
     }
     public void saveQna(QnA qna) {
+        log.info("ProfileRepository saveQna id = {}" , qna.getMember().getMemberIdx());
         em.persist(qna);
     }
 
     public void saveSns(SNS sns) {
+        log.info("ProfileRepository saveSns id = {}" , sns.getMember().getMemberIdx());
         em.persist(sns);
     }
 
     public void saveEducation(Education education) {
+        log.info("ProfileRepository saveEducation id = {}" , education.getMember().getMemberIdx());
         em.persist(education);
     }
 
-    public Education findEducation(Long id){ return em.find(Education.class, id);}
+    public Education findEducation(Long id){
+        log.info("ProfileRepository findEducation id = {}" , id);
+        return em.find(Education.class, id);}
 
     public void deleteEducation(Education education) {
+        log.info("ProfileRepository deleteEducation id = {}" , education.getMember().getMemberIdx());
         em.remove(education);
     }
 
-    public void saveCareer(Career career){ em.persist(career);}
+    public void saveCareer(Career career){
+        log.info("ProfileRepository saveCareer id = {}" , career.getMember().getMemberIdx());
+        em.persist(career);}
 
-    public Career findCareer(Long id){return em.find(Career.class, id);}
+    public Career findCareer(Long id){
+        log.info("ProfileRepository findCareer id = {}" , id);
+        return em.find(Career.class, id);}
 
     public void deleteCareer(Career career) {
+        log.info("ProfileRepository deleteCareer id = {}" , career.getMember().getMemberIdx());
         em.remove(career);
     }
 
     public List<GetSNSListRes> findAllSNS(Long id) {
+        log.info("ProfileRepository findAllSNS id = {}" , id);
         Member member = em.find(Member.class, id);
         List<SNS> s = member.getSNSs();
 
@@ -76,6 +91,7 @@ public class ProfileRepository {
     }
 
     public List<GetEducationListRes> findAllEducation(Long id) {
+        log.info("ProfileRepository findAllEducation id = {}" , id);
         Member member = em.find(Member.class, id);
         List<Education> m = member.getEducations();
 
@@ -93,6 +109,7 @@ public class ProfileRepository {
         return educations;
     }
     public List<GetCareerListRes> findAllCareer(long id) {
+        log.info("ProfileRepository findAllCareer id = {}" , id);
         Member member = em.find(Member.class, id);
         List<Career> c = member.getCareers();
 
@@ -110,6 +127,7 @@ public class ProfileRepository {
         return careers;
     }
     public List<Education> findIsLearning(Long id) {
+        log.info("ProfileRepository findIsLearning id = {}" , id);
         String jpql = "select e from Education e where e.member.memberIdx = :member_idx AND e.isLearning = 'TRUE'";
         List<Education> major = em.createQuery(jpql,Education.class)
                 .setParameter("member_idx",id)
@@ -118,6 +136,7 @@ public class ProfileRepository {
     }
 
     public List<Career> findIsWorking(Long id) {
+        log.info("ProfileRepository findIsWorking id = {}" , id);
         String jpql = "select c from Career c where c.member.memberIdx = :member_idx AND c.isWorking = 'TRUE'";
         List<Career> career = em.createQuery(jpql,Career.class)
                 .setParameter("member_idx",id)
@@ -126,6 +145,7 @@ public class ProfileRepository {
     }
 
     public List<Member> findMembers() {
+        log.info("ProfileRepository findMembers");
         String jpql = "SELECT m FROM Member m WHERE status = 'ACTIVE'";
         List<Member> resultList = em.createQuery(jpql, Member.class)
                 .setMaxResults(11)
@@ -134,6 +154,7 @@ public class ProfileRepository {
     }
 
     public List<Member> findMembers2() {
+        log.info("ProfileRepository findMembers2");
         String jpql = "SELECT m FROM Member m WHERE status = 'ACTIVE' ORDER BY RAND()";
         List<Member> resultList = em.createQuery(jpql, Member.class)
                 .setMaxResults(11)
@@ -142,6 +163,7 @@ public class ProfileRepository {
     }
 
     public long countMember() {
+        log.info("ProfileRepository countMember");
         Query jpql = em.createQuery("SELECT COUNT(m) FROM Member m WHERE status = 'ACTIVE'");
         Long singleResult = (Long) jpql.getSingleResult();
         return singleResult;
