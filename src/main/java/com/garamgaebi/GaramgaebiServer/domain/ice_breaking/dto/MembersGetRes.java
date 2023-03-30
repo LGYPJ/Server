@@ -9,7 +9,6 @@ public class MembersGetRes {
     private Long memberIdx;
     private String nickname;
     private String profileUrl;
-
     private Long currentMemberIdx;
 
     @Builder

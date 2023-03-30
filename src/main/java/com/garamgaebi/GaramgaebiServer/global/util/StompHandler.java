@@ -1,5 +1,6 @@
 package com.garamgaebi.GaramgaebiServer.global.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 
 @Component
+@Slf4j
 public class StompHandler implements ChannelInterceptor {
     @Override
     public void postSend(Message message, MessageChannel channel, boolean sent) {
@@ -16,6 +18,7 @@ public class StompHandler implements ChannelInterceptor {
         System.out.println("DEBUG, accessor: " + accessor);
         String sessionId = accessor.getSessionId();
         String userIdx = accessor.getFirstNativeHeader("userIdx");
+        log.info("DEBUG: userIdx = " + userIdx);
 
         RequestContextHolder.getRequestAttributes();
 
