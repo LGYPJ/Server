@@ -60,8 +60,11 @@ public class StompHandler implements ChannelInterceptor {
                  * memberIdx 다음에 들어온 멤버를 nextMemberIdx로, deleteMemberFromGameRoom 메서드 호출
                  */
 
-                MessageDto messageDto = new MessageDto(MessageDto.MessageType.EXIT, roomId, memberIdx, "EXIT", "EXIT");
-                sendingOperations.convertAndSend("/topic/game/room/" + roomId, messageDto);
+                /**
+                 * 내일 테스트 때 이 코드도 넣어서 !
+                 */
+//                MessageDto messageDto = new MessageDto(MessageDto.MessageType.EXIT, roomId, memberIdx, "EXIT", "EXIT");
+//                sendingOperations.convertAndSend("/topic/game/room/" + roomId, messageDto);
 
 //                List<Member> members = new ArrayList<>();
 
