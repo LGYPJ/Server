@@ -229,17 +229,6 @@ public class MemberServiceImpl implements MemberService {
             throw new RestApiException(ErrorCode.INVALID_JWT_TOKEN);
         }
 
-//        // 2. Access Token에서 User identifier를 가져옴
-//        Authentication authentication = jwtTokenProvider.getAuthentication(memberLogoutReq.getAccessToken());
-//
-//        System.out.println("DEBUG: authentication.getName() = " + authentication.getName());
-//        // 3. Redis에서 해당 User email로 저장된 Refresh Token이 있는지 여부를 확인한 후 있으면 삭제
-//        if (redisUtil.getData("RT: " + authentication.getName()) != null) {
-//            System.out.println("DEBUG: key 찾음");
-//            // Refresh Token 삭제
-//            redisUtil.deleteData("RT: " + authentication.getName());
-//        }
-
         // 2. Refresh Token에서 User identifier를 가져옴
         Claims claims = jwtTokenProvider.parseClaims(memberLogoutReq.getRefreshToken());
         Long memberIdx = claims.get("memberIdx", Long.class);
@@ -247,10 +236,8 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByMemberIdx(memberIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
         String identifier = member.getIdentifier();
 
-        log.info("DEBUG - identifier: {}", identifier);
         // 3. Redis에서 해당 User email로 저장된 Refresh Token이 있는지 여부를 확인한 후 있으면 삭제
         if (redisUtil.getData("RT: " + identifier) != null) {
-            log.info("key 찾음");
             // Refresh Token 삭제
             redisUtil.deleteData("RT: " + identifier);
         }

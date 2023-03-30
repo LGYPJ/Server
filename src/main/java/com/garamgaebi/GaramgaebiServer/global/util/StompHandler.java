@@ -15,18 +15,19 @@ public class StompHandler implements ChannelInterceptor {
         System.out.println("DEBUG, message: " + message);
         System.out.println("DEBUG, accessor: " + accessor);
         String sessionId = accessor.getSessionId();
+        String userIdx = accessor.getFirstNativeHeader("userIdx");
 
         RequestContextHolder.getRequestAttributes();
 
         switch (accessor.getCommand()) {
             case CONNECT:
-                System.out.println("DEBUG, connected: " + sessionId);
+                System.out.println("DEBUG, connected sessionId: " + sessionId + "userIdx: " + userIdx);
                 break;
             case DISCONNECT:
-                System.out.println("DEBUG, disconnected: " + sessionId);
+                System.out.println("DEBUG, disconnected sessionId: " + sessionId + "userIdx: " + userIdx);
                 break;
             case SUBSCRIBE:
-                System.out.println("DEBUG, subscribe: " + sessionId);
+                System.out.println("DEBUG, subscribe sessionId: " + sessionId + "userIdx: " + userIdx);
                 break;
             default:
                 break;
