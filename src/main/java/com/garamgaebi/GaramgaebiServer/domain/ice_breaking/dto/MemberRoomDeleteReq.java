@@ -5,8 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberRoomDeleteReq {
     private String roomId;
     private Long nextMemberIdx;
+
+    public MemberRoomDeleteReq(String roomId, Long nextMemberIdx) {
+        this.roomId = roomId;
+        this.nextMemberIdx = nextMemberIdx;
+    }
 }
