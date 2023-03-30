@@ -86,11 +86,14 @@ public class GameServiceImpl implements GameService{
         List<GameroomMember> gameRoomMembers = gameRoomMemberRepository.findByRoomId(roomId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
 
+        ProgramGameroom gameroom = programGameroomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_GAME_ROOM));
+
         for(GameroomMember gameroomMember : gameRoomMembers) {
             Member member = memberRepository.findById(gameroomMember.getMemberIdx())
                     .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_MEMBER));
 
-            res = new MembersGetRes(member.getMemberIdx(), member.getNickname(), member.getProfileUrl());
+            res = new MembersGetRes(member.getMemberIdx(), member.getNickname(), member.getProfileUrl(), gameroom.getCurrentMemberIdx());
 
             members.add(res);
         }
