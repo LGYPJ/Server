@@ -334,16 +334,11 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // 글 삭제
     @Transactional
     @Override
-    public ProgramRes deleteProgram(Long programIdx, DeleteDto deleteDto) {
+    public ProgramRes deleteProgram(Long programIdx) {
 
-        Optional<Program> programWrapper = adminProgramRepository.findById(programIdx);
+        Program program = adminProgramRepository.findById(programIdx).orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM));
 
-        if(programWrapper.isEmpty()) {
-            throw new RestApiException(ErrorCode.NOT_EXIST_PROGRAM);
-        }
-
-        Program program = programWrapper.get();
-        program.setStatus(ProgramStatus.DELETE);
+        program.delete();
 
         // 스케줄러에서 삭제
         publisher.publishEvent(new DeleteProgramEvent(program));
@@ -379,7 +374,7 @@ public class AdminProgramServiceImpl implements AdminProgramService {
     // util 메서드 : 이미지 업로드
     private String uploadImgToS3(MultipartFile multipartFile, String fileName) throws Exception {
         if (!multipartFile.isEmpty()) {
-            return s3Uploader.upload(multipartFile, fileName, "presentation");
+            return s3Uploader.upload(multipartFile, "presentation");
         }
 
         return null;

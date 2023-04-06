@@ -25,12 +25,22 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
 
-    public String upload(MultipartFile multipartFile, String fileName, String dirName) throws IOException {
+    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
 
+        String fileName = UUID.randomUUID().toString() + ".png";
         File uploadFile = convert(multipartFile, fileName).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
 
         return upload(uploadFile, dirName);
 
+    }
+
+    // filePath로 이미지 삭제
+    public void remove(String filePath) {
+        boolean isExistObject = amazonS3Client.doesObjectExist(bucket, filePath);
+
+        if(isExistObject) {
+            amazonS3Client.deleteObject(bucket, filePath);
+        }
     }
 
     // S3로 파일 업로드하기

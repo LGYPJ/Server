@@ -241,4 +241,8 @@ public class Program {
             this.setStatus(ProgramStatus.CLOSED);
         }
     }
+
+    public void delete() {
+        this.setStatus(ProgramStatus.DELETE);
+    }
 }

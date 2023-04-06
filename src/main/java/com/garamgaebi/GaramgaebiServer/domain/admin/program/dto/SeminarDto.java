@@ -27,17 +27,4 @@ public class SeminarDto {
     private Integer fee;
     private List<PostPresentationDto> presentations;
 
-    public Program toEntity() {
-        Program program = new Program();
-
-        program.setTitle(this.title);
-        program.setDate(this.date);
-        program.setLocation(this.location);
-        program.setFee(this.fee);
-        program.setStatus(ProgramStatus.READY_TO_OPEN);
-        program.setProgramType(ProgramType.SEMINAR);
-
-        return program;
-    }
-
 }
