@@ -28,7 +28,7 @@ import java.util.List;
 @Slf4j
 public class StompHandler implements ChannelInterceptor {
 
-    private final SimpMessageSendingOperations sendingOperations;
+//    private final SimpMessageSendingOperations sendingOperations;
     private final GameService gameService;
     private final GameRoomMemberRepository gameRoomMemberRepository;
 
