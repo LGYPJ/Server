@@ -70,6 +70,7 @@ public class GameServiceImpl implements GameService{
     }
 
     // 해당 Program의 게임방 삭제
+    @Transactional
     public List<ProgramGameroom> deleteRooms(Long programIdx) {
         List<ProgramGameroom> deletedRooms= programGameroomRepository.deleteByProgramIdx(programIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_EXIST_PROGRAM));
