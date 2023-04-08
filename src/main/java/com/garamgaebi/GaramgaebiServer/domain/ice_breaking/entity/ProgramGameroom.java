@@ -47,4 +47,10 @@ public class ProgramGameroom {
     public void setCurrentMemberIdx(Long currentMemberIdx) { this.currentMemberIdx = currentMemberIdx; }
 
     public void startGame() { this.isStarted = true; }
+
+    public void initRoom() {
+        this.currentImgIdx = 0;
+        this.currentMemberIdx = 0L;
+        this.isStarted = false;
+    }
 }
