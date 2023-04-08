@@ -50,7 +50,7 @@ public interface AdminProgramService {
     public ProgramRes modifyNetworking(PatchNetworkingDto patchNetworkingDto);
 
     // 글 삭제
-    public ProgramRes deleteProgram(Long programIdx, DeleteDto deleteDto);
+    public ProgramRes deleteProgram(Long programIdx);
 
     // 프로그램 오픈
     public ProgramRes openProgram(Long programIdx);

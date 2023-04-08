@@ -95,10 +95,9 @@ public class AdminProgramController {
     // 프로그램 삭제
     @DeleteMapping("/program/{program-idx}")
     @ResponseBody
-    public BaseResponse<ProgramRes> deleteProgram(@PathVariable(name = "program-idx") Long programIdx,
-                                        @RequestBody DeleteDto deleteDto) {
+    public BaseResponse<ProgramRes> deleteProgram(@PathVariable(name = "program-idx") Long programIdx) {
 
-        return new BaseResponse<>(adminProgramService.deleteProgram(programIdx, deleteDto));
+        return new BaseResponse<>(adminProgramService.deleteProgram(programIdx));
     }
 
     // 발표자료 리스트 조회
