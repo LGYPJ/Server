@@ -145,13 +145,9 @@ public class GameServiceImpl implements GameService{
 
         gameRoomMemberRepository.deleteByMemberIdx(memberIdx);
 
-        System.out.println("delete member count: " + gameRoomMemberRepository.countByRoomId(memberRoomDeleteReq.getRoomId()));
-
         if (gameRoomMemberRepository.countByRoomId(memberRoomDeleteReq.getRoomId()) == 0) {
-            programGameroom.setCurrentMemberIdx(0L);
-        }
-
-        if (memberRoomDeleteReq.getNextMemberIdx() != -1) {
+            programGameroom.initRoom();
+        } else if (memberRoomDeleteReq.getNextMemberIdx() != -1) {
             /* current_member_idx 갱신 */
             gameRoomMemberRepository.findByRoomIdAndMemberIdx(memberRoomDeleteReq.getRoomId(), memberRoomDeleteReq.getNextMemberIdx())
                     .orElseThrow(() -> new RestApiException(ErrorCode.NOT_REGISTERED_MEMBER_FROM_GAME_ROOM));
