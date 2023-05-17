@@ -28,7 +28,8 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE' // S3
 	implementation platform('software.amazon.awssdk:bom:2.19.33')
 	implementation 'software.amazon.awssdk:s3'
-	implementation group: 'org.quartz-scheduler', name: 'quartz',  version: '2.2.1' // quartz
+	implementation group: 'org.quartz-scheduler', name: 'quartz',  version: '2.2.1'
+    implementation 'org.projectlombok:lombok:1.18.22'// quartz
 	compileOnly('org.springframework.boot:spring-boot-starter-aop') // aop
 	implementation 'org.json:json:20220924' // json
 	implementation 'org.codehaus.janino:janino:3.1.9' // logback

@@ -1,0 +1,84 @@
+2023-05-16 13:20:04.206 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:20:04.304 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:21:09.636 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:21:09.638 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:26:08.636 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:26:08.638 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:27:50.979 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:27:50.982 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:28:35.839 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:28:35.841 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:29:39.324 [main] ERROR [SqlExceptionHelper:138] : NULL not allowed for column "NAME"; SQL statement:
+insert into Apply (apply_idx, member_idx, nickname, program_idx) values (default, ?, ?, ?) [23502-214] 
+2023-05-16 13:29:39.520 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:29:39.521 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:30:28.275 [main] ERROR [SqlExceptionHelper:138] : NULL not allowed for column "PHONE"; SQL statement:
+insert into Apply (apply_idx, member_idx, name, nickname, program_idx) values (default, ?, ?, ?, ?) [23502-214] 
+2023-05-16 13:30:28.455 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:30:28.456 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:34:18.558 [async-thread-1] ERROR [SimpleAsyncUncaughtExceptionHandler:39] : Unexpected exception occurred invoking async method: public void com.garamgaebi.GaramgaebiServer.domain.notification.listener.ApplyEventListenerImpl.handleApplyEvent(com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyEvent) 
+com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException: null
+	at com.garamgaebi.GaramgaebiServer.domain.notification.listener.ApplyEventListenerImpl.lambda$handleApplyEvent$0(ApplyEventListenerImpl.java:43)
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
+	at com.garamgaebi.GaramgaebiServer.domain.notification.listener.ApplyEventListenerImpl.handleApplyEvent(ApplyEventListenerImpl.java:43)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:115)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2023-05-16 13:34:18.754 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:34:18.756 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:40:21.188 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:40:21.190 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:44:48.261 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:44:48.263 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:49:02.239 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:49:02.241 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:51:06.306 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:51:06.309 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:52:33.653 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:52:33.657 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:53:19.776 [async-thread-1] ERROR [SimpleAsyncUncaughtExceptionHandler:39] : Unexpected exception occurred invoking async method: public void com.garamgaebi.GaramgaebiServer.domain.notification.listener.ApplyEventListenerImpl.handleApplyEvent(com.garamgaebi.GaramgaebiServer.domain.notification.event.ApplyEvent) 
+com.garamgaebi.GaramgaebiServer.global.response.exception.RestApiException: null
+	at com.garamgaebi.GaramgaebiServer.domain.notification.listener.ApplyEventListenerImpl.lambda$handleApplyEvent$0(ApplyEventListenerImpl.java:43)
+	at java.base/java.util.Optional.orElseThrow(Optional.java:403)
+	at com.garamgaebi.GaramgaebiServer.domain.notification.listener.ApplyEventListenerImpl.handleApplyEvent(ApplyEventListenerImpl.java:43)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:388)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:752)
+	at org.springframework.aop.interceptor.AsyncExecutionInterceptor.lambda$invoke$0(AsyncExecutionInterceptor.java:115)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+2023-05-16 13:53:19.968 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:53:19.970 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:57:03.554 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:57:03.556 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:58:26.410 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:58:26.413 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:59:05.425 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-16 13:59:05.427 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
