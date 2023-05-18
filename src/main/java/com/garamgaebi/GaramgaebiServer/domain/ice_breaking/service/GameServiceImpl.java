@@ -21,7 +21,7 @@ import java.util.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GameServiceImpl implements GameService{
+public class GameServiceImpl implements GameService {
     private final ProgramGameroomRepository programGameroomRepository;
     private final GameRoomMemberRepository gameRoomMemberRepository;
     private final MemberRepository memberRepository;

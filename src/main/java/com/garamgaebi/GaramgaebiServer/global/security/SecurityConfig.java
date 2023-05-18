@@ -22,8 +22,8 @@ public class SecurityConfig {
     private final RedisTemplate redisTemplate;
 
 
+    /* swagger v3 */
     private static final String[] PERMIT_URL_ARRAY = {
-            /* swagger v3 */
             "/v3/api-docs/**",
             "/swagger-ui/**"
     };
