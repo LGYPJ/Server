@@ -1,0 +1,6 @@
+2023-05-17 10:18:22.792 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-17 10:18:22.795 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-17 10:19:28.849 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-17 10:19:28.851 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-17 10:21:33.963 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
+2023-05-17 10:21:33.964 [SpringApplicationShutdownHook] ERROR [SqlExceptionHelper:138] : Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-214] 
